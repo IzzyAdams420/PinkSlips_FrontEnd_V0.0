@@ -1,5 +1,5 @@
 
-# ReadMe
+# Read Me
 This frontend is very rough, and only really meets basic neccesary functionality needed for issuing badges or querying wallets at the moment.
 I've included a modified version of the colored badges contracts, without any of the usual transfer limitations (that way it is is easier to play with in the frontend.)
 Once Colored Badges repo is made public, this front end will be update with the completed GenericBadges.sol
