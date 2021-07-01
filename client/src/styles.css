@@ -1,0 +1,364 @@
+
+span {
+    display: inline-block;
+    vertical-align: center;
+  }
+  body {
+    background-color: rgb(34, 26, 12);
+    text-align: center !important; 
+  }
+
+  .toast {
+    margin: 15px;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    border-radius: 8px;
+    border-color:blue;
+    border-width: 5px;
+  
+  }
+  .toast-body {
+    color:black;
+  }
+  
+  .mr-auto {
+    color: rgb(255, 255, 255);
+    font-size: 12px;
+    padding-left: 5px;
+    display: inline-block;
+    vertical-align: center;
+  }
+  
+  .App {
+
+    background-color: rgb(34, 26, 12);
+    
+    font-family: sans-serif;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 10px;
+  }
+  .WomanBadge {
+    background: white;
+    border-radius: 100px;
+    text-align: center;
+    height: 150px;
+  }
+  
+  .mr-2 {
+    height: 20px;
+  }
+  
+  .Header {
+    color: white;
+  }
+  
+  .Footer {
+    color: white;
+  }
+  
+  .PinkSlipsInterface, .PinkSlipsInterface2 {
+    font-weight: 600;
+    margin: 50px;
+    padding: 50px;
+    background: pink;
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+  }
+  .PinkSlips body {
+    background: transparent;
+  }
+  
+  .pinkSpinner {
+    
+  } 
+  .aboutBadgesContainer {
+    padding: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin-top: 35px;
+    background-color: aliceblue;
+    border-radius: 5px;
+  }
+  .GoldStarsInterface {
+    font-weight: 600;
+    margin: 50px;
+    padding: 50px;
+    background: rgba(245, 201, 7);
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+  }
+  .BadgeSearch {
+    font-weight: 600;
+    margin: 50px;
+    margin-top: 0px;
+    padding: 50px;
+    background: rgb(252, 125, 40) !important;
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+
+  }
+  .BadgeSearchResults {
+
+    font-weight: 600;
+    margin: 30px;
+    padding: 50px;
+    background: rgb(255, 255, 255) !important;
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+
+  }
+
+  .SearchResultsContainer {
+
+    font-weight: 600;
+    margin: 30px;
+    padding: 50px;
+    background: rgb(255, 255, 255) !important;
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+
+  }
+  #listItem {
+    font-size: 12px;
+    padding-bottom: 5px;
+    overflow-wrap: break-word;
+    vertical-align: baseline;
+  }
+
+  #listItem_color{
+    min-height: 10px;
+  }
+
+  #redSymbol {
+    color: rgb(255, 68, 84);
+
+  }
+
+  #listItem_reason{}
+  #listItem_gifter{}
+
+  #listItem_empty{}
+
+  #listWalletText {
+    font-weight: 300;
+    font-size: 14px;
+  }
+  #BadgeSearchResultsRow {
+    padding: 7px;
+    padding-bottom: 12px;
+  }
+  #closeListButton {
+    border-radius: 10px;
+  }
+
+  .BadgeSearchResults {
+    padding: 10px;
+    background: white !important;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+  }
+
+  #resultsBox {
+    overflow-wrap: break-word;
+
+  }
+
+  #searchHeader {
+    font-size: 25px !important;
+    font-weight: 600;
+  }
+  
+
+  #infoBox  {
+    font-size: 80%;
+    font-weight: 500;
+    padding: 10px;
+    background: white !important;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+  }
+  
+  #navButton {
+      width: 30%;
+
+  }
+
+  .Dispute {
+    margin: 50px;
+    padding: 50px;
+    background: rgb(235, 135, 73);
+    background: linear-gradient(
+      180deg,
+      rgba(235, 135, 73, 1) 0%,
+      rgba(235, 135, 73, 1) 48%,
+      rgba(255, 128, 0, 1) 100%
+    );
+    color: white;
+    border-style: solid;
+    border-width: 5px;
+  }
+  
+  .Dispute h1 {
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .Dispute h2 {
+    color: rgb(0, 0, 0);
+    font-weight: 100;
+    font-size: 110%;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .Dispute body {
+    background: rgba(235, 135, 73, 1) 0%;
+    color: black;
+    font-weight: 100;
+    
+  }
+  
+  .Dispute emoji {
+    font-size: 450%;
+  }
+  
+  .dummyMenu {
+    margin: auto;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    color:aliceblue;
+    font-size: 35px;
+    font-weight: 600px;
+    background-image: linear-gradient(pink, yellow, blue);
+  }
+  
+  #discord {
+    height: 55px;
+  }
+  
+  .tokenIcon {
+    margin-left: -90px;
+    width: 100px;
+  }
+  
+  .tokenMeter {
+    margin-left: 90px;
+  }
+
+  .priceLabel {
+    font-weight: 400;
+
+  }
+
+  #priceInfo {
+
+    font-size: 85%;
+    font-weight: 500;
+
+  }
+
+  #priceQuote {
+    font-size: 200%;
+    font-weight: 600;
+  }
+
+  #priceNumber {
+  
+    color: red;
+    outline: rgb(235, 135, 73), 100;
+    outline-width: 100;
+    outline-color: black;
+  }
+  
+  #quoteContainer {
+  
+  }
+  
+  #issueContainer {
+    margin-top: 20px;
+  }
+
+  #balanceBar {
+    border-width: 2px;
+    border-color: black;
+    border-radius: 4px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top:   1px;
+
+
+
+  }
+
+#balanceBoxGold {
+  background: rgb(44, 44, 44);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+
+  letter-spacing: 1px;
+}
+
+#balanceBoxPink {
+  background-color: rgba(49, 49, 49, 0.157);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+
+  letter-spacing: 1px;
+}
+
+#pinkHeader, #goldHeader {
+  font-size: 80%;
+  font-weight: 500;
+  vertical-align: middle;
+}
+#pinkSubHeader, #goldSubHeader {
+  font-size: 100%;
+  font-weight: 500 !important;
+}
+
+#skull {
+  color: rgb(100, 100, 100);
+  font-weight: bolder;
+  font-size: 35px !important;
+  vertical-align: middle;
+  
+}
+
+.retroButton {
+  background-color: rgb(233, 227, 227);
+  border-style: outset !important;
+  border-color: lightgray !important;
+  border-width: 3px !important;
+  border-radius: 1px !important;
+}
+
+.loadingText {
+  padding-top: 8;
+  padding-bottom: 8;
+  color: rgb(25, 25, 39);
+  font-size: 50px;
+  font-weight: 100;
+}
+.spinner-border {
+  margin: 4px !important;
+}
+.spinner-grow {
+  margin: 2px !important;
+}
