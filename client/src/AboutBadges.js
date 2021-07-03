@@ -11,7 +11,7 @@ import Jumbotron from 'react-bootstrap/Jumbotron'
 
 import MarkdownPreview from "@uiw/react-markdown-preview";
 
-import headerImage from './rsrc/imgs/ColoredBadgesHeader_6.png';
+import headerImage from './rsrc/imgs/ColoredBadgesHeader_w_badge.png';
 
 const aboutColoredBadgesPreview = `
 >\
