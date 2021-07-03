@@ -99,6 +99,7 @@ class App extends Component {
           <Row>
             <Col>
               <PinkSlipsInterface2 {...this.state} />
+              <br />
               <GoldStarsInterface {...this.state} />
 
               <br />
