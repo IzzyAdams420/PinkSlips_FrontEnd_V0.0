@@ -6,14 +6,22 @@ import PinkSlipsInterface2 from "./PinkSlips2_Interface";
 import BadgeSearch from "./Badge_Search";
 import NavigationBar from "./Navigation";
 
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+
 import Web3Prompt from "./Web3Prompt";
 
 import AboutBadges from "./AboutBadges";
 
+import headerImage from './rsrc/imgs/ColoredBadgesHeader.png';
 
 import GoldStars from "./contracts/GoldStars.json";
 import PinkSlips from "./contracts/PinkSlips.json";
 import RedPens from "./contracts/RedPens.json";
+
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -79,23 +87,26 @@ class App extends Component {
       return  <div className="App" ><NavigationBar class="white" /><Web3Prompt connectWallet={this.connectWallet}/> </div>
     }
     return (
-      <div className="App">
+      <div className="App" style={{justifyContent: 'center'}}>
+        
         <NavigationBar class="white" />
+        {/*<img alt="Header" src={headerImage} />*/}
         <AboutBadges />
         <br />
         <br />
         <br />
-          {/*<BadgeSearch {...this.state} /> */}
-          <PinkSlipsInterface2 {...this.state} />
-        <GoldStarsInterface {...this.state} />
-        <br />
-        
+        <Container fluid style={{alignContent: "center", minWidth:"380px", maxWidth:"1100px", justifyContent: 'center', margin: "0 auto"}} >
+          <Row>
+            <Col>
+              <PinkSlipsInterface2 {...this.state} />
+              <GoldStarsInterface {...this.state} />
 
-        {/*<PinkSlipsInterface {...this.state} /> */}
-
-        <br />
-        <BadgeSearch {...this.state} />
-        <br /><br />
+              <br />
+              <BadgeSearch {...this.state} />
+              <br /><br />
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }

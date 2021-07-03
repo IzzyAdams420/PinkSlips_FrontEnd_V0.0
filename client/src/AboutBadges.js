@@ -1,23 +1,26 @@
 import  React from "react";
 import { useState } from "react";
+import { Backdrop } from '@material-ui/core';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Image from 'react-bootstrap/Image'
+import Jumbotron from 'react-bootstrap/Jumbotron'
 
 import MarkdownPreview from "@uiw/react-markdown-preview";
+
+import headerImage from './rsrc/imgs/ColoredBadgesHeader_6.png';
 
 const aboutColoredBadgesPreview = `
 >\
 
-# Colored Badges
+## Lets not all be grey
 `;
 
 const aboutColoredBadgesFull = `
 >\
-
-# Colored Badges
 ## Lets not all be grey
 -------
 
@@ -143,17 +146,21 @@ export default function AboutBadges() {
 
   return (
 
-
-
-    <Container className="aboutBadgesContainer">
+  <Jumbotron style={{justifyContent: "center"}}>
+    <Container className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>
       <Row>
-        <Col>
-          <MarkdownPreview source={!isExpanded ? aboutColoredBadgesPreview : aboutColoredBadgesFull } />
+        <Col style={{justifyContent: "center"}}>
+          <Row>
+            <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} />
+          </Row>
+          {isExpanded ? <><Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "aliceblue"}}>x</Button><br /><br /></>: null }
+          <MarkdownPreview style={isExpanded ? {color: "black"} : {color: "white", fontSize:"105%"}} source={!isExpanded ? aboutColoredBadgesPreview : aboutColoredBadgesFull } />
           <br />
-          <Button variant="warning" onClick={toggleAboutLength}> {isExpanded ? "Read Less" : "Whitepaper" } </Button>
+          <Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "white"}}> {isExpanded ? "Read Less" : "Read our Gold Paper" } </Button>
         </Col>
       </Row>
     </Container>
-    
+  </Jumbotron>
+
   )
 }

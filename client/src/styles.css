@@ -36,6 +36,7 @@ span {
     background-color: rgb(34, 26, 12);
     
     font-family: sans-serif;
+    justify-content: center;
     text-align: center;
     margin: 0px;
     padding: 0px;
@@ -62,7 +63,6 @@ span {
   
   .PinkSlipsInterface, .PinkSlipsInterface2 {
     font-weight: 600;
-    margin: 50px;
     padding: 50px;
     background: pink;
     border-style: solid;
@@ -70,6 +70,18 @@ span {
     border-width: 5px;
     border-color: white;
   }
+
+  .GoldStarsInterface {
+    font-weight: 600;
+    padding: 50px;
+    background: rgba(245, 201, 7);
+    border-style: solid;
+    border-radius: 40px;
+    border-width: 5px;
+    border-color: white;
+  }
+
+
   .PinkSlips body {
     background: transparent;
   }
@@ -82,23 +94,11 @@ span {
     padding-left: 50px;
     padding-right: 50px;
     margin-top: 35px;
-    background-color: aliceblue;
+    /* background-color: aliceblue; */
     border-radius: 5px;
-  }
-  .GoldStarsInterface {
-    font-weight: 600;
-    margin: 50px;
-    padding: 50px;
-    background: rgba(245, 201, 7);
-    border-style: solid;
-    border-radius: 40px;
-    border-width: 5px;
-    border-color: white;
   }
   .BadgeSearch {
     font-weight: 600;
-    margin: 50px;
-    margin-top: 0px;
     padding: 50px;
     background: rgb(252, 125, 40) !important;
     border-style: solid;
@@ -339,6 +339,10 @@ span {
   font-size: 35px !important;
   vertical-align: middle;
   
+}
+
+#lets-not-all-be-grey {
+  border-color: pink;
 }
 
 .retroButton {
