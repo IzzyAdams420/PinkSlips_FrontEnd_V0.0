@@ -7,14 +7,13 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
-contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable, ERC721Enumerable {
+contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerable {
     
-    // Set Default Minting Costs to 9 Red Pens.
+    // Set Default Minting Costs to 3 Red Pens.
     uint256 public mintingCost = 3 * 10 ** 18;
 
-    // Set Default Minting Cost Floor to 3 Red Pens
+    // Set Default Minting Cost Floor to 1 Red Pens
     uint256 public mintingCostFloor = 1 * 10 ** 17;
 
     uint256 public payItForwardTreasuryRatio_Numerator = 2;
@@ -99,9 +98,7 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
     //******************************
 
 
-    modifier PAY_WITH_PENS(address receivingAddress) {
-        
-        _preApproval(msg.sender);
+    modifier PAY_WITH_PENS(address receivingAddress) {      
 
         uint256 expectedContractBalance;
 
@@ -130,8 +127,9 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
 
 
     function issueBadge(address receivingAddress, string memory _reason) public
-        PAY_WITH_PENS(receivingAddress) returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
-
+        PAY_WITH_PENS(receivingAddress) 
+        returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
+        require((receivingAddress != msg.sender) && (receivingAddress != address(0)));
         newId = _tokenIdGenerator;
         setBadgeInfo(msg.sender, _reason, _tokenIdGenerator);
         _safeMint(receivingAddress, _tokenIdGenerator);
@@ -139,18 +137,11 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
        
      }
 
-
-    //Override the burn function to require burners to be the court
-    function burn(uint256 tokenId) public virtual override {
-        
-        require((hasRole(THE_COURT_ROLE, msg.sender)
-                    || hasRole(GAVELS_BAILIFF, msg.sender)
-                    || hasRole(JURY_BAILIFF, msg.sender)
-                    || isBadgeSender(msg.sender, tokenId)),
+    function revokeBadge(uint tokenId) public {
+        require(_isApprovedOrOwner(msg.sender, tokenId),
                     "Nice Try, Bucko") ;
         _burn(tokenId);
     }
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,16 +180,6 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
     /// Internal Checks                                                                     ////
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    
-    // Check for REDPENS balance and spending approval.
-    function _preApproval(address addressToCheck) internal returns (bool) {
-        require(redPens.allowance(addressToCheck, address(this)) >= mintingCost, "Must Allow !RED");
-        require(redPens.balanceOf(addressToCheck) >= mintingCost, "Wallet does not have enough !RED");
-        return true;
-    }
-   
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,15 +222,15 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
     }
 
 
-    function destroy(bool thisIsNotReversible) public THE_COURT returns (bool) {
+    function destroyAndLockContract(uint valueMustBe69) public THE_COURT returns (bool) {
 
-        if(thisIsNotReversible == true) {
+        if(valueMustBe69 == 69) {
             // burn all badges
             _burnAllBadges();
             // set protocol to locked
             _pause();
             isForeverLocked = true;
-            return true;
+            return isForeverLocked;
         } else {return false;}
     }
 
@@ -261,15 +242,55 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
     
+    function _isApprovedOrOwner(address spender, uint256 tokenId)
+        internal view virtual
+        override(ERC721)
+        returns (bool)
+    {
+        require(_exists(tokenId), "ERC721: operator query for nonexistent token");
+        address owner = ERC721.ownerOf(tokenId);
+        address gifter = BadgeInfo[tokenId].gifter;
+        return (spender == gifter || isApprovedForAll(owner, spender));
+    }
+
+    
+    function _approve(address to, uint256 tokenId)
+    internal virtual
+    override (ERC721)
+    {
+        require( hasRole(THE_COURT_ROLE, msg.sender),
+                    "You do not have permission to approve this badge");
+        super._approve(to, tokenId);
+    }
+
+    function isApprovedForAll(address owner, address operator)
+    public view virtual
+    override (ERC721)
+    returns (bool) {
+
+        bool isApproved = ( hasRole(THE_COURT_ROLE, operator)
+                            || hasRole(GAVELS_BAILIFF, operator)
+                            || hasRole(JURY_BAILIFF, operator));
+        return isApproved;
+    }
+
+
+    function setApprovalForAll(address operator, bool approved)
+    public virtual
+    override (ERC721) {
+        
+         require(   hasRole(THE_COURT_ROLE, msg.sender)
+                    || hasRole(GAVELS_BAILIFF, msg.sender)
+                    || hasRole(JURY_BAILIFF, msg.sender),
+                    "You do not have permission to move this badge");
+        super.setApprovalForAll(operator, approved);
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
         override(ERC721, ERC721Enumerable)
     {
-         require((isBadgeSender(msg.sender, tokenId))
-                    || hasRole(THE_COURT_ROLE, msg.sender)
-                    || hasRole(GAVELS_BAILIFF, msg.sender)
-                    || hasRole(JURY_BAILIFF, msg.sender),
-                    "You do not have permission to move this badge");
+
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
@@ -288,11 +309,11 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
         address to,
         uint256 tokenId
     ) public virtual override {
-        require((isBadgeSender(msg.sender, tokenId))
-                    || hasRole(THE_COURT_ROLE, msg.sender)
-                    || hasRole(GAVELS_BAILIFF, msg.sender)
-                    || hasRole(JURY_BAILIFF, msg.sender),
+
+        address gifter = BadgeInfo[tokenId].gifter;
+        require( (msg.sender == gifter || isApprovedForAll(from, msg.sender)),
                     "You do not have permission to move this badge");
+        
         super.transferFrom(from, to, tokenId);
         // revert("You're not authorized to use this function"); // makes function revert back/fail
     }
@@ -302,28 +323,12 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Burnable
         address to,
         uint256 tokenId
     ) public virtual override {
-        require((isBadgeSender(msg.sender, tokenId))
-                    || hasRole(THE_COURT_ROLE, msg.sender)
-                    || hasRole(GAVELS_BAILIFF, msg.sender)
-                    || hasRole(JURY_BAILIFF, msg.sender),
+        address owner = ERC721.ownerOf(tokenId);
+        address gifter = BadgeInfo[tokenId].gifter;
+        require( (msg.sender == gifter || isApprovedForAll(from, msg.sender)),
                     "You do not have permission to move this badge");
         super.safeTransferFrom(from, to, tokenId);
     }
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory _data
-    ) public virtual override {
-        require((isBadgeSender(msg.sender, tokenId))
-                    || hasRole(THE_COURT_ROLE, msg.sender)
-                    || hasRole(GAVELS_BAILIFF, msg.sender)
-                    || hasRole(JURY_BAILIFF, msg.sender),
-                    "You do not have permission to move this badge");
-        super.safeTransferFrom(from, to, tokenId, _data);
-    }
-
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////

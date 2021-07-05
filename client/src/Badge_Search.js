@@ -223,8 +223,8 @@ class BadgeSearch extends Component {
                 </ListGroup> 
                 <div class="d-block d-sm-block d-md-block d-lg-none"> <br /> </div>          
 
-            <SearchResults badge={this.state.goldStars} address={this.state.searchAddress} web3={this.state.web3} />
-            <SearchResults badge={this.state.pinkSlips} address={this.state.searchAddress} web3={this.state.web3} />     
+            <SearchResults badge={this.state.goldStars} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />
+            <SearchResults badge={this.state.pinkSlips} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />     
             </Row>
             </Container>
           )}

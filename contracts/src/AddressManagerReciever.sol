@@ -43,7 +43,7 @@ contract AddressManagerReciever {
         MiniBailiff = addressManager.MiniBailiff();
     }
 
-    function _updateTokenAddresses() internal {
+    function _updateTokenAddresses() internal virtual {
         // Set these from the Address Manager Contract
         GavelTokenAddress = addressManager.GavelTokenAddress();
         RedPenTokenAddress = addressManager.RedPenTokenAddress();

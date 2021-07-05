@@ -84,10 +84,14 @@ class App extends Component {
 
   render() {
     if (!this.state.web3) {
-      return  <div className="App" ><NavigationBar class="white" /><Web3Prompt connectWallet={this.connectWallet}/> </div>
+      return <>
+          <NavigationBar class="white" /><br /><br />
+          <div className="App" style={{paddingTop: "30vh", height: "100vh", justifyContent: "center"}} >
+          <Web3Prompt style={{positionTop: "30vh !important",}} connectWallet={this.connectWallet}/>
+        </div></>
     }
     return (
-      <div className="App" style={{justifyContent: 'center'}}>
+      <div className="App" style={{justifyContent: "center"}}>
         
         <NavigationBar class="white" />
         {/*<img alt="Header" src={headerImage} />*/}

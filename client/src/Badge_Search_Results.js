@@ -78,9 +78,6 @@ class SearchResults extends Component {
     let balance = parseInt(await badge.methods.balanceOf(address).call());
     
     let tokenArray = [];
-
-    console.log("searchFromBalanceStarts " + balance);
-
                                                                                         
     let _gifter = "";
     let _reason = "";
@@ -120,12 +117,11 @@ class SearchResults extends Component {
 
     }
 
-
-
-
-
-
-
+    burn = async (badgeTokenId) => {
+      const badge = this.props.badge;
+      const accounts = this.props.accounts;
+      await badge.methods.revokeBadge(badgeTokenId).send({from: accounts[0]});
+}
 
 
 
@@ -136,7 +132,7 @@ class SearchResults extends Component {
     return (
       <div className="SearchResults">
 
-        { this.state.tokenArray.map(badge => (
+        { this.state.tokenArray.map(badgeResult => (
              
              <>
                
@@ -149,13 +145,13 @@ class SearchResults extends Component {
                        <ListGroup.Item id="listItem_color"  variant={this.state.listVariant} > {this.state.badgeColor} </ListGroup.Item>
                      </Col>
                      <Col xs={6} lg={5}>
-                       <ListGroup.Item id="listItem_reason"  > {badge.reason} </ListGroup.Item>
+                       <ListGroup.Item id="listItem_reason"  > {badgeResult.reason} </ListGroup.Item>
                      </Col >
                      <Col xs={6} lg={3}>
-                       <ListGroup.Item id="listItem_gifter" > {badge.gifter.slice(0, 6) + "..." + badge.gifter.slice(38, 42)} </ListGroup.Item>
+                       <ListGroup.Item id="listItem_gifter" > {badgeResult.gifter.slice(0, 6) + "..." + badgeResult.gifter.slice(38, 42)} </ListGroup.Item>
                      </Col>
                      <Col xs={6} lg={2}>
-                       <ListGroup.Item id="listItem_empty"  variant="warning"> {badge.id} </ListGroup.Item>
+                       <ListGroup.Item id="listItem_empty" variant="warning">{badgeResult.id}</ListGroup.Item>
                      </Col>
                  </ListGroup> 
                  <div class="d-block d-sm-block d-md-block d-lg-none"> <br /> </div>          
