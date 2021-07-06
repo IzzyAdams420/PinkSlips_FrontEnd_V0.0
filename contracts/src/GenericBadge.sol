@@ -104,16 +104,16 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
 
         if (payReciver == true) {
         uint256 portionOfMintingCost = mintingCost / payItForwardTreasuryRatio_Divisor;
-        expectedContractBalance = redPens.balanceOf(address(this)) + (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
+        expectedContractBalance = redPens.balanceOf(TreasuryAddress) + (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
 
-        redPens.transferFrom(msg.sender, address(this), (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
+        redPens.transferFrom(msg.sender, TreasuryAddress, (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
         redPens.transferFrom(msg.sender, receivingAddress, (portionOfMintingCost * (payItForwardTreasuryRatio_Divisor - payItForwardTreasuryRatio_Numerator)));
         } else {
-            expectedContractBalance = redPens.balanceOf(address(this)) + mintingCost;
-            redPens.transferFrom(msg.sender, address(this), mintingCost);
+            expectedContractBalance = redPens.balanceOf(TreasuryAddress) + mintingCost;
+            redPens.transferFrom(msg.sender, TreasuryAddress, mintingCost);
         }
         
-        require(redPens.balanceOf(address(this)) == expectedContractBalance, "Error Transfering !RED");
+        require(redPens.balanceOf(TreasuryAddress) == expectedContractBalance, "Error Transfering !RED");
         
         _;
     }
@@ -150,7 +150,7 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    function setMintingCost(uint256 costInWei) public BAILIFF returns (bool){
+    function setMintingCost(uint256 costInWei) public JURY returns (bool){
         require(costInWei >= mintingCostFloor, "Sorry! Cost must be greater than 0.1 RedPen");
         _setMintingCost(costInWei);
         return true;

@@ -32,12 +32,12 @@ module.exports = function (deployer) {
     accounts = await web3.eth.getAccounts();
     
   }).then(async () => {
-    let firstAdminAddress = accounts[0];
-    juryDaoAgent = accounts[0];
-    gavelDaoAgent =accounts[0];
-    treasuryAddress = accounts[0];
-    theCourtAddress = accounts[0]
-    miniBailiff = accounts[0];
+    let firstAdminAddress = '0xFc961Da137b43B7F0Bf612079FC2f91d9216DdF2'; //accounts[0];
+    juryDaoAgent = firstAdminAddress;
+    gavelDaoAgent = firstAdminAddress;
+    treasuryAddress = firstAdminAddress;
+    theCourtAddress = firstAdminAddress;
+    miniBailiff = firstAdminAddress;
   }).then(async () => {
     await deployer.deploy(AddressManager, juryDaoAgent, gavelDaoAgent, treasuryAddress,
                           theCourtAddress, miniBailiff);

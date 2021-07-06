@@ -22,9 +22,11 @@
  const dotenv = require('dotenv').config();
 // const infuraKey = "fj4jll3k.....";
 
-//const mnemonic = process.env.TINYDANCER;
-//const infura = process.env.INFURAPROJECT;
+const mnemonic = process.env.TINYDANCER;
+const infura = process.env.INFURAPROJECT;
+const infura2 = process.env.INFURAPROJECT2;
 const addy = process.env.OEADDY;
+const addy2 = process.env.OTHERADDY;
 
 const path = require("path");
 module.exports = {
@@ -66,11 +68,26 @@ module.exports = {
       from: addy,
       network_id: '42',
       gasPrice: 1100000000,
-      gas: 4206887,
+      gas: 8206887,
       networkCheckTimeout: 10000000,
       timeoutBlocks: 50000,
   
     },
+
+    rinkby: {
+       provider: () => {
+         return new HDWalletProvider(mnemonic, infura2);
+      },
+       //host: 'localhost',
+       //port: 8546,
+       websockets: true,
+       from: addy2,
+       network_id: 4,
+       gas: 10612388
+       //networkCheckTimeout: 10000000,
+       //timeoutBlocks: 50000,
+   
+     },
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
