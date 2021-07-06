@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 contract DisputeMachine is SmartConsensusMachine {
 
     ERC20 public redPens;
-    JuryPool2 public juryHats;
+    JuryPool public juryHats;
 
     uint private slashIndex = 0;
     uint public slashPercentageInWholeNumber = 30;
@@ -49,7 +49,7 @@ contract DisputeMachine is SmartConsensusMachine {
         
         super._updateTokenAddresses();
         redPens = ERC20(RedPenTokenAddress);
-        juryHats = JuryPool2(JuryPoolAddress);
+        juryHats = JuryPool(JuryPoolAddress);
     }
 
 }

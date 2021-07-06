@@ -24,7 +24,6 @@ let treasuryAddress = '';
 let theCourtAddress = '';
 let miniBailiff = '';
 
-const SimpleStorage = artifacts.require("SimpleStorage");
 module.exports = function (deployer) {
 
 
@@ -34,13 +33,12 @@ module.exports = function (deployer) {
     
   }).then(async () => {
     let firstAdminAddress = accounts[0];
-    juryDaoAgent = firstAdminAddress;
-    gavelDaoAgent =firstAdminAddress;
-    treasuryAddress = firstAdminAddress;
-    theCourtAddress = firstAdminAddress
-    miniBailiff = firstAdminAddress;
+    juryDaoAgent = accounts[0];
+    gavelDaoAgent =accounts[0];
+    treasuryAddress = accounts[0];
+    theCourtAddress = accounts[0]
+    miniBailiff = accounts[0];
   }).then(async () => {
-    await deployer.deploy(SimpleStorage)
     await deployer.deploy(AddressManager, juryDaoAgent, gavelDaoAgent, treasuryAddress,
                           theCourtAddress, miniBailiff);
   }) .then(async () => {

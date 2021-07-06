@@ -18,11 +18,14 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+ const HDWalletProvider = require('@truffle/hdwallet-provider');
+ const dotenv = require('dotenv').config();
 // const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+
+//const mnemonic = process.env.TINYDANCER;
+//const infura = process.env.INFURAPROJECT;
+const addy = process.env.OEADDY;
+
 const path = require("path");
 module.exports = {
 
@@ -51,6 +54,22 @@ module.exports = {
       network_id: "*",
       gas: 6721975,
      // Any network (default: none)
+    },
+
+    kovan: {
+     // provider: () => {
+     //   return new HDWalletProvider(mnemonic, infura);
+    // },
+      host: 'localhost',
+      port: 8546,
+      websockets: true,
+      from: addy,
+      network_id: '42',
+      gasPrice: 1100000000,
+      gas: 4206887,
+      networkCheckTimeout: 10000000,
+      timeoutBlocks: 50000,
+  
     },
     // Another network with more advanced options...
     // advanced: {

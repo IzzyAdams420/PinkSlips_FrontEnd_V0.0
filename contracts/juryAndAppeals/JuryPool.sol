@@ -54,7 +54,7 @@ contract JuryPool is ERC721, ERC721Enumerable, SmartConsensusMachine {
         }   
 
         if (totalSharesCirculating > 0) {
-            _amount += (_amount * totalSharesCirculating / totalPensInPool);
+            _amount = (_amount * totalSharesCirculating / totalPensInPool);
         }
 
         JurrorStake[_tokenId] += _amount; 
@@ -70,7 +70,7 @@ contract JuryPool is ERC721, ERC721Enumerable, SmartConsensusMachine {
         redPens.transferFrom(msg.sender, address(this), _amount);
 
         if (totalShares > 0) {
-            _amount += (_amount * totalShares / totalPensInPool);
+            _amount = (_amount * totalShares / totalPensInPool);
         }
 
         JurrorStake[_tokenId] += _amount; 

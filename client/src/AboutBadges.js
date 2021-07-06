@@ -50,6 +50,7 @@ The Court: The court is a collaborative entity between the Gavels and the Jury, 
 Jury Hats / The Jury Pool: 
 Jury Hats yield interest in Red Pens. While any pen holder may vote on any appeal, they are not required to do so. Hence, the jury pool serves to ensure there is a group of willing-and-able jurors ready to resolve new disputes. In order to ensure a pool of willing-and-able jurors to resolve said disputes, Jury Hat holders are subject to receiving a jury summons at any time.
 Upon receipt of a jury summons, a Jury Hat holder has 24 hours to review the assigned case and issue a verdict vote. Failure to issue a verdict on an assigned case shall result in a portion of the users Jury Hat tokens being slashed and burned, yielding an increased Pen/Hat trade ratio for the pool. With Jury Hat yields inversely correlated with jury participation, individuals are best served when they abide by their jury obligations, but others do not. 
+
 -----------------
 
 Abuse Prevention

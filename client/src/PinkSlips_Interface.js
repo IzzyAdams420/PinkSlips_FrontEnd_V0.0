@@ -2,8 +2,19 @@ import getWeb3 from "./getWeb3";
 import React, { Component } from "react";
 
 
+
 import PinkSlips from "./contracts/PinkSlips.json";
 import RedPens from "./contracts/RedPens.json";
+
+import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
+
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import redPenIcons from './icons/redPenIcon.png';
 
@@ -19,15 +30,21 @@ import Col from 'react-bootstrap/Col';
 
 
 class PinkSlipsInterface extends Component {
-  state = { };
+  state = { pensApproved: false};
 
   componentDidMount = async () => {
-    try {
-
-      this.setState(this.props, this.getLivePrice);
+    
+   
+      await this.setState(this.props, this.getLivePrice);
 
       this.updateForms = this.updateForms.bind(this);
+
+      await this.checkPenApproval();
+      let canSpend = (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost))
+      this.setState({canSpend});
       
+     try { 
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -39,49 +56,72 @@ class PinkSlipsInterface extends Component {
 
   mintBadge = async () => {
 
-    const { accounts, pinkSlips, sendTo, reason } = this.state;
+    const { accounts, pinkSlips, receivingAddress, issueReason } = this.state;
 
-    const sendToAddress = this.state.sendTo;
     const badge = pinkSlips;
 
-    await badge.methods.issueBadge(sendTo, reason).send({ from: accounts[0] });
+    await badge.methods.issueBadge(receivingAddress, issueReason).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
-    const response = await badge.balanceOf(sendTo).call();
+    const response = await badge.balanceOf(receivingAddress).call();
 
     // Update state with the result.
     this.setState({ storageValue: response });
   };
 
+  checkPenApproval = async () => {
+    const {web3, mintingCost} = this.state;
+
+    let spender = this.props.pinkSlipsAddress;
+    let owner = this.props.accounts[0];
+    
+
+    let pensApproved = await this.props.redPens.methods.allowance(owner, spender).call();
+    let userBalance = await this.props.redPens.methods.balanceOf(owner).call();
+    userBalance = this.props.web3.utils.fromWei(userBalance);
+    pensApproved = this.props.web3.utils.fromWei(pensApproved);
+   
+    this.setState({pensApproved, userBalance});
+    return pensApproved;
+    };
+
+
+
   approvePens = async () => {
-    const { accounts, pinkSlipsAddress, redPens } = this.state;
+    const { accounts, pinkSlipsAddress, redPens } = this.props;
 
     // Stores a given value, 5 by default.
-    await redPens.methods.approve(pinkSlipsAddress, "11111111111111111111111111111111111111111").send({ from: accounts[0] });
+    await redPens.methods.approve(pinkSlipsAddress, "42069000000000000000000").send({ from: accounts[0] })
+    .then(async (receipt) => {
+      this.checkPenApproval();
+    });
+    
   };
 
   getLivePrice = async () => {
  
     const { web3, pinkSlips } = this.state;
-    let badge = pinkSlips;
-    let livePrice = await badge.methods.mintingCost().call();
-    livePrice = web3.utils.fromWei(livePrice);
+    let mintingCost = await pinkSlips.methods.mintingCost().call();
+    mintingCost = parseInt(web3.utils.fromWei(mintingCost));
 
-    this.setState({mintingCost: livePrice});
-  }
+    this.setState({mintingCost});
+
+    return mintingCost;
+
+  };
   
   onMintClick(event) {
     event.preventDefault();
-  }
+  };
+
   updateForms(event) {
     event.preventDefault();
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    //const target = event.target;
 
     this.setState({[name]: value});
-  }
+  };
 
   render() {
     if (!this.state.web3) {
@@ -89,20 +129,21 @@ class PinkSlipsInterface extends Component {
     }
     return (
       <div className="PinkSlipsInterface">
-        <h1>⭐ Pink ⭐ Slips ⭐</h1>
-        <h2>Now you know if someones a chad!</h2>
+        <h1><span role="img" id="skull">☠</span> <span id="pinkHeader">Pink</span> 
+          <span role="img" id="skull">☠</span> <span id="pinkHeader">Slips</span>
+          <span role="img" id="skull">☠</span>
+        </h1>
+        <div id="pinkSubHeader">Now you know if someones a dick!</div>
         <br />
           <br></br>
-        <br></br>
-   
     
     <Container fluid>
 
             <Row>
-              <Col sm={2}>
+              <Col md={2}>
 
               </Col>
-              <Col id='quoteContainer' sm={4}>
+              <Col id='quoteContainer' md={8}>
                 <div className='tokenMeter'>
                   <img className='tokenIcon' id='redPenIcon' src={redPenIcons} />
                   <img className='tokenIcon' id='redPenIcon' src={redPenIcons} />
@@ -111,48 +152,49 @@ class PinkSlipsInterface extends Component {
                     <br></br>
                     <br></br>
                   <div className="priceLabel">
-                    Minting a GoldenStar costs: <div id='priceQuote'><span id='priceNumber'>{this.state.mintingCost}</span> Red Pens</div>
+                    Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{this.state.mintingCost}</span> Red Pens</div>
                   </div>
-                  <b>(50% of the minting costs is transferred to the gold star receiver)</b>
+                  
                    
               </Col>
+              <Col sm={2}></Col>
+            </Row>
 
-              <Col id='issueContainer' sm={4}>
-              <br></br>
-                <form onSubmit={this.onMintClick}>
-                  <input
-                    type="text"
-                    name="sendTo"
-                    placeholder="0x_the_chads_wallet"
-                    value={this.state.sendTo}
-                    onChange={this.updateForms}
-                  />
-                  <br></br>
-                  <br></br>
-                  <textarea
-                    name="reason"
-                    placeholder="Reason they're a chad"
-                    value={this.state.reason}
-                    onChange={this.updateForms}
-                  />
-
-                  <br></br>
-                  <br></br>
-                 
-                    <button onClick={this.approvePens} value="Approve !Red">
-                        {this.state.pensApproved ? "Approved" : "Approve" }
-                    </button>
-                    <button onClick={this.mintBadge} value="Mint!">
-                        Mint!
-                    </button>
-                    <br />------------<br />
-                    <input type="submit" value="Send it" />
-                </form>
+            <Row>
+              <Col md={2}></Col>
+              <Col id="issueContainer" md={8}>
+                  <InputGroup style={{
+                              justifyContent: 'center',
+                            }}>
+                    <Form.Group  md={8}  style={{ width: 1500}}>
+                      <Form.Control size="lg" md={8} name="receivingAddress" value={this.state.receivingAddress}
+                                        onChange={this.updateForms} placeholder="0x Wallet Address" />
+                      <Form.Control md={8} as="textarea" rows={3} name="issueReason" value={this.state.issueReason}
+                                        onChange={this.updateForms} placeholder="Reason" />
+                      <br />
+                      <Col >
+                        <div id="balanceBar">
+                          <ListGroup style={{
+                                justifyContent: 'center',
+                              }} horizontal>
+                            <ListGroup.Item  id="balanceBoxPink">
+                              <Button className="retroButton btn btn-light input-group-append" lg={8} as={InputGroup.Append} onClick={ (parseInt(this.state.pensApproved)
+                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens} variant="light"
+                                id="dropdown-basic-button" title="Mint!">
+                                { (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!"}
+                              </Button>
+                            </ListGroup.Item >
+                            <ListGroup.Item id="balanceBoxPink" >You have: <br /> {parseInt(this.state.userBalance)}
+                              <span id="redSymbol" >!Red</span>
+                            </ListGroup.Item> 
+                          </ListGroup>
+                        </div>
+                      </Col>                           
+                    </Form.Group>
+                  </InputGroup>
                   
               </Col>
-              <Col sm={2}>
-
-              </Col>
+              <Col md={2}></Col>
 
             </Row>
 
@@ -164,8 +206,8 @@ class PinkSlipsInterface extends Component {
         <span id="infoBox">
           <strong>***</strong>
           <br /><br />
-          GoldenStars are non-removable ERC-721s that include a log of each and
-          every generous move by a particular wallet.
+          PinkSlips are non-removable ERC-721s that include a log of each and
+          every dick move by a particular wallet.
           <br /> <br /><strong>***</strong> <br />
           Issue one now!
           

@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import getWeb3 from "./getWeb3";
 import GoldStarsInterface from "./GoldStars_Interface";
 import PinkSlipsInterface from "./PinkSlips_Interface";
-import PinkSlipsInterface2 from "./PinkSlips2_Interface";
 import BadgeSearch from "./Badge_Search";
 import NavigationBar from "./Navigation";
+import JuryPoolInterface from "./JuryPoolInterface";
 
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 
 import Web3Prompt from "./Web3Prompt";
 
@@ -21,6 +23,7 @@ import headerImage from './rsrc/imgs/ColoredBadgesHeader.png';
 import GoldStars from "./contracts/GoldStars.json";
 import PinkSlips from "./contracts/PinkSlips.json";
 import RedPens from "./contracts/RedPens.json";
+import JuryPool from "./contracts/JuryPool.json";
 
 
 
@@ -44,7 +47,8 @@ class App extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = await [GoldStars.networks[networkId],
                                       RedPens.networks[networkId],
-                                      PinkSlips.networks[networkId]];
+                                      PinkSlips.networks[networkId],
+                                      JuryPool.networks[networkId]];
 
       //set the contract addresses
 
@@ -62,14 +66,21 @@ class App extends Component {
         PinkSlips.abi,
         deployedNetwork[2] && deployedNetwork[2].address,
       );
+
+      const juryPool = new web3.eth.Contract(
+        JuryPool.abi,
+        deployedNetwork[3] && deployedNetwork[3].address
+      );
       
-      const activeContracts = {goldStars, redPens, pinkSlips};
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool};
 
 
       const goldStarsAddress = deployedNetwork[0].address;
       const pinkSlipsAddress = deployedNetwork[2].address;
-      this.setState({ web3, accounts, goldStars, redPens, pinkSlips,
-                      goldStarsAddress, pinkSlipsAddress, activeContracts});
+      const juryPoolAddress = deployedNetwork[3].address;
+
+      this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool,
+                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, activeContracts});
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -93,6 +104,13 @@ class App extends Component {
     return (
       <div className="App" style={{justifyContent: "center"}}>
         
+        
+        <Alert severity="warning" style={{position: "absolute", width:"40%", marginLeft:"30%", marginTop: "1vh"}}>
+        
+        
+        This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
+        </Alert>
+        
         <NavigationBar class="white" />
         {/*<img alt="Header" src={headerImage} />*/}
         <AboutBadges />
@@ -102,7 +120,11 @@ class App extends Component {
         <Container fluid style={{alignContent: "center", minWidth:"380px", maxWidth:"1100px", justifyContent: 'center', margin: "0 auto"}} >
           <Row>
             <Col>
-              <PinkSlipsInterface2 {...this.state} />
+              {/* <JuryPoolInterface {...this.state} />
+              <br /> */}
+              <BadgeSearch {...this.state} />
+              <br / >
+              <PinkSlipsInterface {...this.state} />
               <br />
               <GoldStarsInterface {...this.state} />
 
