@@ -20,7 +20,6 @@ import Web3Prompt from "../components/Web3Prompt";
 
 import AboutBadges from "./AboutBadges";
 
-import headerImage from '../rsrc/imgs/ColoredBadgesHeader.png';
 
 import GoldStars from "../contracts/GoldStars.json";
 import PinkSlips from "../contracts/PinkSlips.json";

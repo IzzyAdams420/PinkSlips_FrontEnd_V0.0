@@ -17,6 +17,8 @@ import MarkdownPreview from "@uiw/react-markdown-preview";
 
 import headerImage from '../rsrc/imgs/ColoredBadgesHeader_w_badge.png';
 
+import '../css/styles.css';
+
 const aboutColoredBadgesPreview = `
 >\
 
@@ -266,11 +268,11 @@ export default function AboutBadges() {
 
     <>
     <Row>
-        <Alert severity="warning" style={{position: "absolute", width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
+        <Alert id="AlphaAlert" xs={0} m={6} severity="warning" style={{position: "absolute", width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
         This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
         </Alert>
       </Row>
-  <Jumbotron style={{justifyContent: "center"}}>
+  <Jumbotron xs={6} m={12} style={{justifyContent: "center"}}>
     <Container className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>
       
       <Row>
@@ -279,7 +281,7 @@ export default function AboutBadges() {
             <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} />
           </Row>
           {isExpanded ? <><Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "aliceblue"}}>x</Button><br /><br /></>: null }
-          <MarkdownPreview style={isExpanded ? {color: "black"} : {color: "white", fontSize:"105%"}} source={!isExpanded ? aboutColoredBadgesPreview : aboutColoredBadgesFull } />
+          <MarkdownPreview style={isExpanded ? {color: "black"} : {color: "white"}} source={!isExpanded ? aboutColoredBadgesPreview : aboutColoredBadgesFull } />
           <br />
           <Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "white"}}> {isExpanded ? "Read Less" : "Read our Gold Paper" } </Button>
         </Col>
