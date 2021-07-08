@@ -12,7 +12,7 @@ function Web3Prompt (props) {
     
         return (
         <div>
-            <Button variant="warning" onClick={connectWallet} size="lg" >
+            <Button variant="warning" onClick={() => {connectWallet()}} size="lg" >
                 <Spinner animation="grow" variant="light" />
                 <Spinner animation="grow" variant="info" />
                 <Spinner animation="grow" variant="light" />

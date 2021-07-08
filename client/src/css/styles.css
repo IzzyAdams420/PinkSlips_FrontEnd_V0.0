@@ -366,3 +366,20 @@ span {
 .spinner-grow {
   margin: 2px !important;
 }
+
+#drawerShadow {
+  background-color: pink !important;
+  box-shadow:rgb(126, 126, 126) 3px 3px 6px 0px inset, rgba(138, 137, 137, 0.5) 3px 3px 10px 1px inset;
+}
+
+#contentWindowBorder1 {
+  border-style: solid;
+  border-width: 2px;
+  border-color: rgb(192, 214, 255);
+}
+
+#contentWindowBorder2 {
+
+  box-shadow: 1px 0px 5px 0 rgb(255, 79, 211), 10px 5px 20px 0 rgba(255, 208, 208, 0.158);
+
+}

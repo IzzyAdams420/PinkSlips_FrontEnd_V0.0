@@ -2,15 +2,13 @@ import getWeb3 from "./getWeb3";
 import React, { Component } from "react";
 
 
-import GoldStars from "./contracts/GoldStars.json";
-import RedPens from "./contracts/RedPens.json";
+import GoldStars from "../contracts/GoldStars.json";
+import RedPens from "../contracts/RedPens.json";
 
 import LoadingSearch from "./LoadingSearch";
 
-import redPenIcons from './icons/redPenIcon.png';
-
-import "./App.css";
-import "./styles.css";
+import "../App.css";
+import "../css/styles.css";
 
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button'

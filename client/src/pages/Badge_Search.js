@@ -1,13 +1,13 @@
-import getWeb3 from "./getWeb3";
+import getWeb3 from "../components/getWeb3";
 import React, { Component, useState, useEffect } from 'react';
 
-import GoldStars from "./contracts/GoldStars.json";
-import RedPens from "./contracts/RedPens.json";
+import GoldStars from "../contracts/GoldStars.json";
+import RedPens from "../contracts/RedPens.json";
 
-import redPenIcons from './icons/redPenIcon.png';
+import redPenIcons from '../icons/redPenIcon.png';
 
-import "./App.css";
-import "./styles.css";
+import "../App.css";
+import "../css/styles.css";
 
 
 import Navbar from 'react-bootstrap/Navbar';
@@ -26,7 +26,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 //import BadgeSearchResults from "./Badge_Search_Results";
-import SearchResults from "./Badge_Search_Results";
+import SearchResults from "../components/Badge_Search_Results";
 
 async function Search(address) {
 

@@ -1,10 +1,10 @@
-import getWeb3 from "./getWeb3";
+import getWeb3 from "../components/getWeb3";
 import React, { Component } from "react";
 
 
 
-import PinkSlips from "./contracts/PinkSlips.json";
-import RedPens from "./contracts/RedPens.json";
+import GoldStars from "../contracts/GoldStars.json";
+import RedPens from "../contracts/RedPens.json";
 
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
@@ -16,10 +16,10 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 import ListGroup from 'react-bootstrap/ListGroup';
 
-import redPenIcons from './icons/redPenIcon.png';
+import redPenIcons from '../icons/redPenIcon.png';
 
-import "./App.css";
-import "./styles.css";
+import "../App.css";
+import "../css/styles.css";
 
 import Navbar from 'react-bootstrap/Navbar'
 
@@ -29,7 +29,7 @@ import Col from 'react-bootstrap/Col';
 
 
 
-class PinkSlipsInterface extends Component {
+class GoldStarsInterface extends Component {
   state = { pensApproved: false};
 
   componentDidMount = async () => {
@@ -56,9 +56,9 @@ class PinkSlipsInterface extends Component {
 
   mintBadge = async () => {
 
-    const { accounts, pinkSlips, receivingAddress, issueReason } = this.state;
+    const { accounts, goldStars, receivingAddress, issueReason } = this.state;
 
-    const badge = pinkSlips;
+    const badge = goldStars;
 
     await badge.methods.issueBadge(receivingAddress, issueReason).send({ from: accounts[0] });
 
@@ -72,7 +72,7 @@ class PinkSlipsInterface extends Component {
   checkPenApproval = async () => {
     const {web3, mintingCost} = this.state;
 
-    let spender = this.props.pinkSlipsAddress;
+    let spender = this.props.goldStarsAddress;
     let owner = this.props.accounts[0];
     
 
@@ -88,10 +88,10 @@ class PinkSlipsInterface extends Component {
 
 
   approvePens = async () => {
-    const { accounts, pinkSlipsAddress, redPens } = this.props;
+    const { accounts, goldStarsAddress, redPens } = this.props;
 
     // Stores a given value, 5 by default.
-    await redPens.methods.approve(pinkSlipsAddress, "42069000000000000000000").send({ from: accounts[0] })
+    await redPens.methods.approve(goldStarsAddress, "42069000000000000000000").send({ from: accounts[0] })
     .then(async (receipt) => {
       this.checkPenApproval();
     });
@@ -100,8 +100,8 @@ class PinkSlipsInterface extends Component {
 
   getLivePrice = async () => {
  
-    const { web3, pinkSlips } = this.state;
-    let mintingCost = await pinkSlips.methods.mintingCost().call();
+    const { web3, goldStars } = this.state;
+    let mintingCost = await goldStars.methods.mintingCost().call();
     mintingCost = parseInt(web3.utils.fromWei(mintingCost));
 
     this.setState({mintingCost});
@@ -128,14 +128,18 @@ class PinkSlipsInterface extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="PinkSlipsInterface">
-        <h1><span role="img" id="skull">☠</span> <span id="pinkHeader">Pink</span> 
-          <span role="img" id="skull">☠</span> <span id="pinkHeader">Slips</span>
-          <span role="img" id="skull">☠</span>
+      <div className="GoldStarsInterface">
+        <h1>
+          <span role="img">⭐</span>
+          <span id="goldHeader">{" Golden "}</span>
+          <span role="img">⭐</span>
+          <span id="goldHeader">{" Stars "}</span>
+          <span role="img">⭐</span>
         </h1>
-        <div id="pinkSubHeader">Now you know if someones a dick!</div>
+        <div id="goldSubHeader">Now you know if someones a chad!</div>
         <br />
-          <br></br>
+        <br></br>
+   
     
     <Container fluid>
 
@@ -151,15 +155,24 @@ class PinkSlipsInterface extends Component {
                 </div>
                     <br></br>
                     <br></br>
-                  <div className="priceLabel">
-                    Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{this.state.mintingCost}</span> Red Pens</div>
+                <div className="priceLabel">
+                  {"Minting a GoldenStar costs: "}
+                  <div id="priceQuote">
+                    <span id="priceNumber">
+                      {this.state.mintingCost}
+                    </span>
+                    {" Red Pens"}
                   </div>
                   
-                   
+                  <div id="priceInfo">
+                        (50% of the minting costs is transferred to the gold star receiver)
+                  </div>    
+                </div>
+
+                
               </Col>
               <Col sm={2}></Col>
-            </Row>
-
+                </Row>
             <Row>
               <Col md={2}></Col>
               <Col id="issueContainer" md={8}>
@@ -177,14 +190,14 @@ class PinkSlipsInterface extends Component {
                           <ListGroup style={{
                                 justifyContent: 'center',
                               }} horizontal>
-                            <ListGroup.Item  id="balanceBoxPink">
-                              <Button className="retroButton btn btn-light input-group-append" lg={8} as={InputGroup.Append} onClick={ (parseInt(this.state.pensApproved)
-                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens} variant="light"
+                            <ListGroup.Item id="balanceBoxGold" >
+                              <Button lg={8} as={InputGroup.Append} onClick={ (parseInt(this.state.pensApproved)
+                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens} variant="warning"
                                 id="dropdown-basic-button" title="Mint!">
                                 { (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!"}
                               </Button>
-                            </ListGroup.Item >
-                            <ListGroup.Item id="balanceBoxPink" >You have: <br /> {parseInt(this.state.userBalance)}
+                            </ListGroup.Item>
+                            <ListGroup.Item id="balanceBoxGold" >You have: <br /> {parseInt(this.state.userBalance)}
                               <span id="redSymbol" >!Red</span>
                             </ListGroup.Item> 
                           </ListGroup>
@@ -206,8 +219,8 @@ class PinkSlipsInterface extends Component {
         <span id="infoBox">
           <strong>***</strong>
           <br /><br />
-          PinkSlips are non-removable ERC-721s that include a log of each and
-          every dick move by a particular wallet.
+          GoldenStars are non-removable ERC-721s that include a log of each and
+          every generous move by a particular wallet.
           <br /> <br /><strong>***</strong> <br />
           Issue one now!
           
@@ -217,4 +230,4 @@ class PinkSlipsInterface extends Component {
   }
 }
 
-export default PinkSlipsInterface;
+export default GoldStarsInterface;

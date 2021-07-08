@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export default function NavigationBar() {
+export default function NavigationBar(props) {
 
     const classes = useStyles();
 
@@ -84,6 +84,7 @@ export default function NavigationBar() {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="open drawer"
+                onClick={() => {props.toggleDrawer()}}
             >
                 <MenuIcon />
             </IconButton>

@@ -206,7 +206,9 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         // burn all badges
         uint256 index = 0;
         for (index = 0; index < _tokenIdGenerator; index++) {
-            _burn(index);
+            if (_exists(index)) {
+                _burn(index);
+            }   
         }
         _tokenIdGenerator = 0;
         return true;
