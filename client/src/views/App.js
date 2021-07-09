@@ -94,7 +94,7 @@ class App extends Component {
 
   mapRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/home") {
+      if (prop.layout === "/") {
         return (
           <Route
           
@@ -134,7 +134,7 @@ class App extends Component {
                   {...this.state}
                   routes={routes}
                   logo={{
-                    innerLink: "/home/MintingDesk",
+                    innerLink: "/MintingDesk",
                     imgSrc: coloredLogo,
                     imgAlt: "...",
                   }}
@@ -151,7 +151,7 @@ class App extends Component {
 
             <Switch>
               {this.mapRoutes(routes)}
-              <Redirect from="*" to="/home/MintingDesk" />
+              <Redirect from="*" to="/MintingDesk" />
             </Switch>   
         </div> /**/}
           </Row>

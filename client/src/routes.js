@@ -7,22 +7,40 @@ import SamplePage from "./pages/samplepage.js";
 var routes = [
  
   {
-    path: "/MintingDesk",
+    path: "Home",
+    name: "Home",
+    component: MintingDesk,
+    layout: "/",
+  },
+  {
+    path: "MintingDesk",
     name: "Minting Desk",
     component: MintingDesk,
-    layout: "/home",
+    layout: "/",
   },
   {
-    path: "/AboutBadges",
+    path: "AboutBadges",
     name: "About Badges",
     component: AboutBadges,
-    layout: "/home",
+    layout: "/",
   },
   {
-    path: "/Search",
+    path: "Disputes",
+    name: "Disputes",
+    component: BadgeSearch,
+    layout: "",
+  },
+  {
+    path: "Search",
     name: "Badge Search",
     component: BadgeSearch,
-    layout: "/home",
+    layout: "/",
+  },
+  {
+    path: "InkFaucet",
+    name: "Faucet",
+    component: BadgeSearch,
+    layout: "/",
   },
 
 ];
