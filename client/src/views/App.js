@@ -31,7 +31,7 @@ import "../css/styles.css"
 let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
-  state = { web3: null, accounts: null, drawerIsOpen: false};
+  state = { web3: null, accounts: null, drawerIsOpen: true};
   appBorderRadius = "1vh"
 
   componentDidMount = async () => {

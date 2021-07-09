@@ -5,6 +5,7 @@ import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 
@@ -37,18 +38,25 @@ const Sidebar = (props) => {
         return routes.map((prop, key) => {
 
         const newPath = prop.layout + prop.path;
+        const Icon = prop.icon;
         return (
-            <Nav.Item key={key}>
-            <Nav.Link
-                href={prop.layout + prop.path}
-                tag={NavLinkRRD}
-                onClick={toggleDrawer}
-                activeClassName="active"
-            >
-                <i className={prop.icon} />
-                {prop.name}
-            </Nav.Link>
-            </Nav.Item>
+            <>
+                <Dropdown.Item>
+                    <Nav.Item key={key}>
+                        <Nav.Link
+                            href={prop.layout + prop.path}
+                            tag={NavLinkRRD}
+                            onClick={toggleDrawer}
+                            activeClassName="active"
+                        >
+                            <Icon style={{marginRight:"6px"}}/>
+                            {prop.name}
+                        </Nav.Link>              
+                    </Nav.Item>
+                </Dropdown.Item>
+                <Dropdown.Divider />
+            </>
+            
         );
         });
     };
@@ -74,12 +82,11 @@ const Sidebar = (props) => {
     className="navbar-vertical fixed-left navbar-light bg-pink"
     expand="xs"
     id="sidenav-main"
-    style={{marginLeft: "20px"}}
     
     >
 
         
-          <Navbar.Brand className="pt-0" style={{marginLeft: "-20px"}} {...navbarBrandProps}>
+          <Navbar.Brand className="pt-0" {...navbarBrandProps}>
             <img
               alt={logo.imgAlt}
               className="navbar-brand-img"
@@ -87,8 +94,12 @@ const Sidebar = (props) => {
             />
           </Navbar.Brand>
 
-
-          <Nav navbar>{createLinks(routes)}</Nav>
+          
+            <Nav style={{textAlign: "left"}} navbar>
+                
+                    {createLinks(routes)}
+                
+            </Nav>
           
           
     </Navbar>
