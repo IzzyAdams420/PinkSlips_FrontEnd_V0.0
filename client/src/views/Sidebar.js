@@ -48,7 +48,7 @@ const Sidebar = (props) => {
                             activeClassName="active"
                         >
                             <prop.icon style={{marginLeft: "10px", marginRight:"7px"}}/>
-                            {prop.name}
+                           {prop.name} 
                         </Nav.Link>              
                     </Nav.Item>
                 <Dropdown.Divider />

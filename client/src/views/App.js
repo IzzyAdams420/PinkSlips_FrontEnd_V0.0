@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 import getWeb3 from "../components/getWeb3";
 
-import SamplePage from "../pages/samplepage";
 
 import {Container, Row, Col} from 'react-bootstrap';
 
@@ -32,7 +31,7 @@ let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
   state = { web3: null, accounts: null, drawerIsOpen: true};
-  appBorderRadius = "1vh"
+  appBorderRadius = "1em"
 
   componentDidMount = async () => {
       // Get network provider and web3 instance.
@@ -78,7 +77,7 @@ class App extends Component {
         const goldStarsAddress = deployedNetwork[0].address;
         const pinkSlipsAddress = deployedNetwork[2].address;
         const juryPoolAddress = deployedNetwork[3].address;
-  
+
         this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool,
                         goldStarsAddress, pinkSlipsAddress, juryPoolAddress, activeContracts});
   
@@ -147,7 +146,7 @@ class App extends Component {
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
                     justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0) , }}>            
       
-         <NavigationBar class="white" toggleDrawer={this.toggleDrawer}/>
+         <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
 
             <Switch>
               {this.mapRoutes(routes)}

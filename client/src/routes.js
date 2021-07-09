@@ -2,7 +2,6 @@ import React from 'react';
 import MintingDesk from './pages/MintingDesk.js';
 import AboutBadges from './pages/AboutBadges.js';
 import BadgeSearch from './pages/Badge_Search.js';
-import SamplePage from "./pages/samplepage.js";
 
 // import all the icons
 import FaceIcon from '@material-ui/icons/Face'; // alt home icon

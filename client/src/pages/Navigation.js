@@ -75,10 +75,11 @@ export default function NavigationBar(props) {
 
     const classes = useStyles();
 
+
     return (
-        <div className={classes.root}>
-        <AppBar position="static">
-            <Toolbar className={classes.toolbar}>
+        <div  style={{backgroundColor: "transparent" , }} className={classes.root}>
+        <AppBar  style={{backgroundColor: "transparent" , }} position="static">
+            <Toolbar style={{backgroundColor: "(255, 192, 203, 0.561)", borderBottomRightRadius: "0.5em" , borderTopLeftRadius: props.borderRadius}} className={classes.toolbar}>
             <IconButton
                 edge="start"
                 className={classes.menuButton}
