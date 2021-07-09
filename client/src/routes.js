@@ -7,19 +7,19 @@ import SamplePage from "./pages/samplepage.js";
 var routes = [
  
   {
-    path: "/MintingDesk",
+    path: "/MintingDesk/",
     name: "Minting Desk",
     component: MintingDesk,
     layout: "/home",
   },
   {
-    path: "/AboutBadges",
+    path: "/AboutBadges/",
     name: "About Badges",
     component: AboutBadges,
     layout: "/home",
   },
   {
-    path: "/Search",
+    path: "/Search/",
     name: "Badge Search",
     component: BadgeSearch,
     layout: "/home",
