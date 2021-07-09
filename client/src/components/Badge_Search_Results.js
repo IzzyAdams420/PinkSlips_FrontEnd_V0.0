@@ -7,7 +7,7 @@ import RedPens from "../contracts/RedPens.json";
 
 import LoadingSearch from "./LoadingSearch";
 
-import "../App.css";
+import "../css/App.css";
 import "../css/styles.css";
 
 import Navbar from 'react-bootstrap/Navbar';

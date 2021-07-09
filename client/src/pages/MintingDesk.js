@@ -31,7 +31,7 @@ import JuryPool from "../contracts/JuryPool.json";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-import "../App.css";
+import "../css/App.css";
 
 export default function MintingDesk(props) {
 

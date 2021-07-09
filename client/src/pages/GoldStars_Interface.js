@@ -18,7 +18,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 import redPenIcons from '../icons/redPenIcon.png';
 
-import "../App.css";
+import "../css/App.css";
 import "../css/styles.css";
 
 import Navbar from 'react-bootstrap/Navbar'

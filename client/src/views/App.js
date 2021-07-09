@@ -1,29 +1,31 @@
 import React, { Component } from "react";
 import { useLocation, Route, Switch, Redirect } from "react-router-dom";
-import getWeb3 from "./components/getWeb3";
+import getWeb3 from "../components/getWeb3";
 
-import SamplePage from "./pages/samplepage";
+import SamplePage from "../pages/samplepage";
 
 import {Container, Row, Col} from 'react-bootstrap';
 
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 
-import Web3Prompt from "./components/Web3Prompt";
+import Web3Prompt from "../components/Web3Prompt";
 
-import GoldStars from "./contracts/GoldStars.json";
-import PinkSlips from "./contracts/PinkSlips.json";
-import RedPens from "./contracts/RedPens.json";
-import JuryPool from "./contracts/JuryPool.json";
+import GoldStars from "../contracts/GoldStars.json";
+import PinkSlips from "../contracts/PinkSlips.json";
+import RedPens from "../contracts/RedPens.json";
+import JuryPool from "../contracts/JuryPool.json";
 
-import routes from "./routes.js";
+import routes from "../routes.js";
+
+import Sidebar from "./Sidebar.js";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-import "./App.css";
-import "./css/styles.css"
+import "../css/App.css";
+import "../css/styles.css"
 
 class App extends Component {
   state = { web3: null, accounts: null, drawerIsOpen: false};
@@ -121,21 +123,25 @@ class App extends Component {
     return (
       <div className="App" style={{height: "100vh" ,  margin:0, padding: "2vh", justifyContent: "center"}}>
         <Container fluid style={{verflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh", backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
-        <Row style={{ boxShadow:2}} >
-          <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
-          style={{ overflow: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
-                    justifyContent: "center", height: "97vh", padding: 0, margin: 0 }}>
-            Hello
-          </div>
+          <Row style={{ boxShadow:2}} >
+            <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
+            style={{ overflow: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", height: "97vh", padding: 0, margin: 0 }}>
+              <Col style={{overflow: 'hidden', position: "fixed", width: "250px", height:  "94vh"}}>
+                <Sidebar>
+
+                </Sidebar>
+              </Col>
+              
+            </div>
         
-          <div className="content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
+            <div className="content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
                     justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0) , }}>            
             <Switch>
               {this.mapRoutes(routes)}
               <Redirect from="*" to="/home/MintingDesk" />
             </Switch>   
-          </div>
+            </div>
           </Row>
         </Container>
       </div>  

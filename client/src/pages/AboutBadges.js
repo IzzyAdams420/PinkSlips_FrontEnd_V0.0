@@ -15,7 +15,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 
 import MarkdownPreview from "@uiw/react-markdown-preview";
 
-import headerImage from '../rsrc/imgs/ColoredBadgesHeader_w_badge.png';
+import headerImage from '../rsrc/imgs/ColoredBadgesHeader_w_badge_compressed.png';
 
 import '../css/styles.css';
 
