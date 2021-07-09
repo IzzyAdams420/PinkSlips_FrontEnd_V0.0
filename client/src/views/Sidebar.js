@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {Navbar} from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 
 
 const Sidebar = (props) => {
@@ -13,17 +15,17 @@ const Sidebar = (props) => {
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       return (
-        <NavItem key={key}>
-          <NavLink
+        <Nav.Item key={key}>
+          <Nav.Link
             to={prop.layout + prop.path}
             tag={NavLinkRRD}
-            onClick={closeCollapse}
+            
             activeClassName="active"
           >
             <i className={prop.icon} />
             {prop.name}
-          </NavLink>
-        </NavItem>
+          </Nav.Link>
+        </Nav.Item>
       );
     });
   };
