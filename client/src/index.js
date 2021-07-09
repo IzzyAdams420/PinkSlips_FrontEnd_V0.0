@@ -10,8 +10,8 @@ ReactDOM.render(
 
     <BrowserRouter>
       <Switch>
-        <Route path="/home" render={(props) => <App />} />
-        <Redirect from="/" to="/home/minting-desk" />
+        <Route path="/" render={(props) => <App />} />
+        <Redirect from="/" to="/minting-desk" />
       </Switch>
     </BrowserRouter>,
 

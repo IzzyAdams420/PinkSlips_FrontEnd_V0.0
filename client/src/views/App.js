@@ -139,7 +139,7 @@ class App extends Component {
                     justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0) , }}>            
             <Switch>
               {this.mapRoutes(routes)}
-              <Redirect from="*" to="/home/MintingDesk" />
+              <Redirect from="*" to="/MintingDesk" />
             </Switch>   
             </div>
           </Row>
