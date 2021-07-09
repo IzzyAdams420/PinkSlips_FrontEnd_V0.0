@@ -41,7 +41,8 @@ const Sidebar = (props) => {
             <>
                     <Nav.Item key={key}>
                         <Nav.Link
-                            href={ prop.layout + prop.path}
+                            as={Link} // without this, routing wasnt working
+                            to={ prop.layout + prop.path}
                             tag={NavLinkRRD}
                             onClick={toggleDrawer}
                             activeClassName="active"
