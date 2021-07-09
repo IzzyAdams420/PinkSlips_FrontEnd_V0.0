@@ -151,7 +151,7 @@ class App extends Component {
 
             <Switch>
               {this.mapRoutes(routes)}
-              <Redirect from="*" to="/home/MintingDesk/" />
+              <Redirect from="*" to="/home/MintingDesk" />
             </Switch>   
         </div> /**/}
           </Row>
