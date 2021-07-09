@@ -11,7 +11,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route path="/" render={(props) => <App />} />
-        <Redirect from="/" to="/minting-desk" />
+        <Redirect from="/" to="/home/MintingDesk" />
       </Switch>
     </BrowserRouter>,
 
