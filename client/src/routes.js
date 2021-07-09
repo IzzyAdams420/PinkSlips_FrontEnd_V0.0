@@ -41,7 +41,7 @@ var routes = [
     path: "Disputes",
     name: "Disputes",
     component: BadgeSearch,
-    layout: "",
+    layout: "/",
     icon: GavelIcon,
   },
   {

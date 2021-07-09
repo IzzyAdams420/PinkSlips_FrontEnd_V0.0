@@ -32,28 +32,24 @@ const Sidebar = (props) => {
     }
 
 // creates the links that appear in the left menu / Sidebar
-    const createLinks = (routes) => {
-
-        
+    const createLinks = (routes) => {  
         return routes.map((prop, key) => {
 
         const newPath = prop.layout + prop.path;
-        const Icon = prop.icon;
+        
         return (
             <>
-                <Dropdown.Item>
                     <Nav.Item key={key}>
                         <Nav.Link
-                            href={prop.layout + prop.path}
+                            href={ prop.layout + prop.path}
                             tag={NavLinkRRD}
                             onClick={toggleDrawer}
                             activeClassName="active"
                         >
-                            <Icon style={{marginRight:"6px"}}/>
+                            <prop.icon style={{marginLeft: "10px", marginRight:"7px"}}/>
                             {prop.name}
                         </Nav.Link>              
                     </Nav.Item>
-                </Dropdown.Item>
                 <Dropdown.Divider />
             </>
             
