@@ -18,6 +18,7 @@ import JuryPool from "../contracts/JuryPool.json";
 
 import routes from "../routes.js";
 
+import NavigationBar from "../pages/Navigation";
 import Sidebar from "./Sidebar.js";
 
 
@@ -26,6 +27,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import "../css/App.css";
 import "../css/styles.css"
+
+let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
   state = { web3: null, accounts: null, drawerIsOpen: false};
@@ -127,21 +130,30 @@ class App extends Component {
             <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
             style={{ overflow: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", height: "97vh", padding: 0, margin: 0 }}>
               <Col style={{overflow: 'hidden', position: "fixed", width: "250px", height:  "94vh"}}>
-                <Sidebar>
-
-                </Sidebar>
+                <Sidebar
+                  {...this.state}
+                  routes={routes}
+                  logo={{
+                    innerLink: "/home/MintingDesk",
+                    imgSrc: coloredLogo,
+                    imgAlt: "...",
+                  }}
+                />
               </Col>
               
             </div>
-        
-            <div className="content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
+        {/**/
+            <div className="App content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
                     justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0) , }}>            
+      
+         <NavigationBar class="white" toggleDrawer={this.toggleDrawer}/>
+
             <Switch>
               {this.mapRoutes(routes)}
               <Redirect from="*" to="/home/MintingDesk" />
             </Switch>   
-            </div>
+        </div> /**/}
           </Row>
         </Container>
       </div>  

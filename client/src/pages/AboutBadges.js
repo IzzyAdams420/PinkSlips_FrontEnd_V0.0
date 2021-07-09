@@ -273,8 +273,7 @@ export default function AboutBadges() {
         </Alert>
       </Row>
   <Jumbotron xs={6} m={12} style={{justifyContent: "center"}}>
-    <Container className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>
-      
+    <Container className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>   
       <Row>
         <Col style={{justifyContent: "center"}}>
           <Row>

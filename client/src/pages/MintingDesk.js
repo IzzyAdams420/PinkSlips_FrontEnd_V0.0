@@ -39,7 +39,7 @@ export default function MintingDesk(props) {
   return (
     <div className="App" style={{justifyContent: "center"}}>       
         
-        <NavigationBar class="white" {...props}/>
+        
         {/*<img alt="Header" src={headerImage} />*/}
         <AboutBadges style={{marginTop: "50px"}}/>
         <br />
