@@ -16,7 +16,6 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import ListGroup from 'react-bootstrap/ListGroup'
 
-
 import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -68,7 +67,7 @@ async function Search(address) {
 
 class BadgeSearch extends Component {
 
-  state = { listOn: 0, web3: null, accounts: null, goldStars: null, redPens: null,
+  state = { listOn: 0, web3: null, accounts: null, goldStars: null, redPens: null, searchSent: false,
             goldStarsAddress: null, sendTo: undefined, reason: undefined, balanceResult: 0, mintingCost: null};
   
             
@@ -90,31 +89,22 @@ class BadgeSearch extends Component {
   };
 
 
+  searchSent = async () => {
 
-  searchSender = async (event) => {
-    event.preventDefault();
-    const addressToSearch = event.target.address;
-    this.setState({searchAddress: addressToSearch});
-    this.searchGo();
-  };
-
-  searchReceiver = async (event) => {
-    event.preventDefault();
-    const addressToSearch = event.target.address;
-    this.setState({searchAddress: addressToSearch});
-    this.searchGo();
-  };
-
-
-
-
-  searchGo = async () => {
-
-    this.setState({listOn: 1});
-
+    if (this.state.listOn) {
+      this.setState({listOn: 0});
+    };
+    this.setState({listOn: 1, searchSent: true});
     
   };
 
+  searchRecieved = async () => {
+    if (this.state.listOn) {
+      this.setState({listOn: 0});
+    };
+    this.setState({listOn: 1, searchSent: false});
+    
+  };
 
 
   toggleList = async () => {
@@ -145,7 +135,7 @@ class BadgeSearch extends Component {
     
     
     return (
-      <div className="BadgeSearch">
+      <div className="BadgeSearch" >
     
     <Container fluid>
 
@@ -153,6 +143,9 @@ class BadgeSearch extends Component {
               <Col></Col>
               <Col xs={12} s={8} id='Search'>
               <br></br>
+
+              <h5 style={{color: "white"}}> (Works, but still in progress)</h5>
+
                 <div id="searchHeader">
                 View a wallets badge history: 
                    </div>
@@ -168,9 +161,10 @@ class BadgeSearch extends Component {
                 <Col id='Search' xs={12} md={8}>
                     <InputGroup>
                         <FormControl name="searchAddress" value={this.state.searchAddress} onChange={this.updateSearchAddress} placeholder="0x Wallet Address" />
-                        <DropdownButton as={InputGroup.Append} onClick={this.searchGo} variant="warning" id="dropdown-basic-button" title="Search">                            
-                            <Dropdown.Item onClick={this.searchGo}>Badges Received</Dropdown.Item>
-                            <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
+                        <DropdownButton as={InputGroup.Append} variant="warning" id="dropdown-basic-button" title="Search">                            
+                          <Dropdown.Item onClick={this.searchRecieved}>Badges Received</Dropdown.Item>
+                          <Dropdown.Item onClick={this.searchSent}>Badges Sent</Dropdown.Item>
+                          <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
                         </DropdownButton>
                     </InputGroup>
                 </Col>
@@ -215,7 +209,7 @@ class BadgeSearch extends Component {
                       <ListGroup.Item id="listItem_reason"  > Reason </ListGroup.Item>
                     </Col >
                     <Col xs={6} lg={3}>
-                      <ListGroup.Item id="listItem_gifter" > Sender </ListGroup.Item>
+                      <ListGroup.Item id="listItem_gifter" > { this.state.searchSent ? "Reciever" : "Sender"} </ListGroup.Item>
                     </Col>
                     <Col xs={6} lg={2}>
                       <ListGroup.Item id="listItem_empty"  variant="success"> Badge ID </ListGroup.Item>
@@ -223,8 +217,8 @@ class BadgeSearch extends Component {
                 </ListGroup> 
                 <div class="d-block d-sm-block d-md-block d-lg-none"> <br /> </div>          
 
-            <SearchResults badge={this.state.goldStars} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />
-            <SearchResults badge={this.state.pinkSlips} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />     
+            <SearchResults searchSent={this.state.searchSent} badge={this.state.goldStars} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />
+            <SearchResults searchSent={this.state.searchSent} badge={this.state.pinkSlips} address={this.state.searchAddress} web3={this.state.web3} accounts={this.state.accounts} />     
             </Row>
             </Container>
           )}
@@ -244,7 +238,6 @@ class BadgeSearch extends Component {
             <Col></Col>
           </Row>
            
-          
         
       </div>
     );

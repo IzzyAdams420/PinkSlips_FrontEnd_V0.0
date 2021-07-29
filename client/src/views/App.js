@@ -19,7 +19,7 @@ import routes from "../routes.js";
 
 import NavigationBar from "../pages/Navigation";
 import Sidebar from "./Sidebar.js";
-
+import Footer from "./Footer.js";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -144,14 +144,15 @@ class App extends Component {
         {/**/
             <div className="App content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
-                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0) , }}>            
+                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0),  }}>            
       
          <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
 
             <Switch>
               {this.mapRoutes(routes)}
               <Redirect from="*" to="/MintingDesk" />
-            </Switch>   
+            </Switch>
+            <Footer />   
         </div> /**/}
           </Row>
         </Container>

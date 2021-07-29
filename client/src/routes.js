@@ -1,7 +1,11 @@
 import React from 'react';
+
+import Home from './pages/Home.js';
 import MintingDesk from './pages/MintingDesk.js';
 import AboutBadges from './pages/AboutBadges.js';
-import BadgeSearch from './pages/Badge_Search.js';
+import WalletSearch from './pages/Wallet_Search.js';
+import Disputes from './pages/Disputes.js';
+import Faucet from './pages/Faucet.js';
 
 // import all the icons
 import FaceIcon from '@material-ui/icons/Face'; // alt home icon
@@ -13,12 +17,13 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import PageviewIcon from '@material-ui/icons/Pageview';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
 
+
 var routes = [
  
   {
     path: "Home",
     name: "Home",
-    component: MintingDesk,
+    component: Home,
     layout: "/",
     icon: FaceIcon,
   },
@@ -33,27 +38,27 @@ var routes = [
     path: "AboutBadges",
     name: "About Badges",
     component: AboutBadges,
-    layout: "/",
+    layout: "/", //https://app.gitbook.com/@colored-badges/s/colored-badges/
     icon: LooksIcon,
   },
   {
     path: "Disputes",
     name: "Disputes",
-    component: BadgeSearch,
+    component: Disputes,
     layout: "/",
     icon: GavelIcon,
   },
   {
     path: "Search",
     name: "Badge Search",
-    component: BadgeSearch,
+    component: WalletSearch,
     layout: "/",
     icon: PageviewIcon,
   },
   {
     path: "InkFaucet",
     name: "Faucet",
-    component: BadgeSearch,
+    component: Faucet,
     layout: "/",
     icon: LocalDrinkIcon,
   },

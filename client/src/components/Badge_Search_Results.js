@@ -17,6 +17,15 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import ListGroup from 'react-bootstrap/ListGroup'
 
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown'
 
@@ -25,6 +34,23 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 
 
 class SearchResults extends Component {
@@ -50,7 +76,7 @@ class SearchResults extends Component {
     this.setState({listVariant});
 
     this.setState({badgeColor});
-    await this.searchSetUp();
+    await this.searchWallet();
     this.setState({isLoading: false});
 
     } catch (error) {
@@ -62,13 +88,25 @@ class SearchResults extends Component {
     }
   };
 
-  searchSetUp = async () => {
-    let tokenArray = await this.searchFromProps();
+  searchWallet = async () => {
+    let tokenArray;
+    let searchSent = this.props.searchSent;
+    if (!searchSent) {
+      tokenArray = await this.searchRecieved();
+    } else if (searchSent) {
+      tokenArray = await this.searchSent();
+    } else {
+      alert(
+        `Failed to Search. Check console for details.`,
+      );
+      console.error("Sent or Recived not specified");
+    }
+    
     this.setState({tokenArray});
     console.log("set State token Array");
   }
 
-  searchFromProps = async (props) => {
+  searchRecieved = async (props) => {
 
     let address = this.props.address;
     let badge = this.props.badge;
@@ -115,6 +153,47 @@ class SearchResults extends Component {
 
     }
 
+    searchSent = async (props) => {
+
+      let address = this.props.address;
+      let badge = this.props.badge;
+      let _index = 0;
+      
+      let indexArray = await badge.methods.getBadgesSent(address).call();
+      let balance = indexArray.length;
+
+      let _reciever = "";
+      let _reason = "";
+      let _id = 0;
+  
+      let tokenArray = [];
+  
+  
+        for (const [idx, idz] of indexArray.entries()) {
+  
+          console.log("ForOfLoop " + idx + ", " + idz);
+  
+          _id = indexArray[idx];
+          console.log("Set _id: " + _id);
+  
+          _reciever = await badge.methods.ownerOf(_id).call();
+          console.log("Set _reciever: " + _reciever);
+  
+          _reason = await badge.methods.getBadgeReason(_id).call();
+          console.log("Set _reason: " + _reason);
+  
+          tokenArray[idx] = {id: _id, reciever: _reciever, reason: _reason};
+        }
+  
+        return tokenArray;
+  
+        console.log("returned token Array");
+  
+          // .then(() => { })
+  
+  
+      }
+
     burn = async (badgeTokenId) => {
       const badge = this.props.badge;
       const accounts = this.props.accounts;
@@ -130,10 +209,34 @@ class SearchResults extends Component {
     return (
       <div className="SearchResults">
 
+      {/*
+      <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Reason</StyledTableCell>
+                <StyledTableCell align="right">Badge Color</StyledTableCell>
+                <StyledTableCell align="right">Sender &nbsp;</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.tokenArray.map((badgeResult) => (
+                <StyledTableRow key={badgeResult.id}>
+                  <StyledTableCell component="th" scope="row">
+                  {badgeResult.reason}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{this.state.badgeColor}</StyledTableCell>
+                  <StyledTableCell align="right">{badgeResult.gifter.slice(0, 6) + "..." + badgeResult.gifter.slice(38, 42)}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      */}
+
         { this.state.tokenArray.map(badgeResult => (
              
              <>
-               
                  <ListGroup id="listItem" style={{display: 'flex',
                                      alignItems: 'center',
                                      justifyContent: 'center',
@@ -146,7 +249,16 @@ class SearchResults extends Component {
                        <ListGroup.Item id="listItem_reason"  > {badgeResult.reason} </ListGroup.Item>
                      </Col >
                      <Col xs={6} lg={3}>
-                       <ListGroup.Item id="listItem_gifter" > {badgeResult.gifter.slice(0, 6) + "..." + badgeResult.gifter.slice(38, 42)} </ListGroup.Item>
+                       
+                         <ListGroup.Item id="listItem_gifter" >
+                          {
+                            this.props.searchSent
+                            ?
+                            (badgeResult.reciever.slice(0, 6) + "..." + badgeResult.reciever.slice(38, 42))
+                              :
+                            (badgeResult.gifter.slice(0, 6) + "..." + badgeResult.gifter.slice(38, 42))
+                          }
+                          </ListGroup.Item>
                      </Col>
                      <Col xs={6} lg={2}>
                        <ListGroup.Item id="listItem_empty" variant="warning">{badgeResult.id}</ListGroup.Item>

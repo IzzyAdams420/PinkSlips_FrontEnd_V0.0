@@ -104,16 +104,16 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
 
         if (payReciver == true) {
         uint256 portionOfMintingCost = mintingCost / payItForwardTreasuryRatio_Divisor;
-        expectedContractBalance = redPens.balanceOf(TreasuryAddress) + (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
+        expectedContractBalance = redPens.balanceOf(address(this)) + (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
 
-        redPens.transferFrom(msg.sender, TreasuryAddress, (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
+        redPens.transferFrom(msg.sender, address(this), (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
         redPens.transferFrom(msg.sender, receivingAddress, (portionOfMintingCost * (payItForwardTreasuryRatio_Divisor - payItForwardTreasuryRatio_Numerator)));
         } else {
-            expectedContractBalance = redPens.balanceOf(TreasuryAddress) + mintingCost;
-            redPens.transferFrom(msg.sender, TreasuryAddress, mintingCost);
+            expectedContractBalance = redPens.balanceOf(address(this)) + mintingCost;
+            redPens.transferFrom(msg.sender, address(this), mintingCost);
         }
         
-        require(redPens.balanceOf(TreasuryAddress) == expectedContractBalance, "Error Transfering !RED");
+        require(redPens.balanceOf(address(this)) == expectedContractBalance, "Error Transfering !RED");
         
         _;
     }

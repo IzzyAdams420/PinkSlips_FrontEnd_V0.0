@@ -32,7 +32,7 @@ module.exports = function (deployer) {
     accounts = await web3.eth.getAccounts();
     
   }).then(async () => {
-    let firstAdminAddress = '0xFc961Da137b43B7F0Bf612079FC2f91d9216DdF2'; //accounts[0];
+    let firstAdminAddress =  accounts[0]; //'0x76FB5FFCB1d2Ef86472980330BFf71a0c24f5d34';
     juryDaoAgent = firstAdminAddress;
     gavelDaoAgent = firstAdminAddress;
     treasuryAddress = firstAdminAddress;
