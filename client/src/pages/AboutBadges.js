@@ -10,6 +10,7 @@ import Image from 'react-bootstrap/Image';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 
 
+
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 
@@ -25,7 +26,7 @@ const aboutColoredBadgesPreview = `
 ## Lets not all be grey
 `;
 
-const aboutColoredBadgesFull = `# Lets not all be grey
+const aboutColoredBadgesFull = `<span style="word-wrap: break-word;" ># Lets not all be grey
 ---------
 <span style="text-align: left;">
 
@@ -138,7 +139,7 @@ Jury-Determined Variables:
     • Bounty Limits
     • Bounty Requirements (i.e gold stars)
     • The Jerk Threshold
-</span>`; /* `
+</span></span>`; /* `
 >\
 ## Lets not all be grey
 -------

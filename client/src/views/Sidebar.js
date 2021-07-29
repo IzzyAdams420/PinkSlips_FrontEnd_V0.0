@@ -11,6 +11,10 @@ import { PropTypes } from "prop-types";
 
 import Image from 'react-bootstrap/Image';
 
+import GitHubIcon from '@material-ui/icons/GitHub';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+
 import coloredLogo from '../rsrc/imgs/ColoredBadgesHeader_w_badge_compressed.png';
 import coloredLogoSmall from '../rsrc/imgs/ColoredLogo.png';
 
@@ -95,6 +99,45 @@ const Sidebar = (props) => {
             <Nav style={{textAlign: "left"}} navbar>
                 
                     {createLinks(routes)}
+                
+            </Nav>
+
+            <Nav style={{position: "fixed", bottom: 0, textAlign: "left"}} navbar>
+                
+              <Nav.Item key={"Docs"}>
+                 <Nav.Link
+                            href="https://colored-badges.gitbook.io/colored-badges/"
+                            tag={NavLinkRRD}
+                            activeClassName="active"
+                        >
+                            <MenuBookIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                           Docs 
+                  </Nav.Link>              
+              </Nav.Item>
+              <Dropdown.Divider />
+              <Nav.Item key={"Github"}>
+                 <Nav.Link
+                             // without this, routing wasnt working
+                            href="https://github.com/IzzyAdams420/PinkSlips_V0"
+                            tag={NavLinkRRD}
+                            activeClassName="active"
+                        >
+                            <GitHubIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                           Github 
+                  </Nav.Link>              
+              </Nav.Item>
+              <Dropdown.Divider />
+              <Nav.Item key={"Discord"}>
+                 <Nav.Link
+                            href="https://discord.gg/JMXK4GNe"
+                            tag={NavLinkRRD}
+                            activeClassName="active"
+                        >
+                            <ChatBubbleOutlineIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                           Discord 
+                  </Nav.Link>              
+              </Nav.Item>
+              <Dropdown.Divider />
                 
             </Nav>
           
