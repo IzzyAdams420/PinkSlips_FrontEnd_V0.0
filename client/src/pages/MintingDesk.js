@@ -16,8 +16,7 @@ import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Image from 'react-bootstrap/Image';
 
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+
 
 import Web3Prompt from "../components/Web3Prompt";
 
@@ -41,7 +40,10 @@ import headerImage from '../rsrc/imgs/ColoredBadgesHeader_w_badge_compressed.png
 export default function MintingDesk(props) {
 
 
+
   return (
+    <>
+    
     <div className="App" style={{ justifyContent: "center"}}>       
         
         {/* <NavigationBar class="white" {...props}/> */}
@@ -78,6 +80,6 @@ export default function MintingDesk(props) {
         </Container>
         
       </div>
-
+    </>
   )
 }

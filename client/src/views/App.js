@@ -5,6 +5,7 @@ import getWeb3 from "../components/getWeb3";
 
 import {Container, Row, Col} from 'react-bootstrap';
 
+import Button from 'react-bootstrap/Button';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 
@@ -30,8 +31,19 @@ import "../css/styles.css"
 let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
-  state = { web3: null, accounts: null, drawerIsOpen: true};
+  state = { web3: null, accounts: null, drawerIsOpen: true, isAlert: true};
   appBorderRadius = "1em"
+
+
+  toggleAlert = () => { 
+
+    let isAlert = this.state.isAlert;
+    this.setState({isAlert: (!isAlert)});
+    
+    
+  }
+
+
 
   componentDidMount = async () => {
       // Get network provider and web3 instance.
@@ -123,6 +135,21 @@ class App extends Component {
         </div></>
     }
     return (
+      <>
+      {
+      this.state.isAlert
+      ?
+      (<Row>
+        <Alert onClick={this.toggleAlert} id="AlphaAlert" xs={0} m={6} severity="warning" style={{ zIndex: "20" , position: "absolute",
+                                                                    width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
+        This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
+        <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
+                                                                      backgroundColor: "transparent"}} onClick={this.toggleAlert} >Cool Beans</Button>
+        </Alert>
+      </Row>)
+      :
+      ("")
+    }
       <div className="App" style={{height: "100vh" ,  margin:0, padding: "2vh", justifyContent: "center"}}>
         <Container fluid style={{verflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh", backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
           <Row style={{ boxShadow:2}} >
@@ -156,7 +183,8 @@ class App extends Component {
         </div> /**/}
           </Row>
         </Container>
-      </div>  
+      </div> 
+      </>
     );
   }
 }

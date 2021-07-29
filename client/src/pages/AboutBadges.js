@@ -255,7 +255,7 @@ Jury-Determined Variables:
 
 export default function AboutBadges(props) {
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isAlert, setIsAlert] = useState(true);
   
   const toggleAboutLength = () => { 
@@ -298,7 +298,7 @@ export default function AboutBadges(props) {
           <Row>
             <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} />
           </Row>
-          {isExpanded ? <><Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "aliceblue"}}>x</Button><br /><br /></>: null }
+         
           <MarkdownPreview style={isExpanded ? {color: "black"} : {color: "white"}} source={!isExpanded ? aboutColoredBadgesPreview : aboutColoredBadgesFull } />
           <br />
           <Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "white"}}> {isExpanded ? "Read Less" : "Read our Gold Paper" } </Button>
