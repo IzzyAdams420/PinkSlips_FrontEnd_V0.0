@@ -161,8 +161,8 @@ class App extends Component {
       {
         this.state.isErrorAlert
         ?
-        (<Row style={{justifyContent: "center"}}>
-          <Alert onClick={this.toggleErrorAlert} id="AlphaAlert" xs={0} m={6} severity="success" style={{ justifyContent: "center", zIndex: "20" , position: "absolute",
+        (<Row >
+          <Alert onClick={this.toggleErrorAlert} id="AlphaAlert" xs={0} m={6} severity="success" style={{ justifyContent: "center", zIndex: "20" , position: "fixed", top: "3vh",
                                                                       width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
           Please connect to Rinkby <strong> and refresh the page </strong>
           <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
@@ -172,7 +172,7 @@ class App extends Component {
         :
         ("")
       }
-      <div className="App" style={{paddingTop: "30vh", height: "100vh", justifyContent: "center"}} >
+      <div className="App" style={{ height: "100vh", justifyContent: "center"}} >
       <Web3Prompt style={{positionTop: "30vh !important",}} connectOverride={this.connectOverride}
         connectWallet2={this.connectWallet2}/>
       <br /><br />
@@ -189,29 +189,9 @@ class App extends Component {
     }*/}
     return (
       <>
-      {
-        !this.state.web3
-        ?
-        (this.ConnectionPrompt())
-        :
-        (null)
-      }
+      
 
-      {
-      this.state.isAlert
-      ?
-      (<Row>
-        <Alert onClick={this.toggleAlert} id="AlphaAlert" xs={0} m={6} severity="warning" style={{ zIndex: "20" , position: "absolute",
-                                                                    width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
-        This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
-        <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
-                                                                      backgroundColor: "transparent"}} onClick={this.toggleAlert} >Cool Beans</Button>
-        </Alert>
-      </Row>)
-      :
-      ("")
-    }
-      <div className="App" style={{height: "100vh" ,  margin:0, padding: "2vh", justifyContent: "center"}}>
+      <div className="App" style={{height: "100vh" ,  margin: 0, padding: "2vh", justifyContent: "center"}}>
         <Container fluid style={{verflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh", backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
           <Row style={{ boxShadow:2}} >
             <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
@@ -236,10 +216,41 @@ class App extends Component {
       
          <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
 
-            <Switch>
-              {this.mapRoutes(routes)}
-              <Redirect from="*" to="/MintingDesk" />
-            </Switch>
+
+            {
+              !this.state.web3
+              ?
+              (this.ConnectionPrompt())
+              :
+              (
+                this.state.isAlert
+                ?
+                (<Row>
+                  <Alert onClick={this.toggleAlert} id="AlphaAlert" xs={0} m={6} severity="warning" style={{ zIndex: "20" , position: "fixed", top: ( this.state.isErrorAlert ? "20px" : "2vh"),
+                                                                              width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
+                  This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
+                  <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
+                                                                                backgroundColor: "transparent"}} onClick={this.toggleAlert} >Cool Beans</Button>
+                  </Alert>
+                </Row>)
+                :
+                (null)
+                
+              )
+            }
+
+            {
+              this.state.web3
+              ?
+              (
+                <Switch>
+                {this.mapRoutes(routes)}
+                <Redirect from="*" to="/MintingDesk" />
+                </Switch>
+              )
+              :
+              (null)
+            }
             <Footer />   
         </div> /**/}
           </Row>

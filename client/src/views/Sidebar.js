@@ -118,7 +118,7 @@ const Sidebar = (props) => {
               <Nav.Item key={"Github"}>
                  <Nav.Link
                              // without this, routing wasnt working
-                            href="https://github.com/IzzyAdams420/PinkSlips_V0"
+                            href="https://github.com/IzzyAdams420/PinkSlips_Front_End"
                             tag={NavLinkRRD}
                             activeClassName="active"
                         >
