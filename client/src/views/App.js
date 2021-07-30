@@ -31,7 +31,7 @@ import "../css/styles.css"
 let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
-  state = { web3: null, accounts: null, drawerIsOpen: true, isAlert: true};
+  state = { web3: null, accounts: null, drawerIsOpen: true, isAlert: true, isErrorAlert: null};
   appBorderRadius = "1em"
 
 
@@ -43,65 +43,95 @@ class App extends Component {
     
   }
 
+  toggleErrorAlert = () => { 
+
+    let errorAlert = this.state.isErrorAlert;
+    this.setState({isErrorAlert: (!errorAlert)});
+    
+    
+  }
+
+
+  
+
 
 
   componentDidMount = async () => {
       // Get network provider and web3 instance.
       try {
-        // Get network provider and web3 instance.
-        const web3 = await getWeb3();
-  
-        // Use web3 to get the user's accounts.
-        const accounts = await web3.eth.getAccounts();      
-  
-        // Get the contract instance.
-        const networkId = await web3.eth.net.getId();
-        const deployedNetwork = await [GoldStars.networks[networkId],
-                                        RedPens.networks[networkId],
-                                        PinkSlips.networks[networkId],
-                                        JuryPool.networks[networkId]];
-  
-        //set the contract addresses
-  
-        const goldStars = new web3.eth.Contract(
-          GoldStars.abi,
-          deployedNetwork[0] && deployedNetwork[0].address,
-        );
-  
-        const redPens = new web3.eth.Contract(
-          RedPens.abi,
-          deployedNetwork[1] && deployedNetwork[1].address,
-        );
-  
-        const pinkSlips = new web3.eth.Contract(
-          PinkSlips.abi,
-          deployedNetwork[2] && deployedNetwork[2].address,
-        );
-  
-        const juryPool = new web3.eth.Contract(
-          JuryPool.abi,
-          deployedNetwork[3] && deployedNetwork[3].address
-        );
-        
-        const activeContracts = {goldStars, redPens, pinkSlips, juryPool};
-  
-  
-        const goldStarsAddress = deployedNetwork[0].address;
-        const pinkSlipsAddress = deployedNetwork[2].address;
-        const juryPoolAddress = deployedNetwork[3].address;
-
-        this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool,
-                        goldStarsAddress, pinkSlipsAddress, juryPoolAddress, activeContracts});
+        await this.connectWallet();
   
       } catch (error) {
         // Catch any errors for any of the above operations.
-        alert(
-          `Failed to load web3, accounts, or contract. Check console for details.`,
-        );
+        this.setState({isErrorAlert: true});
         console.error(error);
       }
     };
   
+  connectOverride = () => {
+    let web3 = true;
+    this.setState({web3});
+  }
+
+  connectWallet2 = async() => {
+     //refresh page
+     window.location.reload();
+    }
+
+  connectWallet = async () => {
+    try {
+      // Get network provider and web3 instance.
+      const web3 = await getWeb3();
+
+      // Use web3 to get the user's accounts.
+      const accounts = await web3.eth.getAccounts();      
+
+      // Get the contract instance.
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = await [GoldStars.networks[networkId],
+                                      RedPens.networks[networkId],
+                                      PinkSlips.networks[networkId],
+                                      JuryPool.networks[networkId]];
+
+      //set the contract addresses
+
+      const goldStars = new web3.eth.Contract(
+        GoldStars.abi,
+        deployedNetwork[0] && deployedNetwork[0].address,
+      );
+
+      const redPens = new web3.eth.Contract(
+        RedPens.abi,
+        deployedNetwork[1] && deployedNetwork[1].address,
+      );
+
+      const pinkSlips = new web3.eth.Contract(
+        PinkSlips.abi,
+        deployedNetwork[2] && deployedNetwork[2].address,
+      );
+
+      const juryPool = new web3.eth.Contract(
+        JuryPool.abi,
+        deployedNetwork[3] && deployedNetwork[3].address
+      );
+      
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool};
+
+
+      const goldStarsAddress = deployedNetwork[0].address;
+      const pinkSlipsAddress = deployedNetwork[2].address;
+      const juryPoolAddress = deployedNetwork[3].address;
+
+      this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool,
+                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, activeContracts});
+
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      this.setState({isErrorAlert: true});
+      console.error(error);
+    }
+
+  }
 
   mapRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -126,16 +156,47 @@ class App extends Component {
     this.setState({drawerIsOpen: !isOpen});
   }
 
+  ConnectionPrompt = () => {
+    return <>
+      {
+        this.state.isErrorAlert
+        ?
+        (<Row style={{justifyContent: "center"}}>
+          <Alert onClick={this.toggleErrorAlert} id="AlphaAlert" xs={0} m={6} severity="success" style={{ justifyContent: "center", zIndex: "20" , position: "absolute",
+                                                                      width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
+          Please connect to Rinkby <strong> and refresh the page </strong>
+          <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
+                                                                        backgroundColor: "transparent"}} onClick={this.toggleErrorAlert} >Cool Beans</Button>
+         </Alert>
+        </Row>)
+        :
+        ("")
+      }
+      <div className="App" style={{paddingTop: "30vh", height: "100vh", justifyContent: "center"}} >
+      <Web3Prompt style={{positionTop: "30vh !important",}} connectOverride={this.connectOverride}
+        connectWallet2={this.connectWallet2}/>
+      <br /><br />
+      <Button variant="warning" onClick={() => {this.connectOverride()}}>
+        Skip Connecting <br />
+        <span style={{ fontSize: "80%" }} > (some features will not work) </span>
+      </Button>
+    </div>
+    </>
+  }
   render() {
-    if (!this.state.web3) {
-      return <>
-          <div className="App" style={{paddingTop: "30vh", height: "100vh", justifyContent: "center"}} >
-          <Web3Prompt style={{positionTop: "30vh !important",}} connectWallet={this.connectWallet}/>
-          <button onClick={() => {this.connectWallet()}}> Connect! </button>
-        </div></>
-    }
+    {/*if (!this.state.web3) {
+     // return this.ConnectionPrompt();
+    }*/}
     return (
       <>
+      {
+        !this.state.web3
+        ?
+        (this.ConnectionPrompt())
+        :
+        (null)
+      }
+
       {
       this.state.isAlert
       ?

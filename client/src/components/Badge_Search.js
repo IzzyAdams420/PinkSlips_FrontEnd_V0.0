@@ -161,11 +161,23 @@ class BadgeSearch extends Component {
                 <Col id='Search' xs={12} md={8}>
                     <InputGroup>
                         <FormControl name="searchAddress" value={this.state.searchAddress} onChange={this.updateSearchAddress} placeholder="0x Wallet Address" />
-                        <DropdownButton as={InputGroup.Append} variant="warning" id="dropdown-basic-button" title="Search">                            
-                          <Dropdown.Item onClick={this.searchRecieved}>Badges Received</Dropdown.Item>
-                          <Dropdown.Item onClick={this.searchSent}>Badges Sent</Dropdown.Item>
-                          <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
-                        </DropdownButton>
+                        {
+                          this.props.accounts
+                          ?
+                            <DropdownButton as={InputGroup.Append} variant="warning" id="dropdown-basic-button" title="Search">                            
+                              <Dropdown.Item onClick={this.searchRecieved}>Badges Received</Dropdown.Item>
+                              <Dropdown.Item onClick={this.searchSent}>Badges Sent</Dropdown.Item>
+                              <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
+                            </DropdownButton>
+                          :
+                            <DropdownButton as={InputGroup.Append} variant="warning" id="dropdown-basic-button" onClick={() => {window.location.reload()}} title="Connect">                            
+                              <Dropdown.Item onClick={() => {window.location.reload()}} >Badges Received</Dropdown.Item>
+                              <Dropdown.Item onClick={() => {window.location.reload()}} >Badges Sent</Dropdown.Item>
+                              <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
+                            </DropdownButton>
+
+
+                        }
                     </InputGroup>
                 </Col>
                 <Col></Col>

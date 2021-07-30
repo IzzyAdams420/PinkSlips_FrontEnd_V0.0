@@ -34,7 +34,7 @@ class PinkSlipsInterface extends Component {
 
   componentDidMount = async () => {
     
-   
+   // if (this.props.accounts != null) {
       await this.setState(this.props, this.getLivePrice);
 
       this.updateForms = this.updateForms.bind(this);
@@ -42,16 +42,8 @@ class PinkSlipsInterface extends Component {
       await this.checkPenApproval();
       let canSpend = (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost))
       this.setState({canSpend});
-      
-     try { 
+    //} else { }
 
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
   };
 
   mintBadge = async () => {
@@ -70,19 +62,23 @@ class PinkSlipsInterface extends Component {
   };
 
   checkPenApproval = async () => {
-    const {web3, mintingCost} = this.state;
+    if (this.state.accounts != null) {
+      const {web3, mintingCost} = this.state;
 
-    let spender = this.props.pinkSlipsAddress;
-    let owner = this.props.accounts[0];
+      let spender = this.props.pinkSlipsAddress;
+      let owner = this.props.accounts[0];
+      
+
+      let pensApproved = await this.props.redPens.methods.allowance(owner, spender).call();
+      let userBalance = await this.props.redPens.methods.balanceOf(owner).call();
+      userBalance = this.props.web3.utils.fromWei(userBalance);
+      pensApproved = this.props.web3.utils.fromWei(pensApproved);
     
-
-    let pensApproved = await this.props.redPens.methods.allowance(owner, spender).call();
-    let userBalance = await this.props.redPens.methods.balanceOf(owner).call();
-    userBalance = this.props.web3.utils.fromWei(userBalance);
-    pensApproved = this.props.web3.utils.fromWei(pensApproved);
-   
-    this.setState({pensApproved, userBalance});
-    return pensApproved;
+      this.setState({pensApproved, userBalance});
+      return pensApproved;
+    } else {
+      return 0;
+    }
     };
 
 
@@ -100,6 +96,7 @@ class PinkSlipsInterface extends Component {
 
   getLivePrice = async () => {
  
+    if (this.state.accounts != null) {
     const { web3, pinkSlips } = this.state;
     let mintingCost = await pinkSlips.methods.mintingCost().call();
     mintingCost = parseInt(web3.utils.fromWei(mintingCost));
@@ -107,6 +104,11 @@ class PinkSlipsInterface extends Component {
     this.setState({mintingCost});
 
     return mintingCost;
+    } else {
+      let mintingCost = "?";
+      this.setState({mintingCost});
+      return mintingCost
+    }
 
   };
   
@@ -124,9 +126,7 @@ class PinkSlipsInterface extends Component {
   };
 
   render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
+
     return (
       <div className="PinkSlipsInterface">
         <h1><span role="img" id="skull">☠</span> <span id="pinkHeader">Pink</span> 
@@ -178,13 +178,13 @@ class PinkSlipsInterface extends Component {
                                 justifyContent: 'center',
                               }} horizontal>
                             <ListGroup.Item  id="balanceBoxPink">
-                              <Button className="retroButton btn btn-light input-group-append" lg={8} as={InputGroup.Append} onClick={ (parseInt(this.state.pensApproved)
-                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens} variant="light"
+                              <Button className="retroButton btn btn-light input-group-append" lg={8} as={InputGroup.Append}
+                                onClick={ this.props.accounts ? ((parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens) : (() => {(window.location.reload())})} variant="light"
                                 id="dropdown-basic-button" title="Mint!">
-                                { (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!"}
+                                { this.props.accounts ? ((parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!") : "Connect"}
                               </Button>
                             </ListGroup.Item >
-                            <ListGroup.Item id="balanceBoxPink" >You have: <br /> {parseInt(this.state.userBalance)}
+                            <ListGroup.Item id="balanceBoxPink" >You have: <br /> {this.props.accounts ? parseInt(this.state.userBalance) : "? "}
                               <span id="redSymbol" >!Red</span>
                             </ListGroup.Item> 
                           </ListGroup>

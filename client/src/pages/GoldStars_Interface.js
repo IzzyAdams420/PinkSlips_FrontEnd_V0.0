@@ -43,15 +43,6 @@ class GoldStarsInterface extends Component {
       let canSpend = (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost))
       this.setState({canSpend});
       
-     try { 
-
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
   };
 
   mintBadge = async () => {
@@ -70,19 +61,24 @@ class GoldStarsInterface extends Component {
   };
 
   checkPenApproval = async () => {
-    const {web3, mintingCost} = this.state;
 
-    let spender = this.props.goldStarsAddress;
-    let owner = this.props.accounts[0];
+    if (this.state.accounts != null) {
+      const {web3, mintingCost} = this.state;
+
+      let spender = this.props.goldStarsAddress;
+      let owner = this.props.accounts[0];
+      
+
+      let pensApproved = await this.props.redPens.methods.allowance(owner, spender).call();
+      let userBalance = await this.props.redPens.methods.balanceOf(owner).call();
+      userBalance = this.props.web3.utils.fromWei(userBalance);
+      pensApproved = this.props.web3.utils.fromWei(pensApproved);
     
-
-    let pensApproved = await this.props.redPens.methods.allowance(owner, spender).call();
-    let userBalance = await this.props.redPens.methods.balanceOf(owner).call();
-    userBalance = this.props.web3.utils.fromWei(userBalance);
-    pensApproved = this.props.web3.utils.fromWei(pensApproved);
-   
-    this.setState({pensApproved, userBalance});
-    return pensApproved;
+      this.setState({pensApproved, userBalance});
+      return pensApproved;
+    } else {
+      return 0;
+    }  
     };
 
 
@@ -99,14 +95,19 @@ class GoldStarsInterface extends Component {
   };
 
   getLivePrice = async () => {
- 
-    const { web3, goldStars } = this.state;
-    let mintingCost = await goldStars.methods.mintingCost().call();
-    mintingCost = parseInt(web3.utils.fromWei(mintingCost));
+    if (this.state.accounts != null) {
+      const { web3, goldStars } = this.state;
+      let mintingCost = await goldStars.methods.mintingCost().call();
+      mintingCost = parseInt(web3.utils.fromWei(mintingCost));
 
-    this.setState({mintingCost});
+      this.setState({mintingCost});
 
-    return mintingCost;
+      return mintingCost; 
+    } else {
+      let mintingCost = "?";
+      this.setState({mintingCost});
+      return mintingCost
+    }
 
   };
   
@@ -191,10 +192,11 @@ class GoldStarsInterface extends Component {
                                 justifyContent: 'center',
                               }} horizontal>
                             <ListGroup.Item id="balanceBoxGold" >
-                              <Button lg={8} as={InputGroup.Append} onClick={ (parseInt(this.state.pensApproved)
-                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens} variant="warning"
+                              <Button lg={8} as={InputGroup.Append}
+                              onClick={ this.props.accounts ? ((parseInt(this.state.pensApproved)
+                                >= parseInt(this.state.mintingCost)) ? this.mintBadge : this.approvePens) : (() => {(window.location.reload())})} variant="warning"
                                 id="dropdown-basic-button" title="Mint!">
-                                { (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!"}
+                                { this.props.accounts ? ( (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost)) ? "Mint!" : "Approve!") : "Connect"}
                               </Button>
                             </ListGroup.Item>
                             <ListGroup.Item id="balanceBoxGold" >You have: <br /> {parseInt(this.state.userBalance)}
