@@ -232,7 +232,7 @@ class App extends Component {
         {/**/
             <div className="App content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
-                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0),  }}>            
+                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0), paddingRight: ( this.state.drawerIsOpen ? "250px" : null)  }}>            
       
          <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
 

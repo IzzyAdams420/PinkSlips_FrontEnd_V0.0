@@ -257,7 +257,7 @@ Jury-Determined Variables:
 export default function AboutBadges(props) {
 
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isAlert, setIsAlert] = useState(true);
+
   
   const toggleAboutLength = () => { 
 
@@ -266,31 +266,12 @@ export default function AboutBadges(props) {
     
   }
 
-  const toggleAlert= () => { 
 
-    
-    setIsAlert(!isAlert);
-    
-    
-  }
 
   return (
 
     <>
-    {
-      isAlert
-      ?
-      (<Row>
-        <Alert onClick={toggleAlert} id="AlphaAlert" xs={0} m={6} severity="warning" style={{ zIndex: "20" , position: "absolute",
-                                                                    width:"40%", marginLeft:"30%", marginTop: "1vh", marginBotton: "5vh"}}>
-        This is an alpha release! Please use at your own risk. <strong>Contracts are unaudited</strong>
-        <br /><Button style={{color: "rgb(34, 26, 12)", fontWeight: "600", fontSize: "10px" , borderWidth: "1px", borderColor: "rgb(34, 26, 12)",
-                                                                      backgroundColor: "transparent"}} onClick={toggleAlert} >Cool Beans</Button>
-        </Alert>
-      </Row>)
-      :
-      ("")
-    }
+
     
   <Jumbotron xs={6} m={12} style={{justifyContent: "center"}}>
     <Container className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>   
