@@ -52,14 +52,28 @@ export default function AboutBadges(props) {
     <>
 
     
-    <Container xs={6} m={12} className="aboutBadgesContainer" style={{minHeight: "97vh", paddingBottom: "30vh", backgroundColor: "aliceblue", justifyContent: "center"}}>   
+    <Container xs={6} m={12} className="aboutBadgesContainer" style={props.noHeader ? null: {minHeight: "97vh", paddingBottom: "30vh"}} style={{ backgroundColor: "aliceblue", justifyContent: "center"}}>   
       <Row>
-        <Col style={{justifyContent: "center"}}>        
-            <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} fluid />
-            <ColoredPaper />
-        </Col>
+        {
+          props.noHeader
+          ?
+          (null)
+          :
+          ( <>
+            <Col style={{justifyContent: "center"}}>        
+                <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} fluid />
+                <ColoredPaper />
+            </Col>
+          </>)
+        }
       </Row>
-      {divider(2, blackish)}
+      {
+          props.noHeader
+          ?
+          divider(2, "transparent")
+          :
+          divider(2, blackish)
+      }
       <Row>
         <Col style={{textAlign:"left"}}>
         Colored badged are meant to provide a unique and user-friendly way 

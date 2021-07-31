@@ -111,7 +111,7 @@ const Sidebar = (props) => {
                             tag={NavLinkRRD}
                             activeClassName="active"
                         >
-                            <MenuBookIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                            <MenuBookIcon style={{marginLeft: "-3px", marginRight: "7px"}}/>
                            Docs 
                   </Nav.Link>              
               </Nav.Item>
@@ -123,7 +123,7 @@ const Sidebar = (props) => {
                             tag={NavLinkRRD}
                             activeClassName="active"
                         >
-                            <GitHubIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                            <GitHubIcon style={{marginLeft: "10px", marginRight: "7px"}}/>
                            Github 
                   </Nav.Link>              
               </Nav.Item>
@@ -134,7 +134,7 @@ const Sidebar = (props) => {
                             tag={NavLinkRRD}
                             activeClassName="active"
                         >
-                            <ChatBubbleOutlineIcon style={{marginLeft: "10px", marginRight:"7px"}}/>
+                            <ChatBubbleOutlineIcon style={{marginLeft: "10px", marginRight: "7px"}}/>
                            Discord 
                   </Nav.Link>              
               </Nav.Item>

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { useState } from "react";
 
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 
 
@@ -26,8 +29,10 @@ export default function Footer(props) {
         <Image className="Chad" onClick={turnChadOff} style={{zIndex: 2,  position: "fixed", bottom: 0,
             right: 0, maxWidth: "40vw", maxHeight: "44vh" }} src={chad2} />  
       }
-
-        <Image className="ChadFloor" style={{zIndex: 0, bottom: 0, left: 0, width: "100%" }} src={footerImage} />
+      <Row style={{zIndex: 2, position: "absolute", bottom: "25%", left: "5%", width: "100%", fontSize: "98%"}} >
+      coloredbadges.fun
+      </Row>
+        <Image className="ChadFloor" style={{zIndex: 0, minHeight: 85, maxHeight: 100, bottom: 0, left: 0, width: "100%" }} src={footerImage} />
     </div>
   )
 }

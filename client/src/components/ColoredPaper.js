@@ -25,7 +25,7 @@ const aboutColoredBadgesPreview = `
 # # Lets not all be grey
 `;
 
-const aboutColoredBadgesFull = `<span style="word-wrap: break-word;" ># Lets not all be grey
+const aboutColoredBadgesFull = `<span style="word-wrap: break-word;" >
 ---------
 <span style="text-align: left;">
 
@@ -272,10 +272,11 @@ export default function ColoredPaper(props) {
     <>
     <Container xs={6} m={12} className="aboutBadgesContainer" style={isExpanded ? {backgroundColor: "aliceblue"} : {backgroundColor: "transparent"}}>   
       <Row>
-        <Col style={{justifyContent: "center"}}>    
-          <Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "white"}}> {isExpanded ? "Read Less" : "Read our Gold Paper" } </Button>
+        <Col style={{justifyContent: "center"}}>              
+        { props.noHeader ? (null) : (<><MarkdownPreview style={{color: "black"}} source={aboutColoredBadgesPreview} /> <br /></>)}
+        <Button variant="warning" onClick={toggleAboutLength} style={{backgroundColor: "white"}}> {isExpanded ? "Read Less" : "Read our Gold Paper" } </Button>
           <br />
-          <MarkdownPreview style={{color: "black"}} source={!isExpanded ? aboutColoredBadgesPreview : ("<br />" + aboutColoredBadgesFull) } />
+          <MarkdownPreview style={{color: "black"}} source={!isExpanded ? (null) : ("<br />" + aboutColoredBadgesFull) } />
         </Col>
       </Row>
     </Container>
