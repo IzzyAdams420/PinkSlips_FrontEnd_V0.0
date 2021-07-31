@@ -16,8 +16,6 @@ import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Image from 'react-bootstrap/Image';
 
-
-
 import Web3Prompt from "../components/Web3Prompt";
 
 import AboutBadges from "./AboutBadges";
@@ -27,7 +25,6 @@ import GoldStars from "../contracts/GoldStars.json";
 import PinkSlips from "../contracts/PinkSlips.json";
 import RedPens from "../contracts/RedPens.json";
 import JuryPool from "../contracts/JuryPool.json";
-
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';

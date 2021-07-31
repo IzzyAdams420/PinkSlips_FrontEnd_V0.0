@@ -14,6 +14,7 @@ import Web3Prompt from "../components/Web3Prompt";
 import GoldStars from "../contracts/GoldStars.json";
 import PinkSlips from "../contracts/PinkSlips.json";
 import RedPens from "../contracts/RedPens.json";
+import VendingMachine from "../contracts/VendingMachine.json";
 import JuryPool from "../contracts/JuryPool.json";
 
 import routes from "../routes.js";
@@ -52,10 +53,6 @@ class App extends Component {
   }
 
 
-  
-
-
-
   componentDidMount = async () => {
       // Get network provider and web3 instance.
       try {
@@ -91,7 +88,8 @@ class App extends Component {
       const deployedNetwork = await [GoldStars.networks[networkId],
                                       RedPens.networks[networkId],
                                       PinkSlips.networks[networkId],
-                                      JuryPool.networks[networkId]];
+                                      JuryPool.networks[networkId],
+                                      VendingMachine.networks[networkId]];
 
       //set the contract addresses
 
@@ -114,16 +112,23 @@ class App extends Component {
         JuryPool.abi,
         deployedNetwork[3] && deployedNetwork[3].address
       );
+
+      const vendingMachine = new web3.eth.Contract(
+        VendingMachine.abi,
+        deployedNetwork[4] && deployedNetwork[4].address
+      );
       
-      const activeContracts = {goldStars, redPens, pinkSlips, juryPool};
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine};
 
 
       const goldStarsAddress = deployedNetwork[0].address;
       const pinkSlipsAddress = deployedNetwork[2].address;
       const juryPoolAddress = deployedNetwork[3].address;
+      const vendingMachineAddress = deployedNetwork[4].address;
 
-      this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool,
-                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, activeContracts});
+      this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool, vendingMachine,
+                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, vendingMachineAddress,
+                      activeContracts});
 
     } catch (error) {
       // Catch any errors for any of the above operations.

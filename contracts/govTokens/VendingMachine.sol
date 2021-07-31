@@ -49,7 +49,7 @@ contract VendingMachine {
         pendingBalance[msg.sender] = 0;
         require(pendingBalance[msg.sender] == 0);  
         redPens.transfer(msg.sender, amount);
-        inStock = _fromWei(redPens.balanceOf(address(this)));
+        inStock = _fromWei(balanceOf(address(this)));
         penToNativeRatio = inStock / 1000;
         Dispersed(msg.sender, amount);
         return pendingBalance[msg.sender] == 0;
