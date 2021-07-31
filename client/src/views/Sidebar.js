@@ -106,7 +106,7 @@ const Sidebar = (props) => {
                 
               <Nav.Item key={"Docs"}>
                  <Nav.Link
-                            href="https://colored-badges.gitbook.io/colored-badges/"
+                            href="https://docs.pinkslips.fun"
                             tag={NavLinkRRD}
                             activeClassName="active"
                         >
