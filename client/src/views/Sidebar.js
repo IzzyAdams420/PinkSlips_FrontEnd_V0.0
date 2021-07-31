@@ -83,11 +83,12 @@ const Sidebar = (props) => {
     className="navbar-vertical fixed-left navbar-light bg-pink"
     expand="xs"
     id="sidenav-main"
+    style={{minHeight: "97vh"}}
     
     >
 
         
-          <Navbar.Brand className="pt-0" {...navbarBrandProps}>
+          <Navbar.Brand style={{position: "absolute", top: 0}} className="pt-0" {...navbarBrandProps}>
             <img
               alt={logo.imgAlt}
               className="navbar-brand-img"
@@ -96,14 +97,14 @@ const Sidebar = (props) => {
           </Navbar.Brand>
 
           
-            <Nav style={{textAlign: "left"}} navbar>
+            <Nav style={{position: "absolute", top: 150, textAlign: "left"}} navbar>
                 
                     {createLinks(routes)}
                 
             </Nav>
 
-            <Nav style={{position: "fixed", bottom: 0, textAlign: "left"}} navbar>
-                
+            <Nav style={{position: "absolute", textAlign: "left"}}
+                style={window.innerHeight >= 710 ? {position: "fixed", bottom: 0} : {position: "absolute", top: 520}} navbar>                
               <Nav.Item key={"Docs"}>
                  <Nav.Link
                             href="https://docs.pinkslips.fun"

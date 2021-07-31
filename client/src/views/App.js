@@ -197,11 +197,12 @@ class App extends Component {
       
 
       <div className="App" style={{height: "100vh" ,  margin: 0, padding: "2vh", justifyContent: "center"}}>
-        <Container fluid style={{verflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh", backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
+        <Container fluid style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh",
+                                  backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
           <Row style={{ boxShadow:2}} >
             <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
-            style={{ overflow: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", height: "97vh", padding: 0, margin: 0 }}>
-              <Col style={{overflow: 'hidden', position: "fixed", width: "250px", height:  "94vh"}}>
+            style={{ overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", height: "97vh", padding: 0, margin: 0 }}>
+              <Col style={{overflowY: 'scroll', overflowX: 'hidden', scrollbarWidth: "none", msOverflowStyle: "none" , position: "fixed", width: "250px", height:  "97vh"}}>
                 <Sidebar
                   {...this.state}
                   routes={routes}
@@ -210,6 +211,7 @@ class App extends Component {
                     imgSrc: coloredLogo,
                     imgAlt: "...",
                   }}
+                  style={{ overflowY: 'scroll',}}
                 />
               </Col>
               
