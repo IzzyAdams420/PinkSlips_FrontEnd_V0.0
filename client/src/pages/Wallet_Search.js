@@ -13,7 +13,6 @@ import NavigationBar from "./Navigation";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import Image from 'react-bootstrap/Image';
 
 import Alert from '@material-ui/lab/Alert';
@@ -43,8 +42,7 @@ export default function MintingDesk(props) {
 
   return (
     <div className="App" style={{minHeight: "130vh", justifyContent: "center"}}>       
-        <Jumbotron xs={6} m={12} style={{justifyContent: "center"}}>
-          <Container className="aboutBadgesContainer" style={{backgroundColor: "transparent"}}>   
+          <Container xs={6} m={12} className="aboutBadgesContainer" style={{justifyContent: "center", backgroundColor: "transparent"}}>   
             <Row>
               <Col style={{justifyContent: "center"}}>
                 <Row>
@@ -57,7 +55,6 @@ export default function MintingDesk(props) {
               </Col>
             </Row>
           </Container>
-        </Jumbotron>
     </div>
 
   )

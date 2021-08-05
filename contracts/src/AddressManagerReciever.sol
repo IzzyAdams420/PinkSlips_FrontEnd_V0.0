@@ -5,24 +5,31 @@ import './AddressManager.sol';
 
 contract AddressManagerReciever {
 
-    
-
+    // Master Address Manager Address
     address public AddressManagerAddress;
 
+    // Token Addresses
     address public GavelTokenAddress;
     address public RedPenTokenAddress;
 
+    // Badge Addresses
     address public GoldStarAddress;
     address public PinkSlipAddress;
     address public ChadBadgeAddress;
 
-    address public  JuryPoolAddress;
+    // Bank Addresses
+    address public TreasuryAddress;
+    address public JuryPoolAddress;
     
+    // DAO addresses
+    address public GavelDAOAddress;
+    address public JuryDAOAddress;
+    address public TheCourtDAOAddress;
+
+    // Agent Addresses
     address public GavelDAOAgent;
     address public JuryDAOAgent;
-    address public TreasuryAddress;
-    address public TheCourtAddress;
-
+    address public TheCourtDAOAgent;
     address public MiniBailiff;
     
     AddressManager public addressManager;
@@ -37,9 +44,18 @@ contract AddressManagerReciever {
 
     function _updateDAOAddresses() internal {
         // Set these from the Address Manager Contract
+        GavelDAOAddress = addressManager.GavelDAOAddress();
+        JuryDAOAddress = addressManager.JuryDAOAddress();
+        TheCourtDAOAddress = addressManager.TheCourtDAOAddress();
+        TreasuryAddress = addressManager.TreasuryAddress();
+        JuryPoolAddress = addressManager.JuryPoolAddress();
+    }
+
+    function _updateDAOAgents() internal {
+        // Set these from the Address Manager Contract
         GavelDAOAgent = addressManager.GavelDAOAgent();
         JuryDAOAgent = addressManager.JuryDAOAgent();
-        TreasuryAddress = addressManager.TreasuryAddress();
+        TheCourtDAOAgent = addressManager.TheCourtDAOAgent();
         MiniBailiff = addressManager.MiniBailiff();
     }
 
@@ -52,8 +68,6 @@ contract AddressManagerReciever {
         PinkSlipAddress = addressManager.PinkSlipAddress();
         ChadBadgeAddress = addressManager.ChadBadgeAddress();
 
-        JuryPoolAddress = addressManager.JuryPoolAddress();
-        
     }
 
     function _updateAddressManager() internal {
@@ -67,6 +81,7 @@ contract AddressManagerReciever {
 
     function updateAllAddresses() public {
         _updateDAOAddresses();
+        _updateDAOAgents();
         _updateTokenAddresses();
     }
 
@@ -80,6 +95,10 @@ contract AddressManagerReciever {
 
     function updateDAOAddresses() public {
         _updateDAOAddresses();
+    }
+
+    function updateDAOAgents() public {
+        _updateDAOAgents();
     }
 
 

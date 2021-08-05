@@ -11,11 +11,13 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 
 import Web3Prompt from "../components/Web3Prompt";
 
+import AddressManager from "../contracts/AddressManager.json";
 import GoldStars from "../contracts/GoldStars.json";
 import PinkSlips from "../contracts/PinkSlips.json";
 import RedPens from "../contracts/RedPens.json";
 import VendingMachine from "../contracts/VendingMachine.json";
 import JuryPool from "../contracts/JuryPool.json";
+import Minion from "../contracts/Minion.json";
 
 import routes from "../routes.js";
 
@@ -89,7 +91,9 @@ class App extends Component {
                                       RedPens.networks[networkId],
                                       PinkSlips.networks[networkId],
                                       JuryPool.networks[networkId],
-                                      VendingMachine.networks[networkId]];
+                                      VendingMachine.networks[networkId],
+                                      Minion.networks[networkId],
+                                      AddressManager.networks[networkId]];
 
       //set the contract addresses
 
@@ -103,7 +107,7 @@ class App extends Component {
         deployedNetwork[1] && deployedNetwork[1].address,
       );
 
-      const pinkSlips = new web3.eth.Contract(
+      const pinkSlips= new web3.eth.Contract(
         PinkSlips.abi,
         deployedNetwork[2] && deployedNetwork[2].address,
       );
@@ -117,18 +121,31 @@ class App extends Component {
         VendingMachine.abi,
         deployedNetwork[4] && deployedNetwork[4].address
       );
-      
-      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine};
+
+      const juryBailiff = new web3.eth.Contract(
+        Minion.abi,
+        deployedNetwork[5] && deployedNetwork[5].address
+      );
+
+      const addressManager = new web3.eth.Contract(
+        AddressManager.abi,
+        deployedNetwork[6] && deployedNetwork[6].address
+      );
+
+      // const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine, juryBailiff, addressManager};
 
 
       const goldStarsAddress = deployedNetwork[0].address;
       const pinkSlipsAddress = deployedNetwork[2].address;
       const juryPoolAddress = deployedNetwork[3].address;
       const vendingMachineAddress = deployedNetwork[4].address;
+      const juryBailiffAddress = deployedNetwork[5].address;
+      
 
-      this.setState({ web3, accounts, goldStars, redPens, pinkSlips, juryPool, vendingMachine,
-                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, vendingMachineAddress,
-                      activeContracts});
+      this.setState({ web3, accounts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff, vendingMachine,
+                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, /* juryDAOAddress, */ vendingMachineAddress, juryBailiffAddress,
+                      addressManager, activeContracts});
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -188,7 +205,14 @@ class App extends Component {
     </div>
     </>
   }
+
+  
+
+
+
   render() {
+
+    const menuScroll = window.innerHeight >= 710 ? 'none' : 'scroll';
     {/*if (!this.state.web3) {
      // return this.ConnectionPrompt();
     }*/}
@@ -201,8 +225,9 @@ class App extends Component {
                                   backgroundColor: "#536267", position: "fixed", positionTop:"0px", positionRight: "0px", padding: 0}} >    
           <Row style={{ boxShadow:2}} >
             <div className="navigation-drawer" id={this.state.drawerIsOpen ? "drawerShadow" : ""}
-            style={{ overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", height: "97vh", padding: 0, margin: 0 }}>
-              <Col style={{overflowY: 'scroll', overflowX: 'hidden', scrollbarWidth: "none", msOverflowStyle: "none" , position: "fixed", width: "250px", height:  "97vh"}}>
+            style={{ overflowY: menuScroll, scrollbarWidth: "none",  overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed",
+                      height: "97vh", padding: 0, margin: 0 }}>
+              <Col style={{overflowY: menuScroll, overflowX: 'hidden', scrollbarWidth: "none", position: "fixed", width: "250px", height:  "97vh"}}>
                 <Sidebar
                   {...this.state}
                   routes={routes}
@@ -219,7 +244,8 @@ class App extends Component {
         {/**/
             <div className="App content-window" id={this.state.drawerIsOpen ? "contentWindowBorder2" : ""}
             style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, position: "fixed", alignContent: "center",
-                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0), paddingRight: ( this.state.drawerIsOpen ? "250px" : null)  }}>            
+                    justifyContent: 'center', height: "97vh", padding: 0, margin: 0, marginLeft: (this.state.drawerIsOpen ? "250px" : 0),
+                    paddingRight: ( this.state.drawerIsOpen ? "250px" : null)  }}>            
       
          <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
 

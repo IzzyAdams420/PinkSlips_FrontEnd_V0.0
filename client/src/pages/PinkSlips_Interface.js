@@ -34,7 +34,6 @@ class PinkSlipsInterface extends Component {
 
   componentDidMount = async () => {
     
-   // if (this.props.accounts != null) {
       await this.setState(this.props, this.getLivePrice);
 
       this.updateForms = this.updateForms.bind(this);
@@ -42,8 +41,7 @@ class PinkSlipsInterface extends Component {
       await this.checkPenApproval();
       let canSpend = (parseInt(this.state.pensApproved) >= parseInt(this.state.mintingCost))
       this.setState({canSpend});
-    //} else { }
-
+  
   };
 
   mintBadge = async () => {

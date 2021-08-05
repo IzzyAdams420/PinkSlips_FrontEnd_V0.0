@@ -38,7 +38,7 @@ contract VendingMachine {
     }
     function deposit() public payable {
         pendingBalance[msg.sender] += msg.value;
-        Deposit(msg.sender, msg.value);
+        emit Deposit(msg.sender, msg.value);
         _vend();
     }
     function _vend() internal returns (bool) {
@@ -49,9 +49,9 @@ contract VendingMachine {
         pendingBalance[msg.sender] = 0;
         require(pendingBalance[msg.sender] == 0);  
         redPens.transfer(msg.sender, amount);
-        inStock = _fromWei(balanceOf(address(this)));
+        inStock = _fromWei(redPens.balanceOf(address(this)));
         penToNativeRatio = inStock / 1000;
-        Dispersed(msg.sender, amount);
+        emit Dispersed(msg.sender, amount);
         return pendingBalance[msg.sender] == 0;
     }
 

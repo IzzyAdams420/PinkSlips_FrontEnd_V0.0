@@ -24,8 +24,8 @@
 
             updateAllAddresses();
             _syncVotes(); 
-            _setupRole(DEFAULT_ADMIN_ROLE, TheCourtAddress);
-            _setupRole(THE_COURT_ROLE, TheCourtAddress);
+            _setupRole(DEFAULT_ADMIN_ROLE, TheCourtDAOAddress);
+            _setupRole(THE_COURT_ROLE, TheCourtDAOAddress);
             _setupRole(GAVELS_BAILIFF, GavelDAOAgent);
             _setupRole(JURY_BAILIFF, JuryDAOAgent);
             _setupRole(MINI_BAILIFF_ROLE, MiniBailiff);
