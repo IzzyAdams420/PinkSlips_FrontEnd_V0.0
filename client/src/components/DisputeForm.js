@@ -37,6 +37,9 @@ export default function DisputeForm(props) {
   
     const pinkSlips = props.pinkSlips;
     const goldStars = props.goldStars;
+
+    const courtClerk = props.courtClerk;
+    const CourtClerkAddress = 0x8afa9422Cb3AB730105066416F495b70e841b2c8;
   
     const addressManager = props.addressManager;
   
@@ -81,7 +84,7 @@ export default function DisputeForm(props) {
 
     const badge = props[badgeType];
     const defendant = await parseInt(badge.methods.getBadgeSender(badgeId)).toString();
-    const description = "(Case #3): " + defense + " | Defendant: " + defendant;
+    const description = "Case #" + badgeId.toString() + " " + " -" + " "+ " \"" + defense + "\"" + " (" + badgeType.toString() + ")";
     const _txData = props.web3.eth.abi.encodeFunctionCall(
                                   {
                                     "inputs": [
@@ -98,24 +101,50 @@ export default function DisputeForm(props) {
                                   },
                                   [badgeId]);
 
-    const disputeId = await juryBailiff.methods.proposeAction( badgeAddress, 0, txData, description).send({from: props.accounts[0]});
+    const _txData2 = props.web3.eth.abi.encodeFunctionCall(
+                                    {
+                                      "constant": false,
+                                      "inputs": [
+                                        {
+                                          "internalType": "address",
+                                          "name": "_actionTo",
+                                          "type": "address"
+                                        },
+                                        {
+                                          "internalType": "uint256",
+                                          "name": "_actionValue",
+                                          "type": "uint256"
+                                        },
+                                        {
+                                          "internalType": "bytes",
+                                          "name": "_actionData",
+                                          "type": "bytes"
+                                        },
+                                        {
+                                          "internalType": "string",
+                                          "name": "_description",
+                                          "type": "string"
+                                        }
+                                      ],
+                                      "name": "proposeAction",
+                                      "outputs": [
+                                        {
+                                          "internalType": "uint256",
+                                          "name": "",
+                                          "type": "uint256"
+                                        }
+                                      ],
+                                      "payable": false,
+                                      "stateMutability": "nonpayable",
+                                      "type": "function"
+                                    },
+                                      [badgeAddress, 0, _txData, description]);
+
+    // const disputeId = await juryBailiff.methods.proposeAction( badgeAddress, 0, txData, description).send({from: props.accounts[0]});
+    const disputeId = await courtClerk.methods.submitDispute( badgeId, badgeAddress, _txData2).send({from: props.accounts[0]});
   }
 
-  const txData = props.web3.eth.abi.encodeFunctionCall(
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "revokeBadge",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    ["1"]);
+
 
   return (
     <div className="DisputeForm" style={{color: "black", alignContent: "left", justifyContent: "center"}}>
@@ -202,7 +231,7 @@ export default function DisputeForm(props) {
                                     <TextField
                                     id="reason-for-appeal"
                                     label="Reason for appeal:"
-                                    helperText="(Be concise, you can provide more information in your case thread).)"
+                                    helperText="(Be concise, you can provide more information later in your case thread).)"
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{

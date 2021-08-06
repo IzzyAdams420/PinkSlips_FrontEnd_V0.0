@@ -18,6 +18,7 @@ import RedPens from "../contracts/RedPens.json";
 import VendingMachine from "../contracts/VendingMachine.json";
 import JuryPool from "../contracts/JuryPool.json";
 import Minion from "../contracts/Minion.json";
+import CourtClerk from "../contracts/_outside/CourtClerk.json";
 
 import routes from "../routes.js";
 
@@ -38,12 +39,10 @@ class App extends Component {
   appBorderRadius = "1em"
 
 
-  toggleAlert = () => { 
-
+  toggleAlert = (event) => { 
     let isAlert = this.state.isAlert;
     this.setState({isAlert: (!isAlert)});
-    
-    
+
   }
 
   toggleErrorAlert = () => { 
@@ -93,7 +92,9 @@ class App extends Component {
                                       JuryPool.networks[networkId],
                                       VendingMachine.networks[networkId],
                                       Minion.networks[networkId],
-                                      AddressManager.networks[networkId]];
+                                      AddressManager.networks[networkId],
+                                      CourtClerk.networks[networkId]
+                                    ];
 
       //set the contract addresses
 
@@ -132,8 +133,13 @@ class App extends Component {
         deployedNetwork[6] && deployedNetwork[6].address
       );
 
+      const courtClerk = new web3.eth.Contract(
+        CourtClerk.abi,
+        deployedNetwork[7] && deployedNetwork[7].address
+      );
+
       // const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
-      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine, juryBailiff, addressManager};
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine, juryBailiff, addressManager, courtClerk};
 
 
       const goldStarsAddress = deployedNetwork[0].address;
@@ -143,7 +149,7 @@ class App extends Component {
       const juryBailiffAddress = deployedNetwork[5].address;
       
 
-      this.setState({ web3, accounts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff, vendingMachine,
+      this.setState({ web3, accounts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff, vendingMachine, courtClerk,
                       goldStarsAddress, pinkSlipsAddress, juryPoolAddress, /* juryDAOAddress, */ vendingMachineAddress, juryBailiffAddress,
                       addressManager, activeContracts});
 
