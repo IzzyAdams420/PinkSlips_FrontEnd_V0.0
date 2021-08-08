@@ -4,28 +4,21 @@
    
     contract AddressManager is ConsensusMachine {/// Change the Gavels Agent Address
         
-        // Token Addresses
         address public GavelTokenAddress;
         address public RedPenTokenAddress;
 
-        // Badge Addresses
         address public GoldStarAddress;
         address public PinkSlipAddress;
         address public ChadBadgeAddress;
 
-        // Bank Addresses
-        address public TreasuryAddress;
-        address public JuryPoolAddress;
         
-        // DAO addresses
-        address public GavelDAOAddress;
-        address public JuryDAOAddress;
-        address public TheCourtDAOAddress;
+        address public  JuryPoolAddress;
 
-        // Agent Addresses
         address public GavelDAOAgent;
         address public JuryDAOAgent;
-        address public TheCourtDAOAgent;
+        address public TreasuryAddress;
+        address public TheCourtAddress;
+
         address public MiniBailiff;
 
         address public newAddressManager; // For the ability to upgrade if neccesary.
@@ -34,6 +27,7 @@
         string private errorMessage = "the hell are you doing? C'mon";
         string private zeroAddressWarning = "C'mon";
 
+        uint public badgeCount = 0;
 
         event AddressUpdated(address, string);
 
@@ -44,10 +38,13 @@
             GavelDAOAgent = gavelDAOAgent;
             JuryDAOAgent = juryDAOAgent;
             TreasuryAddress = treasuryAddress;
-            TheCourtDAOAddress = theCourtAddress;
+            TheCourtAddress = theCourtAddress;
             MiniBailiff = _MiniBailiff;
 
         }
+
+    
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +53,7 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-        function setnewAddressManager(address newAddressManagerAddress) public THE_COURT {
+        function setnewAddressManager(address newAddressManagerAddress) public THE_COURT BAILIFF {
             require(newAddressManagerAddress != address(0), errorMessage);
             newAddressManager = newAddressManagerAddress;
             hasMovedToNewAddress = true;
@@ -65,63 +62,8 @@
             emit AddressUpdated(newAddressManagerAddress, "New AddressManagerAddress");
         }
 
-        /// Change the Gavel DAO Address
-        function switchGavelDAOAddress(address newDAOAddress) public GAVELS {
-            require(newDAOAddress != address(0), zeroAddressWarning);
-            GavelDAOAddress = newDAOAddress;
-            emit AddressUpdated(newDAOAddress, "New Gavel Address");
-        }
 
-
-        /// Change the Jury DAO Address
-        function switchJuryDAOAddress(address newDAOAddress) public JURY {
-            require(newDAOAddress != address(0), zeroAddressWarning);
-            JuryDAOAddress = newDAOAddress;
-            emit AddressUpdated(newDAOAddress, "New Jury Address");
-
-        }
-        /// Change the Court DAO Address
-        function switchTheCourtDAOAddress(address newDAOAddress) public THE_COURT {
-            require(newDAOAddress != address(0), zeroAddressWarning);
-            JuryDAOAddress = newDAOAddress;
-            _resetVote();
-            emit AddressUpdated(newDAOAddress, "New Court Address");
-        }
-
-        /// Change the Gavel Agent Address
-        function switchGavelAgent(address newAgentAddress) public GAVELS {
-            bool success = _setAgent(GAVELS_BAILIFF, newAgentAddress);
-            require(success == true);
-            GavelDAOAgent = newAgentAddress;
-            emit AddressUpdated(newAgentAddress, "New Gavel Agent");
-        }
-
-
-        /// Change the Jury Agent Address
-        function switchJuryAgent(address newAgentAddress) public JURY {
-            bool success = _setAgent(JURY_BAILIFF, newAgentAddress);
-            require(success == true);
-            JuryDAOAgent = newAgentAddress;
-            emit AddressUpdated(newAgentAddress, "New Jury Agent");
-
-        }
-        /// Change the Court Agent Address
-        function switchTheCourtAgent(address newAgentAddress) public THE_COURT {
-            bool success = _setAgent(THE_COURT_ROLE, newAgentAddress);
-            require(success == true);
-            JuryDAOAgent = TheCourtDAOAgent;
-            _resetVote();
-            emit AddressUpdated(newAgentAddress, "New Court Elected");
-        }
-
-
-        function addMiniBailiff(address newAgentAddress) public BAILIFF {
-            bool success = _setAgent(MINI_BAILIFF_ROLE, newAgentAddress);
-            require(success == true);
-            emit AddressUpdated(newAgentAddress, "New Mini Bailiff");
-        }
-        
-       function _setAgent( bytes32 ROLE , address newAgentAddress) internal BAILIFF returns (bool) {
+        function _setAgent( bytes32 ROLE , address newAgentAddress) internal returns (bool) {
             require(newAgentAddress != address(0), errorMessage);
             require(!hasRole(ROLE, newAgentAddress));
             grantRole(ROLE, newAgentAddress);
@@ -129,11 +71,34 @@
             return true;
         }
 
+        /// Change the Gavel Agent Address
+        function addGavelAgent(address newAgentAddress) public GAVELS {
+            bool success = _setAgent(GAVELS_BAILIFF, newAgentAddress);
+            require(success == true);
+            emit AddressUpdated(newAgentAddress, "New Gavel Agent");
+        }
 
 
+        /// Change the Jury Agent Address
+        function addJuryAgent(address newAgentAddress) public GAVELS {
+            bool success = _setAgent(JURY_BAILIFF, newAgentAddress);
+            require(success == true);
+            emit AddressUpdated(newAgentAddress, "New Jury Agent");
 
+        }
 
+        function addMiniBailiff(address newAgentAddress) public BAILIFF {
+            bool success = _setAgent(MINI_BAILIFF_ROLE, newAgentAddress);
+            require(success == true);
+            emit AddressUpdated(newAgentAddress, "New Mini Bailiff");
+        }
 
+        /// Change the Court Agent Address
+        function setTheCourtAgent(address newAgentAddress) public GAVELS {
+            bool success = _setAgent(THE_COURT_ROLE, newAgentAddress);
+            require(success == true);
+            emit AddressUpdated(newAgentAddress, "New Court Elected");
+        }
 
         /// Change the Treasury Address
         function setTreasuryAddress(address newTreasuryAddress) public THE_COURT {
@@ -141,6 +106,14 @@
             TreasuryAddress = newTreasuryAddress;
             _resetVote();
             emit AddressUpdated(newTreasuryAddress, "New Treasury Address");
+        }
+
+        function setCourtAddress(address newCourtAddress) public THE_COURT {
+            require(newCourtAddress != address(0), zeroAddressWarning);
+            TheCourtAddress = newCourtAddress;
+            _resetVote();
+            emit AddressUpdated(newCourtAddress, "New Court Address");
+            
         }
 
         function setGavelTokenAddress(address newGavelTokenAddress) public GAVELS {
@@ -151,20 +124,20 @@
             emit AddressUpdated(newGavelTokenAddress, "New Gavel Token Address");            
         }
 
-        function setRedPenTokenAddress(address newRedPenTokenAddress) public JURY  {
-            require(newRedPenTokenAddress != address(0), zeroAddressWarning);
-            require(newRedPenTokenAddress != GavelTokenAddress, "Don't mess with the balance of power");
-            RedPenTokenAddress = newRedPenTokenAddress;
-
-            emit AddressUpdated(newRedPenTokenAddress, "New Red Pen Token Address"); 
-        }
-
         function setJuryPoolAddress(address newJuryPoolAddress) public JURY  {
             require(newJuryPoolAddress != address(0), zeroAddressWarning);
             require(newJuryPoolAddress != GavelTokenAddress, "Don't mess with the balance of power");
             JuryPoolAddress = newJuryPoolAddress;
      
             emit AddressUpdated(newJuryPoolAddress, "New Jury Pool Address"); 
+        }
+
+        function setRedPenTokenAddress(address newRedPenTokenAddress) public JURY  {
+            require(newRedPenTokenAddress != address(0), zeroAddressWarning);
+            require(newRedPenTokenAddress != GavelTokenAddress, "Don't mess with the balance of power");
+            RedPenTokenAddress = newRedPenTokenAddress;
+
+            emit AddressUpdated(newRedPenTokenAddress, "New Red Pen Token Address"); 
         }
 
         function setGoldStarAddress(address newGoldStarAddress) public THE_COURT {

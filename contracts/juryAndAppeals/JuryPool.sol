@@ -63,7 +63,7 @@ contract JuryPool is ERC721, ERC721Enumerable, SmartConsensusMachine {
     }
 
     // Only use this one if you have multiple staked positions that you are managing manually.
-    function stakePensAdvanced(uint256 _amount, uint tokenIdToStakeWith) public {
+    function stakePens(uint256 _amount, uint tokenIdToStakeWith) public {
  
         uint256 totalPensInPool = redPens.balanceOf(address(this));
         uint _tokenId;
@@ -97,7 +97,7 @@ contract JuryPool is ERC721, ERC721Enumerable, SmartConsensusMachine {
     
     }
 
-    function returnHatsAdvanced(uint256 _amount, uint256 _tokenId) public {
+    function returnHats(uint256 _amount, uint256 _tokenId) public {
 
         require (ownerOf(_tokenId) == msg.sender);
         if (JurrorStake[_tokenId] <= _amount) {

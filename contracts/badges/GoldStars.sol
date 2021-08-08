@@ -1,14 +1,15 @@
 pragma solidity ^0.8.0;
 
-import "../src/GenericBadge.sol";
+import "../src/ERC721/TippingBadge.sol";
 
 
-contract GoldStars is GenericBadge {
+contract GoldStars is TippingBadge {
 
 
      constructor(address _AddressManagerAddress)
-        GenericBadge("GoldStar", "Gold", true, _AddressManagerAddress)
+        TippingBadge("GoldStars", "Gold", _AddressManagerAddress)
     {
     }      
 
+  
 }

@@ -25,6 +25,7 @@ import "../css/styles.css";
 
 import redPenIcons from '../icons/redPenIcon.png';
 import headerImage from '../rsrc/imgs/Chad_Banner.png';
+import { pink } from "@material-ui/core/colors";
 
 
 
@@ -47,6 +48,8 @@ export default function DisputeForm(props) {
     const [badgeAddress, setBadgeAddress] = useState(null);
     const [badgeId, setBadgeId] = useState(0);
     const [defense, setDefense] = useState("I'm not a cat...");
+
+    const [txData, setTxData] = useState(null);
     
     const handleBadgeChange = (event) => {
       setBadgeType(event.target.value);
@@ -100,6 +103,20 @@ export default function DisputeForm(props) {
                                     "type": "function"
                                   },
                                   [badgeId]);
+                                  
+    const tempAddressForTest = '0xb0Bf10CC89a663Dd8834387a18b46f764660Aeb4';
+
+    const _txDataForTest = props.web3.eth.abi.encodeFunctionCall(
+                                    {
+                                      "inputs": [],
+                                      "name": "test",
+                                      "outputs": [],
+                                      "stateMutability": "nonpayable",
+                                      "type": "function"
+                                    },
+                                    []);
+
+
 
     const _txData2 = props.web3.eth.abi.encodeFunctionCall(
                                     {
@@ -140,9 +157,20 @@ export default function DisputeForm(props) {
                                     },
                                       [badgeAddress, 0, _txData, description]);
 
-    // const disputeId = await juryBailiff.methods.proposeAction( badgeAddress, 0, txData, description).send({from: props.accounts[0]});
+    const txRaw = {
+        from: props.accounts[0],
+        to: badgeAddress,
+        data: _txData
+    }
+
+  
+    //await juryBailiff.methods.proposeAction( tempAddressForTest, 0, _txDataForTest, description).send({from: props.accounts[0]});
+    //const disputeId = '1';
+    //const disputeId = await juryBailiff.methods.proposeAction( badgeAddress, 0, txData, description).send({from: props.accounts[0]});
     const disputeId = await courtClerk.methods.submitDispute( badgeId, badgeAddress, _txData2).send({from: props.accounts[0]});
-  }
+    //const disputeId = await props.web3.eth.sendTransaction(txRaw); //badge.methods.revokeBadge(badgeId).send({from: props.accounts[0]});
+    setTxData(_txData.toString());
+}
 
 
 
@@ -191,7 +219,7 @@ export default function DisputeForm(props) {
                         <CardContent>
 
                             <Typography variant="h5" component="h2">
-                                Appeal Your Badge
+                                Appeal Your Badge { txData ? txData : null }
                             </Typography>
 
                             <Typography color="textSecondary">
@@ -242,7 +270,6 @@ export default function DisputeForm(props) {
                                     onChange={handleDefenseChange}
                                     />
                                 </Row>
-
                                 
                             </Container>
                         </CardContent>

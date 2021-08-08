@@ -17,12 +17,13 @@ let AddressManagerInstance;
 let accounts = [];
 
 // THIS IS LEFT BLANK FOR TESTING THE UI, ALL PERMISSIONS ARE GRANTED TO DEPLOYER.
-
+let firstAdminAddress =  '0xaffbfc96a767c348fdc3f1fbaf11fdf5b0df65b4';
+let RedPensAddress = '';
 let juryDaoAgent = '';
-let gavelDaoAgent = '';
-let treasuryAddress = '';
-let theCourtAddress = '';
-let miniBailiff = '';
+let gavelDaoAgent = firstAdminAddress;
+let treasuryAddress = firstAdminAddress;
+let theCourtAddress = firstAdminAddress;
+let miniBailiff = firstAdminAddress;
 
 module.exports = function (deployer) {
 
@@ -32,7 +33,7 @@ module.exports = function (deployer) {
     accounts = await web3.eth.getAccounts();
     
   }).then(async () => {
-    let firstAdminAddress =  accounts[0]; //'0x76FB5FFCB1d2Ef86472980330BFf71a0c24f5d34';
+    //let firstAdminAddress = "0xAFfBFc96A767C348FDC3F1fBaF11fDF5B0df65b4"; //'0x76FB5FFCB1d2Ef86472980330BFf71a0c24f5d34';
     juryDaoAgent = firstAdminAddress;
     gavelDaoAgent = firstAdminAddress;
     treasuryAddress = firstAdminAddress;
@@ -55,7 +56,7 @@ module.exports = function (deployer) {
     
     await deployer.deploy(PinkSlips, AddressManager.address);
     await deployer.deploy(GoldStars, AddressManager.address);
-    await deployer.deploy(ChadBadge, true, AddressManager.address);
+    await deployer.deploy(ChadBadge, AddressManager.address);
     
     
   }).then(async () => {

@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "../src/SmartConsensusMachine.sol";
+import "../src/ERC20/JerkSanctions.sol";
 
 // Token features:
 // Snapshot for governance and distrubutions
@@ -15,66 +16,23 @@ import "../src/SmartConsensusMachine.sol";
 // Fixed Supply
 // Gassless Permit (Draft EIP)
 
-contract RedPens is ERC20, ERC20Snapshot, ERC20Permit, ERC20Burnable, SmartConsensusMachine {
-
- 
-    /******************************************************
-    * JERK SANCTIONS:
-    *   if 'jerkSanctionIsOn' is enabled, this prohibits jerks from using thier !Red.    *
-    *
-    * FOREVER_DISABLE_SANCTIONS:
-    *   if this setting is set to true, Jerk sanctions will be disabled forever.
-    *   THIS IS NOT REVERSABLE!
-    */
-
-    bool public SANCTIONS_FOREVER_DISABLED = false;
-    bool public jerkSanctionsLocal = false;
-
-    /***********************************************/
-
+contract RedPens is ERC20, ERC20Snapshot, ERC20Permit, ERC20Burnable, SmartConsensusMachine, JerkSanctions {
 
     constructor(address _AddressManagerAddress) ERC20("Red Pens", "!RED") ERC20Permit("Red Pens") SmartConsensusMachine(_AddressManagerAddress) {
     
         _mint(TreasuryAddress, 820042000 * 10 ** 18); // Mint the entire token supply
     }
 
-
-    //***********************************************************
-    // The DAO may choose to prohibit Jerks from using !Red
-    //********************************************************* */
-    function switchLocalJerkSanctions(bool turnOnSanctions) public JURY {
-        require(!SANCTIONS_FOREVER_DISABLED);
-
-        jerkSanctionsLocal = turnOnSanctions;
-
-    }
-
-    // This will disable the sanctions function forever (incase it was a bad idea or poses a security issue)
-    function foreverDisableJerkSanctions(bool safteySwitch) public THE_COURT {
-        // The Saftey Switch should be set to FALSE for the function to be properly executed.
-        require(!safteySwitch && !SANCTIONS_FOREVER_DISABLED);
-        jerkSanctionsLocal = false;
-        SANCTIONS_FOREVER_DISABLED = true;
-    }
-
-    /**************************************************************************
-    ***************************************************************************/
-    
-
-    // Take a snapshot of token holders (Must be the recorder, bailiff, or court)
-     function snapshot() public MINI_BAILIFF {
-        _snapshot();
-    }
-
-
-    // Only needed in the event jerk sanctions are turned on.
     function _beforeTokenTransfer(address from, address to, uint256 amount)
         internal
-        override(ERC20, ERC20Snapshot)
+        override(ERC20, ERC20Snapshot, JerkSanctions)
     {
         if (jerkSanctionsLocal && jerkSanctions) {
            require(!hasRole(JERK_ROLE, msg.sender)); 
         }
         super._beforeTokenTransfer(from, to, amount);
     }
+
 }
+
+    

@@ -149,11 +149,9 @@ class PinkSlipsInterface extends Component {
                 </div>
                     <br></br>
                     <br></br>
-                  <div className="priceLabel">
-                    Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{this.state.mintingCost}</span> Red Pens</div>
-                  </div>
-                  
-                   
+                <div className="priceLabel">
+                  Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{this.state.mintingCost}</span> Red Pens</div>
+                </div>                   
               </Col>
               <Col sm={2}></Col>
             </Row>

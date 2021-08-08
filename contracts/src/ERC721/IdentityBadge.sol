@@ -1,35 +1,22 @@
 pragma solidity ^0.8.0;
 
-import "./SmartConsensusMachine.sol";
-import "./AddressManagerReciever.sol";
+import "../SmartConsensusMachine.sol";
+import "../AddressManagerReciever.sol";
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerable {
+contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerable {
     
-    // Set Default Minting Costs to 3 Red Pens.
-    uint256 public mintingCost = 3 * 10 ** 18;
-
-    // Set Default Minting Cost Floor to 1 Red Pens
-    uint256 public mintingCostFloor = 1 * 10 ** 17;
-
-    uint256 public payItForwardTreasuryRatio_Numerator = 2;
-    uint256 public payItForwardTreasuryRatio_Divisor = 3;
-
     uint256 private _tokenIdGenerator = 0;
 
     bool public isForeverLocked = false;
-    bool public payReciver;
 
     string public badgeColor;
     string public badgeName;
 
-    ERC20 public redPens = ERC20(RedPenTokenAddress);
-
-     constructor(string memory _badgeName, string memory _badgeSymbol, bool _payReciver, address _AddressManagerAddress)
+    constructor(string memory _badgeName, string memory _badgeSymbol, address _AddressManagerAddress)
         ERC721(_badgeName, _badgeSymbol)
         SmartConsensusMachine(_AddressManagerAddress){
        
@@ -37,86 +24,65 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         badgeColor = _badgeSymbol;
         badgeName = _badgeName;
 
-        payReciver = _payReciver;
-        redPens = ERC20(RedPenTokenAddress);
     }      
-
     
     //******************************
     //                            **
     //     Setup mapping          ** 
     //                            **
     //******************************
-    struct Badge { // struct will store the gifter address and reason for the gold stars
-        address gifter;
-        string reason;
+    struct IDCard { // struct will store the psuedonym and avatar NFT information.
+        string pseudonym;
+        string twitterHandle;
+        address avatarTokenAddress;
+        uint avatarTokenId;
+        // uint avatarChainId; // may want to add this. Will consider.
     }
 
-    mapping (uint => Badge) public BadgeInfo; // mapping of badge ID to badge struct(reason/gifter address)
-
-    mapping (address => uint[]) public BadgesSent; // mapping of address to tokenIDs sent
-
+    mapping (uint => IDCard) public IDCardInfo; 
+    mapping (string => uint) public TwitterHandle;
 
 
-    function setBadgeInfo(address _gifter, string memory _reason, uint _tokenId) internal {
-        BadgeInfo[_tokenId].gifter = _gifter; // assigns this goldstar gifter address to msg.sender
-        BadgeInfo[_tokenId].reason = _reason; // assigns the reason for this goldstar
-        BadgesSent[_gifter].push(_tokenId); // pushes tokenID to the addresses array of tokens
-    }
-
-    function getBadgeReason(uint _tokenId) public view returns (string memory _theReason) {
-        _theReason = BadgeInfo[_tokenId].reason; 
-
-        return (_theReason);
-    }
-
-    function getBadgeSender(uint _tokenId) public view returns (address _theGifter) {
-        _theGifter = BadgeInfo[_tokenId].gifter; 
-
-        return (_theGifter);
-    }
-
-
-    function getBadgesSent (address _gifter) public view returns (uint[] memory _BadgesSent) {
-       _BadgesSent = BadgesSent[_gifter];
-       return _BadgesSent; // returns array of tokenIDs sent by address
-    }
-
-
-    function isBadgeSender(address addressToCheck, uint badgeTokenID) public returns (bool){
-
-        if (addressToCheck == (BadgeInfo[badgeTokenID].gifter)) {
-            return true;
-        } else { return false;}
-
-    }
     
-    //******************************
-    //                            **
-    //  Set payment modifier      ** 
-    //                            **
-    //******************************
-
-
-    modifier PAY_WITH_PENS(address receivingAddress) {      
-
-        uint256 expectedContractBalance;
-
-        if (payReciver == true) {
-        uint256 portionOfMintingCost = mintingCost / payItForwardTreasuryRatio_Divisor;
-        expectedContractBalance = redPens.balanceOf(address(this)) + (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
-
-        redPens.transferFrom(msg.sender, address(this), (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
-        redPens.transferFrom(msg.sender, receivingAddress, (portionOfMintingCost * (payItForwardTreasuryRatio_Divisor - payItForwardTreasuryRatio_Numerator)));
-        } else {
-            expectedContractBalance = redPens.balanceOf(address(this)) + mintingCost;
-            redPens.transferFrom(msg.sender, address(this), mintingCost);
-        }
+    function _setBadgeInfo(string memory _pseudonym, string memory _twitterHandle, address _avatarTokenAddress, uint _avatarTokenId, uint _tokenId) internal {
         
-        require(redPens.balanceOf(address(this)) == expectedContractBalance, "Error Transfering !RED");
-        
-        _;
+        require(TwitterHandle[_twitterHandle] == 0, "Already a badge associated with this handle");
+
+        IDCardInfo[_tokenId].twitterHandle = _twitterHandle;
+        IDCardInfo[_tokenId].avatarTokenAddress = _avatarTokenAddress; 
+        IDCardInfo[_tokenId].avatarTokenId = _avatarTokenId;
+        IDCardInfo[_tokenId].pseudonym = _pseudonym;
+
+        TwitterHandle[_twitterHandle] = _tokenId;
     }
+
+    function updateAvatar(uint _tokenId, address _avatarTokenAddress, uint _avatarTokenId) public {
+        require(balanceOf(msg.sender) > 0);
+        _tokenId = tokenOfOwnerByIndex(msg.sender, 0);
+        _updateAvatar(_tokenId, _avatarTokenAddress, _avatarTokenId);
+
+    }
+
+    function _updateAvatar(uint _tokenId, address _avatarTokenAddress, uint _avatarTokenId) internal {
+        require(ownerOf(_tokenId) == msg.sender, "Double check your ID Number");
+        IDCardInfo[_tokenId].avatarTokenAddress = _avatarTokenAddress; 
+        IDCardInfo[_tokenId].avatarTokenId = _avatarTokenId;
+    }
+
+    function getIDFromHandle(string memory _TwitterHandle) public view returns (uint _tokenId) {
+        _tokenId = TwitterHandle[_TwitterHandle];
+        return ( _tokenId );
+    }
+
+    function getBadgeInfo(uint _tokenId) public view returns (string memory _pseudonym, string memory _twitterHandle, address _avatarTokenAddress, uint _avatarTokenId ) {
+        _pseudonym = IDCardInfo[_tokenId].pseudonym;
+        _avatarTokenAddress = IDCardInfo[_tokenId].avatarTokenAddress;
+        _avatarTokenId = IDCardInfo[_tokenId].avatarTokenId;
+        _twitterHandle =IDCardInfo[_tokenId].twitterHandle;
+        return (_pseudonym, _twitterHandle, _avatarTokenAddress, _avatarTokenId );
+    }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,12 +92,13 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    function issueBadge(address receivingAddress, string memory _reason) public
-        PAY_WITH_PENS(receivingAddress) 
+    function issueBadge(address receivingAddress, string memory _pseudonym, string memory _twitterHandle, address _avatarTokenAddress, uint _avatarTokenId, uint _tokenId) public virtual
+        BAILIFF
         returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
         require((receivingAddress != msg.sender) && (receivingAddress != address(0)));
+        require(balanceOf(receivingAddress) <= 0, "Only one ID per wallet");
         newId = _tokenIdGenerator;
-        setBadgeInfo(msg.sender, _reason, _tokenIdGenerator);
+        _setBadgeInfo(_pseudonym, _twitterHandle, _avatarTokenAddress, _avatarTokenId, _tokenId);
         _safeMint(receivingAddress, _tokenIdGenerator);
         _tokenIdGenerator += 1;
        
@@ -143,43 +110,6 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         _burn(tokenId);
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /// @dev                                                                                     ////
-    /// Set Minting Costs                                                                        ////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    function setMintingCost(uint256 costInWei) public JURY returns (bool){
-        require(costInWei >= mintingCostFloor, "Sorry! Cost must be greater than 0.1 RedPen");
-        _setMintingCost(costInWei);
-        return true;
-    }
-
-    function _setMintingCost(uint256 costInWei) internal returns (bool) {
-        mintingCost = costInWei;
-        return true;
-    }
-
-    function setMintingCostFloor(uint256 costFloorInWei) public BAILIFF returns (bool){
-
-        require(costFloorInWei < mintingCostFloor, "Sorry! You can only lower the floor!");
-        _setMintingCostFloor(costFloorInWei);
-        return true;
-    }
-
-    function _setMintingCostFloor(uint256 costInWei) internal returns (bool) {
-        mintingCostFloor = costInWei;
-        return true;
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /// @dev                                                                                     ////
-    /// Internal Checks                                                                     ////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,11 +125,6 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
     function unpause() public GAVELS {
         require(isForeverLocked == false);
         _unpause();
-    }
-
-    function updatePaymentToken() public {
-        _updateTokenAddresses();
-        redPens = ERC20(RedPenTokenAddress);
     }
 
     function _burnAllBadges() internal returns (bool) {
@@ -250,9 +175,8 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         returns (bool)
     {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-        address owner = ERC721.ownerOf(tokenId);
-        address gifter = BadgeInfo[tokenId].gifter;
-        return (spender == gifter || isApprovedForAll(owner, spender));
+        address owner = ownerOf(tokenId);
+        return (owner == msg.sender || isApprovedForAll(owner, spender));
     }
 
     
@@ -312,8 +236,8 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         uint256 tokenId
     ) public virtual override {
 
-        address gifter = BadgeInfo[tokenId].gifter;
-        require( (msg.sender == gifter || isApprovedForAll(from, msg.sender)),
+        address owner = ownerOf(tokenId);
+        require((msg.sender == owner || isApprovedForAll(from, msg.sender)),
                     "You do not have permission to move this badge");
         
         super.transferFrom(from, to, tokenId);
@@ -325,9 +249,8 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         address to,
         uint256 tokenId
     ) public virtual override {
-        address owner = ERC721.ownerOf(tokenId);
-        address gifter = BadgeInfo[tokenId].gifter;
-        require( (msg.sender == gifter || isApprovedForAll(from, msg.sender)),
+        address owner = ownerOf(tokenId);
+        require( (msg.sender == owner || isApprovedForAll(from, msg.sender)),
                     "You do not have permission to move this badge");
         super.safeTransferFrom(from, to, tokenId);
     }

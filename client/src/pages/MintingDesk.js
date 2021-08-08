@@ -17,7 +17,7 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Image from 'react-bootstrap/Image';
 
 import Web3Prompt from "../components/Web3Prompt";
-
+import MintingAgent from '../components/MintingAgent.js';
 import AboutBadges from "./AboutBadges";
 
 
@@ -65,6 +65,7 @@ export default function MintingDesk(props) {
               <br /> */}
               {/* <BadgeSearch toggleDrawer={props.toggleDrawer} {...props} />
               <br / > */}
+              <br />
               <PinkSlipsInterface {...props} />
               <br />
               <GoldStarsInterface {...props} />

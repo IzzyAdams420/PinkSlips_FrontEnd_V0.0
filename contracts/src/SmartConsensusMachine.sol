@@ -2,7 +2,7 @@
 
     import "./AddressManagerReciever.sol";
 
-    import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+    import "./forked/AccessControlEnumerable.sol";
    
     contract SmartConsensusMachine is AccessControlEnumerable, AddressManagerReciever {
        
@@ -24,8 +24,8 @@
 
             updateAllAddresses();
             _syncVotes(); 
-            _setupRole(DEFAULT_ADMIN_ROLE, TheCourtDAOAddress);
-            _setupRole(THE_COURT_ROLE, TheCourtDAOAddress);
+            _setupRole(DEFAULT_ADMIN_ROLE, TheCourtAddress);
+            _setupRole(THE_COURT_ROLE, TheCourtAddress);
             _setupRole(GAVELS_BAILIFF, GavelDAOAgent);
             _setupRole(JURY_BAILIFF, JuryDAOAgent);
             _setupRole(MINI_BAILIFF_ROLE, MiniBailiff);
@@ -186,29 +186,35 @@
        
 
         function updateAllRoles() public {
+            _flipSaftey(true);
             _updateAllRoles();
+            require(_flipSaftey(false));
         }
 
         function updateSingleRole(bytes32 ROLE_TO_UPDATE) public {
+            _flipSaftey(true);
             _clearRole(ROLE_TO_UPDATE);
             _updateRole(ROLE_TO_UPDATE);
+            require(_flipSaftey(false));
         }
 
         function syncSingleRole(bytes32 ROLE_TO_SYNC) public {
+            _flipSaftey(true);
             _syncSingleRole(ROLE_TO_SYNC);
-
+            require(_flipSaftey(false));
         }
 
         function syncAllRoles() public {
+            _flipSaftey(true);
             _syncSingleRole(THE_COURT_ROLE);
             _syncSingleRole(GAVELS_BAILIFF);
             _syncSingleRole(JURY_BAILIFF);
             _syncSingleRole(MINI_BAILIFF_ROLE);
             _syncSingleRole(JERK_ROLE);
             _syncSingleRole(DEFAULT_ADMIN_ROLE);
-            _syncVotes(); 
+            _syncVotes();
+            require(_flipSaftey(false));
         }
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

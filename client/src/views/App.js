@@ -35,7 +35,7 @@ import "../css/styles.css"
 let coloredLogo = "../rsrc/imgs/ColoredLogo.png";
 
 class App extends Component {
-  state = { web3: null, accounts: null, drawerIsOpen: true, isAlert: true, isErrorAlert: null};
+  state = { web3: null, accounts: null, drawerIsOpen: true, isAlert: true, isErrorAlert: null, isOverride: null};
   appBorderRadius = "1em"
 
 
@@ -67,8 +67,7 @@ class App extends Component {
     };
   
   connectOverride = () => {
-    let web3 = true;
-    this.setState({web3});
+    this.setState({isOverride: true});
   }
 
   connectWallet2 = async() => {
@@ -91,8 +90,8 @@ class App extends Component {
                                       PinkSlips.networks[networkId],
                                       JuryPool.networks[networkId],
                                       VendingMachine.networks[networkId],
-                                      Minion.networks[networkId],
                                       AddressManager.networks[networkId],
+                                      Minion.networks[networkId],
                                       CourtClerk.networks[networkId]
                                     ];
 
@@ -122,35 +121,39 @@ class App extends Component {
         VendingMachine.abi,
         deployedNetwork[4] && deployedNetwork[4].address
       );
-
-      const juryBailiff = new web3.eth.Contract(
-        Minion.abi,
+      
+      const addressManager = new web3.eth.Contract(
+        AddressManager.abi,
         deployedNetwork[5] && deployedNetwork[5].address
       );
 
-      const addressManager = new web3.eth.Contract(
-        AddressManager.abi,
+      
+      const juryBailiff = new web3.eth.Contract(
+        Minion.abi,
         deployedNetwork[6] && deployedNetwork[6].address
       );
-
+      
       const courtClerk = new web3.eth.Contract(
         CourtClerk.abi,
         deployedNetwork[7] && deployedNetwork[7].address
       );
 
-      // const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
-      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine, juryBailiff, addressManager, courtClerk};
-
+      //const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
+      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine,  juryBailiff,  addressManager,  courtClerk  };
+      const pinkMintingCost = await this.getLivePrice();
+      const goldMintingCost = await this.getLivePrice();
+      const mintingCosts = ["?", pinkMintingCost, goldMintingCost];
 
       const goldStarsAddress = deployedNetwork[0].address;
       const pinkSlipsAddress = deployedNetwork[2].address;
       const juryPoolAddress = deployedNetwork[3].address;
       const vendingMachineAddress = deployedNetwork[4].address;
-      const juryBailiffAddress = deployedNetwork[5].address;
+      const juryBailiffAddress = deployedNetwork[6].address;
       
+      const userBalance = await redPens.methods.balanceOf(accounts[0]).call();
 
-      this.setState({ web3, accounts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff, vendingMachine, courtClerk,
-                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, /* juryDAOAddress, */ vendingMachineAddress, juryBailiffAddress,
+      this.setState({ web3, accounts, userBalance, mintingCosts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff,  vendingMachine,  courtClerk,  
+                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, /* juryDAOAddress, */ vendingMachineAddress,  juryBailiffAddress, 
                       addressManager, activeContracts});
 
     } catch (error) {
@@ -166,7 +169,6 @@ class App extends Component {
       if (prop.layout === "/") {
         return (
           <Route
-          
               path={prop.layout + prop.path}
               component={() => <prop.component toggleDrawer={this.toggleDrawer} {...this.state} />}
               key={key}
@@ -178,6 +180,32 @@ class App extends Component {
     });
   };
 
+  getLivePrice = async () => {
+ 
+    if (this.state.accounts != null) {
+    const { web3, pinkSlips } = this.state;
+    let mintingCost = await pinkSlips.methods.mintingCost().call();
+    mintingCost = parseInt(web3.utils.fromWei(mintingCost));
+
+    this.setState({mintingCost});
+
+    return mintingCost;
+    } else {
+      let mintingCost = "?";
+      this.setState({mintingCost});
+      return mintingCost
+    }
+
+  };
+
+  getMintingCost = async (badgeType) => {
+
+    if (this.state.accounts != null) {
+        let mintingCost = await badgeType.methods.mintingCost().call();
+        mintingCost = parseInt(this.state.web3.utils.fromWei(mintingCost).toString());
+        return mintingCost.toString();
+    } else return "?";
+  }
 
   toggleDrawer = (event) => {
     const isOpen = this.state.drawerIsOpen;
@@ -257,7 +285,7 @@ class App extends Component {
 
 
             {
-              !this.state.web3
+              (!this.state.web3  && !this.state.isOverride)
               ?
               (this.ConnectionPrompt())
               :
@@ -279,7 +307,7 @@ class App extends Component {
             }
 
             {
-              this.state.web3
+              (this.state.web3  || this.state.isOverride)
               ?
               (
                 <Switch>

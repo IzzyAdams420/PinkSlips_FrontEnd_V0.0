@@ -1,13 +1,13 @@
 pragma solidity ^0.8.0;
 
-import "../src/GenericBadge.sol";
+import "../src/ERC721/UserSendable.sol";
 
 
-contract PinkSlips is GenericBadge {
+contract PinkSlips is UserSendable {
 
 
      constructor(address _AddressManagerAddress)
-        GenericBadge("PinkSlip", "Pink", false, _AddressManagerAddress)
+        UserSendable("PinkSlip", "Pink", _AddressManagerAddress)
     {
     }      
 
