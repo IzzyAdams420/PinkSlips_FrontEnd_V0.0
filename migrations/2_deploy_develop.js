@@ -7,6 +7,7 @@ const Gavels = artifacts.require("Gavels");
 const PinkSlips = artifacts.require("PinkSlips");
 const GoldStars = artifacts.require("GoldStars");
 const ChadBadge = artifacts.require("ChadBadges");
+const ColoredID = artifacts.require("ColoredID");
 
 const VendingMachine = artifacts.require("VendingMachine");
 const JuryPool = artifacts.require("JuryPool");
@@ -57,6 +58,7 @@ module.exports = function (deployer) {
     await deployer.deploy(PinkSlips, AddressManager.address);
     await deployer.deploy(GoldStars, AddressManager.address);
     await deployer.deploy(ChadBadge, AddressManager.address);
+    await deployer.deploy(ColoredID, AddressManager.address);
     
     
   }).then(async () => {
@@ -75,23 +77,26 @@ module.exports = function (deployer) {
     const PinkSlipsInstance = await PinkSlips.deployed();
     const GoldStarsInstance = await GoldStars.deployed();
     const ChadBadgeInstance = await ChadBadge.deployed();
+    const ColoredIDInstance = await ColoredID.deployed()
 
     const JuryPoolInstance = await JuryPool.deployed();
     const DisputeMachineInstance = await DisputeMachine.deployed();
 
-    await AddressManagerInstance.setPinkSlipAddress(PinkSlips.address);
-    await AddressManagerInstance.setGoldStarAddress(GoldStars.address);
-    await AddressManagerInstance.setChadBadgeAddress(ChadBadge.address);
-    await AddressManagerInstance.setJuryPoolAddress(JuryPool.address);
+    await AddressManagerInstance.setPinkSlipAddress(PinkSlipsInstance.address);
+    await AddressManagerInstance.setGoldStarAddress(GoldStarsInstance.address);
+    await AddressManagerInstance.setChadBadgeAddress(ChadBadgeInstance.address);
+    await AddressManagerInstance.setColoredIDAddress(ColoredIDInstance.address);
+    await AddressManagerInstance.setJuryPoolAddress(JuryPoolInstance.address);
     
-    await RedPensInstance.updateTokenAddresses();
-    await GavelsInstance.updateTokenAddresses();
+    await RedPensInstance.updateAllAddresses();
+    await GavelsInstance.updateAllAddresses();
 
-    await PinkSlipsInstance.updateTokenAddresses();
-    await GoldStarsInstance.updateTokenAddresses();
-    await ChadBadgeInstance.updateTokenAddresses();
-    await JuryPoolInstance.updateTokenAddresses();
-    await DisputeMachineInstance.updateTokenAddresses();
+    await PinkSlipsInstance.updateAllAddresses();
+    await GoldStarsInstance.updateAllAddresses();
+    await ChadBadgeInstance.updateAllAddresses();
+    await ChadBadgeInstance.updateAllAddresses();
+    await JuryPoolInstance.updateAllAddresses();
+    await DisputeMachineInstance.updateAllAddresses();
     
     
   })

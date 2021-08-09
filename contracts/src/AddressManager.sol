@@ -10,10 +10,12 @@
         address public GoldStarAddress;
         address public PinkSlipAddress;
         address public ChadBadgeAddress;
+        address public ColoredIDAddress;
 
         
         address public  JuryPoolAddress;
 
+        address public CourtClerk;
         address public GavelDAOAgent;
         address public JuryDAOAgent;
         address public TreasuryAddress;
@@ -116,6 +118,13 @@
             
         }
 
+        function setCourtClerk(address _newCourtClerkAddress) public BAILIFF {
+            require(_newCourtClerkAddress != address(0), zeroAddressWarning);
+            CourtClerk = _newCourtClerkAddress;
+            emit AddressUpdated(CourtClerk, "New Court Clerk");
+            
+        }
+
         function setGavelTokenAddress(address newGavelTokenAddress) public GAVELS {
             require(newGavelTokenAddress != address(0), zeroAddressWarning);
             require(newGavelTokenAddress != RedPenTokenAddress, "Don't mess with the balance of power");
@@ -163,6 +172,15 @@
             _resetVote();
             emit AddressUpdated(newChadBadgeAddress, "New ChadBadge Address");
         }
+
+        function setColoredIDAddress(address newColoredIDAddress) public THE_COURT {
+            require(newColoredIDAddress != address(0), zeroAddressWarning);
+            require(newColoredIDAddress != GavelTokenAddress && newColoredIDAddress != RedPenTokenAddress, "What are you doing?");
+            ColoredIDAddress = newColoredIDAddress;
+            _resetVote();
+            emit AddressUpdated(newColoredIDAddress, "New ColoredID Address");
+        }
+
 
 
 

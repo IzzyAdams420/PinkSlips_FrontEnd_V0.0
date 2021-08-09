@@ -15,9 +15,12 @@ contract AddressManagerReciever {
     address public GoldStarAddress;
     address public PinkSlipAddress;
     address public ChadBadgeAddress;
+    address public ColoredIDAddress;
+    
 
     address public  JuryPoolAddress;
-    
+
+    address public CourtClerk;
     address public GavelDAOAgent;
     address public JuryDAOAgent;
     address public TreasuryAddress;
@@ -41,6 +44,7 @@ contract AddressManagerReciever {
         JuryDAOAgent = addressManager.JuryDAOAgent();
         TreasuryAddress = addressManager.TreasuryAddress();
         MiniBailiff = addressManager.MiniBailiff();
+        CourtClerk = addressManager.CourtClerk();
     }
 
     function _updateTokenAddresses() internal virtual {
@@ -51,6 +55,7 @@ contract AddressManagerReciever {
         GoldStarAddress = addressManager.GoldStarAddress();
         PinkSlipAddress = addressManager.PinkSlipAddress();
         ChadBadgeAddress = addressManager.ChadBadgeAddress();
+        ColoredIDAddress = addressManager.ColoredIDAddress();
 
         JuryPoolAddress = addressManager.JuryPoolAddress();
         

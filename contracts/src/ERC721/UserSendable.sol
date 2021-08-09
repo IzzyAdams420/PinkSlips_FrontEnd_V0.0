@@ -102,7 +102,7 @@ contract UserSendable is GenericBadge {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = ownerOf(tokenId);
         address gifter = BadgeInfo[tokenId].gifter;
-        return (spender == gifter || msg.sender == JuryDAOAgent || isApprovedForAll(owner, spender));
+        return (spender == gifter || isApprovedForAll(owner, spender));
     }
 
 }

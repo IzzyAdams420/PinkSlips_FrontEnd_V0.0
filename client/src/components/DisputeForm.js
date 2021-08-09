@@ -49,7 +49,6 @@ export default function DisputeForm(props) {
     const [badgeId, setBadgeId] = useState(0);
     const [defense, setDefense] = useState("I'm not a cat...");
 
-    const [txData, setTxData] = useState(null);
     
     const handleBadgeChange = (event) => {
       setBadgeType(event.target.value);
@@ -102,20 +101,7 @@ export default function DisputeForm(props) {
                                     "stateMutability": "nonpayable",
                                     "type": "function"
                                   },
-                                  [badgeId]);
-                                  
-    const tempAddressForTest = '0xb0Bf10CC89a663Dd8834387a18b46f764660Aeb4';
-
-    const _txDataForTest = props.web3.eth.abi.encodeFunctionCall(
-                                    {
-                                      "inputs": [],
-                                      "name": "test",
-                                      "outputs": [],
-                                      "stateMutability": "nonpayable",
-                                      "type": "function"
-                                    },
-                                    []);
-
+                                  [badgeId]);                 
 
 
     const _txData2 = props.web3.eth.abi.encodeFunctionCall(
@@ -157,19 +143,8 @@ export default function DisputeForm(props) {
                                     },
                                       [badgeAddress, 0, _txData, description]);
 
-    const txRaw = {
-        from: props.accounts[0],
-        to: badgeAddress,
-        data: _txData
-    }
-
   
-    //await juryBailiff.methods.proposeAction( tempAddressForTest, 0, _txDataForTest, description).send({from: props.accounts[0]});
-    //const disputeId = '1';
-    //const disputeId = await juryBailiff.methods.proposeAction( badgeAddress, 0, txData, description).send({from: props.accounts[0]});
     const disputeId = await courtClerk.methods.submitDispute( badgeId, badgeAddress, _txData2).send({from: props.accounts[0]});
-    //const disputeId = await props.web3.eth.sendTransaction(txRaw); //badge.methods.revokeBadge(badgeId).send({from: props.accounts[0]});
-    setTxData(_txData.toString());
 }
 
 
