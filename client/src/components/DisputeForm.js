@@ -194,7 +194,7 @@ export default function DisputeForm(props) {
                         <CardContent>
 
                             <Typography variant="h5" component="h2">
-                                Appeal Your Badge { txData ? txData : null }
+                                Appeal Your Badge
                             </Typography>
 
                             <Typography color="textSecondary">
