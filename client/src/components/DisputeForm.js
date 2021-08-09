@@ -158,7 +158,7 @@ export default function DisputeForm(props) {
                 </Col>
                 
                 <Col xs={12} md={8}>
-                    <Card className="FaucetInterface" style={{backgroundColor: "pink" }}
+                    <Card className="MintingTileHeader" style={{ backgroundColor: "pink" }}
                             onClick={ formIsValid() ? submitDispute : (null) }>
                         <CardContent>
                         <Typography variant="h4" component="h2">
@@ -190,7 +190,7 @@ export default function DisputeForm(props) {
                 </Col>
                 
                 <Col xs={12} md={8}>
-                    <Card className="FaucetInterface" style={{}}>
+                    <Card className="MintingTileForm" style={{}}>
                         <CardContent>
 
                             <Typography variant="h5" component="h2">
@@ -272,7 +272,7 @@ export default function DisputeForm(props) {
           </Col>
 
           <Col xs={12} md={8}>
-            <Card className="FaucetInterface" style={{backgroundColor: "pink"}}>
+            <Card className="MintingTileFooter" style={{backgroundColor: "pink"}}>
                 <CardContent>
                 </CardContent>
                 <CardActions style={{justifyContent: "center"}}>

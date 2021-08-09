@@ -71,6 +71,26 @@ span {
     border-color: white;
   }
 
+  .MintingTileHeader {
+    border-style: solid;
+    border-radius: 40px 40px 0px 0px !important;
+    border-width: 5px;
+    border-color: white;
+  }
+
+  .MintingTileForm {
+    border-style: none;
+
+    border-radius: 2px !important;
+  }
+
+  .MintingTileFooter {
+    border-style: solid;
+    border-radius: 0px 0px 40px 40px !important;
+    border-width: 5px;
+    border-color: white;
+  }
+
   .GoldStarsInterface {
     font-weight: 600;
     padding: 50px;

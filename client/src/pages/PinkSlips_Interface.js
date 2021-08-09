@@ -77,7 +77,7 @@ class PinkSlipsInterface extends Component {
     } else {
       return 0;
     }
-    };
+  };
 
 
 

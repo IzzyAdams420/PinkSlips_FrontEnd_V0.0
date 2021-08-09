@@ -98,7 +98,6 @@ module.exports = function (deployer) {
     await JuryPoolInstance.updateAllAddresses();
     await DisputeMachineInstance.updateAllAddresses();
     
-    
   })
 
   

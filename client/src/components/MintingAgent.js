@@ -20,6 +20,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import InputGroup from 'react-bootstrap/InputGroup';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../css/App.css";
@@ -34,10 +36,11 @@ import { pink } from "@material-ui/core/colors";
 export default function MintingAgent(props) {
 
     const badge = props.badge;
-    const userBalance = props.userBalance;
+    const [userBalance, setUserBalance] = useState(props.userBalance);
+    const [pensApproved, setPensApproved] =  useState(false);
     const mintingCosts = props.mintingCosts;
 
-    const [badgeType, setBadgeType] = useState(0);
+    const [badgeType, setBadgeType] = useState(props.badgeType ? props.badgeType : 0);
     const [badgeTip, setBadgeTip] = useState(0);
     const [reason, setReason] = useState("I'm not a cat...");
     const [receivingAddress, setReceivingAddress] = useState(null);
@@ -140,9 +143,9 @@ export default function MintingAgent(props) {
 
   const TopBanner = () => {
     return (
-      <Card className="FaucetInterface" style={{backgroundColor: badgeColor[badgeTypeId]}}
+      <Card className="MintingTileHeader" style={{backgroundColor: badgeColor[badgeTypeId]}}
         onClick={ formIsValid() ? submitDispute : (null) }>
-        <CardContent>
+        <CardContent style={{marginTop: 40}}>
         <Typography variant="h4" component="h2">
                 {badgeName[badgeTypeId]}
         </Typography>
@@ -150,6 +153,16 @@ export default function MintingAgent(props) {
                 {"Issue a badge below"}
         </Typography>
 
+        {
+         badgeTypeId < 1
+         ?
+         null
+         : 
+          <Row style={{marginTop: 60}}>
+              {mintingQuoteBox()}
+          </Row>
+        }
+        
         </CardContent>
 
         
@@ -186,8 +199,25 @@ export default function MintingAgent(props) {
 
   const AgentFooter = () => {
     return (
-      <Card className="FaucetInterface" style={{backgroundColor: badgeColor[badgeTypeId]}}>
+      <Card className="MintingTileFooter" style={{backgroundColor: badgeColor[badgeTypeId]}}>
         <CardContent>
+          <div id="balanceBar">
+            <ListGroup style={{justifyContent: 'center', }} horizontal>
+              <ListGroup.Item  id="balanceBoxPink">
+                <Button className="retroButton btn btn-light input-group-append" lg={8} as={InputGroup.Append}
+                  onClick={ props.accounts ? ((parseInt(pensApproved) >= parseInt(props.mintingCost)) ?
+                            mintBadge : approvePens) : (() => {(window.location.reload())})
+                          }
+                      variant="light" id="dropdown-basic-button" title="Mint!">
+                        { props.accounts ? ((parseInt(props.pensApproved) >= parseInt(props.mintingCost)) ? "Mint!" : "Approve!") : "Connect"}
+                </Button>
+              </ListGroup.Item >
+              <ListGroup.Item id="balanceBoxPink" >You have: <br /> {props.accounts ? parseInt(props.userBalance) : "? "}
+                <span id="redSymbol" >!Red</span>
+              </ListGroup.Item> 
+            </ListGroup>
+          </div>
+          
         </CardContent>
         <CardActions style={{justifyContent: "center"}}>
           <Button href={"https://app.daohaus.club/dao/0x" + props.networkId + "/" + props.juryDAOAddress
@@ -208,6 +238,35 @@ export default function MintingAgent(props) {
     return response;
   };
 
+  const checkPenApproval = async () => {
+    if (props.accounts != null) {
+      const web3 = props.web3;
+      const mintingCost = props.mintingCost;
+
+      let spender = props.pinkSlipsAddress;
+      let owner = props.accounts[0];
+      
+
+      let pensApproved = await props.redPens.methods.allowance(owner, spender).call();
+      let userBalance = await props.redPens.methods.balanceOf(owner).call();
+      userBalance = props.web3.utils.fromWei(userBalance);
+      pensApproved = props.web3.utils.fromWei(pensApproved);
+
+      setPensApproved(pensApproved);
+      setUserBalance(userBalance);
+      return pensApproved;
+    } else {
+      return 0;
+    }
+  };
+
+  const approvePens = async () => {
+    await props.redPens.methods.approve(props.pinkSlipsAddress, "42069000000000000000000").send({ from: props.accounts[0] })
+    .then(async (receipt) => {
+      checkPenApproval();
+    });
+    
+  };
 
   return (
     <div className="MintingAgent" style={{color: "black", alignContent: "left", justifyContent: "center"}}>
@@ -234,15 +293,12 @@ export default function MintingAgent(props) {
                 </Col>
                 
                 <Col xs={12} md={8}>
-                <Card className="FaucetInterface" style={{}}>
+                <Card className="MintingTileForm" style={{}}>
                         <CardContent>
 
                            
                             <Container fluid>
-                              <Row>
-                              {mintingQuoteBox()}
-                              </Row>
-                              <br />
+                              
 
                                 {
                                   (badgeTypeId == 2)
@@ -268,10 +324,11 @@ export default function MintingAgent(props) {
                                             id="demo-simple-select-helper-label"
                                             value={badgeType}
                                             onChange={handleBadgeChange}
-                                            style={{backgroundColor: badgeColor[badgeTypeId], borderRadius: 4}}
+                                            style={{backgroundColor: badgeColor[badgeTypeId], borderStyle: "none", borderRadius: 5}}
+                                            disableUnderline
                                             >
                                                 <MenuItem value={0}>
-                                                    <em>Select a badge</em>
+                                                    <em>Select a badge color</em>
                                                 </MenuItem>
                                                 <MenuItem value={"pinkSlips"}>PinkSlip</MenuItem>
                                                 <MenuItem value={"goldStars"}>GoldStar</MenuItem>
@@ -318,7 +375,7 @@ export default function MintingAgent(props) {
                         </CardContent>
 
                         <CardActions style={{justifyContent: "center"}}>
-                            <Button onClick={mintBadge} color="secondary" size="small" ><strong>Submit Dispute</strong></Button>
+                             <Button onClick={mintBadge} color="secondary" size="small" ><strong>Submit Dispute</strong></Button>
                          </CardActions>
 
                     </Card>
@@ -336,7 +393,11 @@ export default function MintingAgent(props) {
 
       <Container>
         <Row>
+                  
+        </Row>                        
+        <Row>
           <Col xs={0} md={2}>
+            
           </Col>
 
           <Col xs={12} md={8}>
