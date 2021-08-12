@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 import getWeb3 from "../components/getWeb3";
 
-
 import {Container, Row, Col} from 'react-bootstrap';
 
 import Button from 'react-bootstrap/Button';
@@ -14,6 +13,7 @@ import Web3Prompt from "../components/Web3Prompt";
 import AddressManager from "../contracts/AddressManager.json";
 import GoldStars from "../contracts/GoldStars.json";
 import PinkSlips from "../contracts/PinkSlips.json";
+import ColoredID from "../contracts/ColoredID.json";
 import RedPens from "../contracts/RedPens.json";
 import VendingMachine from "../contracts/VendingMachine.json";
 import JuryPool from "../contracts/JuryPool.json";
@@ -39,7 +39,8 @@ class App extends Component {
   appBorderRadius = "1em"
 
 
-  toggleAlert = (event) => { 
+  toggleAlert = (event) => {
+    event.preventDefault();
     let isAlert = this.state.isAlert;
     this.setState({isAlert: (!isAlert)});
 
@@ -91,8 +92,9 @@ class App extends Component {
                                       JuryPool.networks[networkId],
                                       VendingMachine.networks[networkId],
                                       AddressManager.networks[networkId],
-                                      Minion.networks[networkId],
-                                      CourtClerk.networks[networkId]
+                                      //Minion.networks[networkId],
+                                      //CourtClerk.networks[networkId],
+                                      ColoredID.networks[networkId],
                                     ];
 
       //set the contract addresses
@@ -107,7 +109,7 @@ class App extends Component {
         deployedNetwork[1] && deployedNetwork[1].address,
       );
 
-      const pinkSlips= new web3.eth.Contract(
+      let pinkSlips= new web3.eth.Contract(
         PinkSlips.abi,
         deployedNetwork[2] && deployedNetwork[2].address,
       );
@@ -126,8 +128,7 @@ class App extends Component {
         AddressManager.abi,
         deployedNetwork[5] && deployedNetwork[5].address
       );
-
-      
+/*
       const juryBailiff = new web3.eth.Contract(
         Minion.abi,
         deployedNetwork[6] && deployedNetwork[6].address
@@ -137,24 +138,64 @@ class App extends Component {
         CourtClerk.abi,
         deployedNetwork[7] && deployedNetwork[7].address
       );
+*/
+      let coloredID= new web3.eth.Contract(
+        ColoredID.abi,
+        deployedNetwork[6] && deployedNetwork[6].address,
+      );
 
       //const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
-      const activeContracts = {goldStars, redPens, pinkSlips, juryPool, vendingMachine,  juryBailiff,  addressManager,  courtClerk  };
+      
+      pinkSlips.tester = "test";
+
+      const _pinkSlips = {
+      contract: pinkSlips,
+      badgeTypeId : 1,
+      name : "PinkSlips",
+      color : "Pink",
+      address : deployedNetwork[2].address,
+      };
+      
+      const _goldStars = {
+        contract: goldStars,
+        badgeTypeId : 2,
+        name : "GoldStars",
+        color : "Gold",
+        address : deployedNetwork[0].address,
+      };
+
+      goldStars.badgeTypeId = 2;
+      goldStars.name = "GoldStars";
+      goldStars.color = "Gold";
+      goldStars.address = deployedNetwork[0].address;
+
+      coloredID.badgeTypeId = 3;
+      coloredID.name = "ColoredID";
+      coloredID.color = "Colored";
+      //coloredID.address = deployedNetwork[6].address;
+
+     
+      const badgeContracts = { redPens, pinkSlips, goldStars, coloredID};
       const pinkMintingCost = await this.getLivePrice();
       const goldMintingCost = await this.getLivePrice();
       const mintingCosts = ["?", pinkMintingCost, goldMintingCost];
+
+
+      juryPool.address = deployedNetwork[3].address;
+      vendingMachine.address = deployedNetwork[4].address;
+//      juryBailiff.address = deployedNetwork[6].address;
 
       const goldStarsAddress = deployedNetwork[0].address;
       const pinkSlipsAddress = deployedNetwork[2].address;
       const juryPoolAddress = deployedNetwork[3].address;
       const vendingMachineAddress = deployedNetwork[4].address;
-      const juryBailiffAddress = deployedNetwork[6].address;
+      //const juryBailiffAddress = deployedNetwork[6].address;
       
       const userBalance = await redPens.methods.balanceOf(accounts[0]).call();
 
-      this.setState({ web3, accounts, userBalance, mintingCosts, networkId, goldStars, redPens, pinkSlips, juryPool, juryBailiff,  vendingMachine,  courtClerk,  
-                      goldStarsAddress, pinkSlipsAddress, juryPoolAddress, /* juryDAOAddress, */ vendingMachineAddress,  juryBailiffAddress, 
-                      addressManager, activeContracts});
+      this.setState({ web3, accounts, userBalance, mintingCosts, networkId, _goldStars, _pinkSlips, goldStars, coloredID, redPens, pinkSlips, juryPool,
+                      /*juryBailiff, */  vendingMachine,  /**courtClerk, */ goldStarsAddress, pinkSlipsAddress, juryPoolAddress,
+                       /* juryDAOAddress, */ vendingMachineAddress,  /**juryBailiffAddress, */ addressManager, badgeContracts });
 
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -240,19 +281,17 @@ class App extends Component {
     </>
   }
 
-  
-
 
 
   render() {
 
     const menuScroll = window.innerHeight >= 710 ? 'none' : 'scroll';
+    const web3 = this.state.web3;
     {/*if (!this.state.web3) {
      // return this.ConnectionPrompt();
     }*/}
     return (
       <>
-      
 
       <div className="App" style={{height: "100vh" ,  margin: 0, padding: "2vh", justifyContent: "center"}}>
         <Container fluid style={{overflowY: 'scroll', overflowX: 'hidden', borderRadius: this.appBorderRadius, height: "97vh",
@@ -322,7 +361,7 @@ class App extends Component {
         </div> /**/}
           </Row>
         </Container>
-      </div> 
+      </div>
       </>
     );
   }

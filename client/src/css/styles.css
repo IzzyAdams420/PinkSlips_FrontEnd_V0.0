@@ -78,9 +78,14 @@ span {
     border-color: white;
   }
 
+  .MintingTileImage {
+    background-color: rgb(171, 248, 248) !important;
+    border-style: none;
+    border-radius: 2px !important;
+  }
   .MintingTileForm {
     border-style: none;
-
+    
     border-radius: 2px !important;
   }
 

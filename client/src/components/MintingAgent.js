@@ -1,4 +1,9 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState, useRef } from "react";
+
+import {uploadIDBadge, uploadGenericBadge} from "../functions/IPFSInteractions.js";
+import { toPng } from 'html-to-image';
+import download from 'downloadjs';
+
 import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -27,6 +32,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../css/App.css";
 import "../css/styles.css";
 
+import BadgeImageGenerator from '../components/BadgeImageGenerator.js';
+
 import redPenIcons from '../icons/redPenIcon.png';
 import headerImage from '../rsrc/imgs/Chad_Banner.png';
 import { pink } from "@material-ui/core/colors";
@@ -35,28 +42,79 @@ import { pink } from "@material-ui/core/colors";
 
 export default function MintingAgent(props) {
 
-    const badge = props.badge;
+    const [badge, setBadge] = useState(props.badge);
+    const [badgeType, setBadgeType] = useState(props.badge ? [props.badge] : 0);
+    
+
     const [userBalance, setUserBalance] = useState(props.userBalance);
     const [pensApproved, setPensApproved] =  useState(false);
-    const mintingCosts = props.mintingCosts;
+    const [mintingCost, setMintingCost] = useState('?');
 
-    const [badgeType, setBadgeType] = useState(props.badgeType ? props.badgeType : 0);
+    const reasonDeafult = "I'm not a cat...";
     const [badgeTip, setBadgeTip] = useState(0);
-    const [reason, setReason] = useState("I'm not a cat...");
+    const [reason, setReason] = useState(reasonDeafult);
     const [receivingAddress, setReceivingAddress] = useState(null);
     
 
-    
-    const badgeTypeId = (badgeType == 0) ? 0
-                        : (badgeType == "pinkSlips" ? 1
-                          : (badgeType == "goldStars" ? 2
-                            : 0 )
-    );
+    const contract = badge.contract;
+    const badgeTypeId = badge ? badge.badgeTypeId : 0;
+
+    const disputeIMG = useRef();
+    const imagePrefs = {
+      backgroundColor: "transparent",
+      width: "490",
+      height: "300",
+    }
+ 
 
     const badgeName = [
+
+      "badge",
+      "PinkSlip",
+      "GoldStar"
+
+    ]
+    useEffect( () => {
+
+        checkPenApproval();
+    });
+
+    const fileName = badge.name;
+
+    const generatePNG =  () => {
+
+      return toPng(document.getElementById('badgeImage'), imagePrefs);
+      
+    }
+    
+    const downloadPNG = async () => {
+
+      download(await generatePNG(), fileName);
+
+    }
+
+    const badgeTitle = [
       "Minting Desk",
-      "PinkSlips",
-      "GoldStars"
+      <>
+        <h1>
+          <span role="img" id="skull">☠</span> <span id="pinkHeader">Pink</span> 
+          <span role="img" id="skull">☠</span> <span id="pinkHeader">Slips</span>
+          <span role="img" id="skull">☠</span>
+        </h1>
+        <div id="pinkSubHeader">Now you know if someones a dick!</div>
+        <br />      
+      </>,
+      <>
+        <h1>
+          <span role="img">⭐</span>
+          <span id="goldHeader">{" Golden "}</span>
+          <span role="img">⭐</span>
+          <span id="goldHeader">{" Stars "}</span>
+          <span role="img">⭐</span>
+        </h1>
+        <div id="goldSubHeader">Now you know if someones a chad!</div>
+        <br />
+      </>
     ];
 
     const badgeEmoji = [
@@ -74,7 +132,7 @@ export default function MintingAgent(props) {
       },
     ];
 
-    const reasonTitle = [
+    const reasonLabel = [
       "Reason for issuance",
       "Dick Move",
       "Chad Move"
@@ -86,13 +144,16 @@ export default function MintingAgent(props) {
       "The Chad's Address"
     ]
 
-    const badgeColor = ["aliceblue", "pink", "gold"];
+    const badgeColor = ["aliceblue", "pink", "rgba(245, 201, 7)"];
 
 
 
 
 
     const handleBadgeChange = (event) => {
+
+      if (event.target.value) setBadge(props[event.target.value]);
+      if (event.target.value == 0) setBadge(0);
       setBadgeType([event.target.value]);
       //setBadgeAddress(props.[event.target.value + "Address"]);
     };
@@ -116,8 +177,8 @@ export default function MintingAgent(props) {
     }
 
   const tipIsValid = (badgeTip) => {
-       if( Number.isInteger(parseInt(badgeTip))
-           && parseInt(badgeTip) > 0 )
+       if( (Number.isInteger(parseInt(badgeTip))
+           && parseInt(badgeTip) >= 0) || ! badgeTip )
        {
            return true;
        } else {
@@ -147,10 +208,7 @@ export default function MintingAgent(props) {
         onClick={ formIsValid() ? submitDispute : (null) }>
         <CardContent style={{marginTop: 40}}>
         <Typography variant="h4" component="h2">
-                {badgeName[badgeTypeId]}
-        </Typography>
-        <Typography color="textSecondary">
-                {"Issue a badge below"}
+                {badgeTitle[badgeTypeId]}
         </Typography>
 
         {
@@ -158,11 +216,14 @@ export default function MintingAgent(props) {
          ?
          null
          : 
-          <Row style={{marginTop: 60}}>
+          <Row style={{marginTop: 40, marginBottom: -10}}>
               {mintingQuoteBox()}
           </Row>
         }
-        
+        {badge.badgeTypeId}
+        {badge.name}
+        {badge.address}
+        {badge.contract ? "hey" : null}
         </CardContent>
 
         
@@ -187,7 +248,7 @@ export default function MintingAgent(props) {
                 </Col>
                 <Col>
                 <div className="priceLabel">
-                  Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{ mintingCosts[2] }</span> Red Pens</div>
+                  Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{ mintingCost }</span> Red Pens</div>
                 </div>                   
               </Col>
               
@@ -209,7 +270,7 @@ export default function MintingAgent(props) {
                             mintBadge : approvePens) : (() => {(window.location.reload())})
                           }
                       variant="light" id="dropdown-basic-button" title="Mint!">
-                        { props.accounts ? ((parseInt(props.pensApproved) >= parseInt(props.mintingCost)) ? "Mint!" : "Approve!") : "Connect"}
+                        { props.accounts ? ((parseInt(pensApproved) >= parseInt(mintingCost)) ? "Mint!" : "Approve!") : "Connect"}
                 </Button>
               </ListGroup.Item >
               <ListGroup.Item id="balanceBoxPink" >You have: <br /> {props.accounts ? parseInt(props.userBalance) : "? "}
@@ -229,21 +290,48 @@ export default function MintingAgent(props) {
 
   const mintBadge = async () => {
 
+    const badgeImageData = await generatePNG();
+    const tokenId = 2; // await contract.methods.nextTokenId().call();
 
-    await props.pinkSlips.methods.issueBadge(receivingAddress, reason).send({ from: props.accounts[0] });
+    const badgeInfo = {
+        name: badge.name,
+        description: reason,
+        reason: reason,
+        sender: props.accounts[0]
+    };
 
-    // Get the value from the contract to prove it worked.
-    const response = await badge.balanceOf(receivingAddress).call();
-
+    const metadata = await uploadGenericBadge(badgeImageData, badgeInfo);
+    const hashPipe = metadata.path;
+    const _badgeTip = props.web3.utils.toWei(badgeTip);
+    const response =  (
+      (badge.badgeTypeId > 1)
+      ?
+      (
+        await contract.methods.issueBadge(receivingAddress.toString(), reason.toString(), _badgeTip, hashPipe.toString())
+              .send({ from: props.accounts[0] })
+      )
+      :
+      (
+        await contract.methods.issueBadge(receivingAddress, reason, hashPipe.toString())
+              .send({ from: props.accounts[0] })
+      )
+      );
+    
+    
+    console.log("Hash path:" + hashPipe + " - Returned(eth):" + response);
     return response;
+
+
   };
 
   const checkPenApproval = async () => {
-    if (props.accounts != null) {
-      const web3 = props.web3;
-      const mintingCost = props.mintingCost;
+    
+    if (badge) {
 
-      let spender = props.pinkSlipsAddress;
+      let _mintingCost = await contract.methods.mintingCost().call();
+      _mintingCost = props.web3.utils.fromWei(_mintingCost);
+
+      let spender = badge.address;
       let owner = props.accounts[0];
       
 
@@ -252,6 +340,7 @@ export default function MintingAgent(props) {
       userBalance = props.web3.utils.fromWei(userBalance);
       pensApproved = props.web3.utils.fromWei(pensApproved);
 
+      setMintingCost(_mintingCost);
       setPensApproved(pensApproved);
       setUserBalance(userBalance);
       return pensApproved;
@@ -261,39 +350,76 @@ export default function MintingAgent(props) {
   };
 
   const approvePens = async () => {
-    await props.redPens.methods.approve(props.pinkSlipsAddress, "42069000000000000000000").send({ from: props.accounts[0] })
+    await props.redPens.methods.approve(badge.address, "42069000000000000000000").send({ from: props.accounts[0] })
     .then(async (receipt) => {
       checkPenApproval();
     });
     
   };
 
+  const getHelperText = () => {
+    let text = "Don't forget, they can dispute thier "
+    + (badgeTypeId? badgeName[badgeTypeId] : "badge") + "!";
+    return text;
+  }
+
+  const BadgePreview = () => {
+    return (
+      <Container fluid>
+        <Row>
+            <Col xs={12} md={12}>
+                <Card className="MintingTileImage" style={{alignContent: "center", justifyContent: "center"}}>
+                    <CardContent>
+                      <Container onClick={() => {}} style={{ backgroundColor: "transparent", alignContent: "center", justifyContent: "center"}}>
+                        <Row   id="badgeImage" style={{padding: 0, alignContent: "center", justifyContent: "center"}}>
+                        <BadgeImageGenerator
+                              badge={badge}
+                              badgeSender={props.accounts[0]}
+                              badgeReason={reason}
+                              badgeTokenId={42069}
+                              badgeTip={badgeTip ? badgeTip : 1}
+                              web3={props.web3}
+                            />   
+                        </Row>
+                      </Container>                          
+                    </CardContent>
+
+                    <CardActions style={{justifyContent: "center"}}>
+                        <Button onClick={downloadPNG} color="secondary" size="small" ><strong>Save Image</strong></Button>
+                          <h5>(Don't worry, we'll upload it to IPFS too)</h5>
+                    </CardActions>
+
+                </Card>
+            </Col>
+        </Row>      
+      </Container>);
+}
+
   return (
-    <div className="MintingAgent" style={{color: "black", alignContent: "left", justifyContent: "center"}}>
-        <Container>
+    <div className="MintingAgent" style={{color: "black", alignContent: "center", justifyContent: "center"}}>
+        <Container fluid>
             <Row>
-                <Col xs={0} md={2}>
-                </Col>
-
-                <Col xs={12} md={8}>
+                <Col xs={12} md={12}>
                     <TopBanner />
-                </Col>
-
-                <Col xs={0} md={2}>
                 </Col>
             </Row>      
         </Container>
 
         <br />
 
+       {
+        (badgeTypeId && (receivingAddress || badgeTip || reason != reasonDeafult))
+        ?
+        <BadgePreview />
+        :
+        (null)}
+
+        <br />        
+
         <Container>
             <Row>
-
-                <Col xs={0} md={2}>
-                </Col>
-                
-                <Col xs={12} md={8}>
-                <Card className="MintingTileForm" style={{}}>
+                <Col xs={12} md={12}>
+                <Card className="MintingTileForm" >
                         <CardContent>
 
                            
@@ -308,7 +434,7 @@ export default function MintingAgent(props) {
                                     </Col>
                                     
                                     <Col xs={12} lg={5} >
-                                        <TextField id="badge-token-id-input" label="Badge ID" value={badgeTip}
+                                        <TextField id="badge-token-id-input" label="Tip Amount" value={badgeTip}
                                             onChange={handleTipChange} />
                                     </Col>
                                   </Row>
@@ -330,8 +456,8 @@ export default function MintingAgent(props) {
                                                 <MenuItem value={0}>
                                                     <em>Select a badge color</em>
                                                 </MenuItem>
-                                                <MenuItem value={"pinkSlips"}>PinkSlip</MenuItem>
-                                                <MenuItem value={"goldStars"}>GoldStar</MenuItem>
+                                                <MenuItem value={"_pinkSlips"}>PinkSlip</MenuItem>
+                                                <MenuItem value={"_goldStars"}>GoldStar</MenuItem>
                                             </Select>
                                     </FormControl>                                                                                            
                                 </Row>
@@ -340,8 +466,7 @@ export default function MintingAgent(props) {
                                     <TextField
                                     id="reason-for-appeal2"
                                     label={walletLabel[badgeTypeId]}
-                                    helperText={"Don't forget, they can dispute thier "
-                                    + (badgeTypeId? badgeName[badgeTypeId] : "badge") + "!"}
+                                    helperText={getHelperText()}
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{
@@ -357,7 +482,7 @@ export default function MintingAgent(props) {
                                 <Row>
                                     <TextField
                                     id="reason-for-appeal"
-                                    label="Reason for appeal:"
+                                    label={reasonLabel[badgeTypeId]}
                                     helperText="(Be concise, you can provide more information later in your case thread)"
                                     fullWidth
                                     margin="normal"
@@ -375,12 +500,12 @@ export default function MintingAgent(props) {
                         </CardContent>
 
                         <CardActions style={{justifyContent: "center"}}>
-                             <Button onClick={mintBadge} color="secondary" size="small" ><strong>Submit Dispute</strong></Button>
+                             <Button onClick={mintBadge} color="secondary" size="small" ><strong>
+                             { props.accounts ? ((parseInt(pensApproved) >= parseInt(mintingCost)) ? "Mint Badge" : "Approve !Red") : "Connect"}
+                             </strong></Button>
                          </CardActions>
 
                     </Card>
-                </Col>
-                <Col xs={0} md={2}>
                 </Col>
             </Row>      
         </Container>
@@ -396,16 +521,16 @@ export default function MintingAgent(props) {
                   
         </Row>                        
         <Row>
-          <Col xs={0} md={2}>
+          <Col xs={0} md={0}>
             
           </Col>
 
-          <Col xs={12} md={8}>
+          <Col xs={12} md={12}>
             <AgentFooter />
 
           </Col>
 
-          <Col xs={0} md={2}>
+          <Col xs={0} md={0}>
           </Col>
 
         </Row>

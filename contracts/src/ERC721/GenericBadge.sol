@@ -5,16 +5,19 @@ import "../AddressManagerReciever.sol";
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerable {
+contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStorage, ERC721Enumerable {
     
     uint256 private _tokenIdGenerator = 0;
     bool public isForeverLocked = false;
 
     string public badgeColor;
     string public badgeName;
+
+    string public baseURI_ = string(abi.encodePacked("ipfs", ":", "/", "/"));
 
 
     constructor(string memory _badgeName, string memory _badgeSymbol, address _AddressManagerAddress)
@@ -43,7 +46,9 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
 
     mapping (address => uint[]) public BadgesSent; // mapping of address to tokenIDs sent
 
-
+    function nextTokenId() public view returns (uint _nextTokenId){
+        _nextTokenId = _tokenIdGenerator;
+    }
 
     function setBadgeInfo(address _gifter, string memory _reason, uint _tokenId) internal {
         BadgeInfo[_tokenId].gifter = _gifter; // assigns this goldstar gifter address to msg.sender
@@ -89,23 +94,41 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
 
 
     function issueBadge(address receivingAddress, string memory _reason) public virtual
-        BAILIFF
         returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
         newId = _issueBadge(receivingAddress, _reason);
         return newId;
        
      }
 
+    function issueBadge(address receivingAddress, string memory _reason,  string memory _tokenURI) public virtual
+        returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
+        newId = _issueBadge(receivingAddress, _reason, _tokenURI);
+        return newId;
+       
+    }
+
     function _issueBadge(address receivingAddress, string memory _reason) internal virtual
         returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
         require((receivingAddress != msg.sender) && (receivingAddress != address(0)));
         newId = _tokenIdGenerator;
-        setBadgeInfo(msg.sender, _reason, _tokenIdGenerator);
-        _safeMint(receivingAddress, _tokenIdGenerator);
+        setBadgeInfo(msg.sender, _reason, newId);
+        _safeMint(receivingAddress, newId);
         _tokenIdGenerator += 1;
         return newId;
        
-     }
+    }
+
+    function _issueBadge(address receivingAddress, string memory _reason, string memory _tokenURI) internal virtual
+        returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
+        require((receivingAddress != msg.sender) && (receivingAddress != address(0)));
+        newId = _tokenIdGenerator;
+        setBadgeInfo(msg.sender, _reason, newId);
+        _safeMint(receivingAddress, newId);
+        _setTokenURI(newId, _tokenURI);
+        _tokenIdGenerator += 1;
+        return newId;
+       
+    }
 
     function revokeBadge(uint tokenId) public {
         require(_isApprovedOrOwner(msg.sender, tokenId),
@@ -173,6 +196,27 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721Enumerab
         } else {return false;}
     }
 
+    function _burn(uint256 _tokenId) internal virtual override (ERC721, ERC721URIStorage){
+        ERC721URIStorage._burn(_tokenId);
+    }
+
+    function setBaseURI(string memory _baseURIString) public BAILIFF returns (bool) {
+        _setBaseURI(_baseURIString);
+        return true;
+    }
+
+    function _setBaseURI(string memory _baseURIString) internal returns (bool) {
+        baseURI_ = _baseURIString;
+        return true;
+    }
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI_;
+    }
+
+    function tokenURI(uint256 _tokenId) public view virtual override(ERC721, ERC721URIStorage) returns (string memory _URI) {
+        _URI = ERC721URIStorage.tokenURI(_tokenId);
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////

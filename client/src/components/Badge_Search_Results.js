@@ -209,31 +209,6 @@ class SearchResults extends Component {
     return (
       <div className="SearchResults">
 
-      {/*
-      <TableContainer component={Paper}>
-          <Table aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Reason</StyledTableCell>
-                <StyledTableCell align="right">Badge Color</StyledTableCell>
-                <StyledTableCell align="right">Sender &nbsp;</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.tokenArray.map((badgeResult) => (
-                <StyledTableRow key={badgeResult.id}>
-                  <StyledTableCell component="th" scope="row">
-                  {badgeResult.reason}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{this.state.badgeColor}</StyledTableCell>
-                  <StyledTableCell align="right">{badgeResult.gifter.slice(0, 6) + "..." + badgeResult.gifter.slice(38, 42)}</StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      */}
-
         { this.state.tokenArray.map(badgeResult => (
              
              <>

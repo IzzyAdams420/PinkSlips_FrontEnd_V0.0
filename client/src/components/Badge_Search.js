@@ -135,7 +135,7 @@ class BadgeSearch extends Component {
     
     
     return (
-      <div className="BadgeSearch" >
+      <div className="BadgeSearch" maxWidth={1000} >
     
     <Container fluid>
 
@@ -175,8 +175,6 @@ class BadgeSearch extends Component {
                               <Dropdown.Item onClick={() => {window.location.reload()}} >Badges Sent</Dropdown.Item>
                               <Dropdown.Item >(More Coming Soon...)</Dropdown.Item>
                             </DropdownButton>
-
-
                         }
                     </InputGroup>
                 </Col>

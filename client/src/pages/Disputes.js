@@ -1,7 +1,7 @@
 import React from "react";
 
 import DisputeForm from '../components/DisputeForm.js';
-import MintingAgent from '../components/MintingAgent.js';
+import BadgeImageGenerator from '../components/BadgeImageGenerator.js';
 
 import Row from 'react-bootstrap/Row';
 
@@ -21,9 +21,28 @@ export default function Disputes(props) {
       <Row>
         <DisputeForm {...props} /> 
       </Row>
-      <Row style={{marginTop: "5vh"}}>
-        <MintingAgent {...props} />
-      </Row> 
+      <br /><br />
+{/*      <Row>
+        <BadgeImageGenerator badge={props.goldStars}
+          badgeTokenId={42069}
+          badgeReason={"OMG! Sam cuts the best fucking watermelon!"}
+          badgeSender={"0xFc961Da137b43B7F0Bf612079FC2f91d9216DdF2"}
+          badgeTip={"420"} /> 
+      </Row>
+      <Row>
+        <BadgeImageGenerator badge={props.pinkSlips}
+          badgeTypeId={1}
+          badgeTokenId={42069}
+          badgeReason={"OMG! Sam cuts the best fucking watermelon!"}
+          badgeSender={"0xFc961Da137b43B7F0Bf612079FC2f91d9216DdF2"}
+          /> 
+      </Row> */}
+      <Row>
+        <BadgeImageGenerator badge={props.coloredID}
+          badgeTokenId={42069}
+          web3={props.web3} /> 
+        
+      </Row>
       <br /><br />    
     </div>
   )

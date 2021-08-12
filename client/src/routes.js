@@ -7,6 +7,7 @@ import WalletSearch from './pages/Wallet_Search.js';
 import Disputes from './pages/Disputes.js';
 import Faucet from './pages/Faucet.js';
 
+
 // import all the icons
 import FaceIcon from '@material-ui/icons/Face'; // alt home icon
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';

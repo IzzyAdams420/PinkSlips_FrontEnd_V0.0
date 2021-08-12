@@ -7,6 +7,7 @@ const Gavels = artifacts.require("Gavels");
 const PinkSlips = artifacts.require("PinkSlips");
 const GoldStars = artifacts.require("GoldStars");
 const ChadBadge = artifacts.require("ChadBadges");
+const ColoredID = artifacts.require("ColoredID");
 
 const VendingMachine = artifacts.require("VendingMachine");
 const JuryPool = artifacts.require("JuryPool");
@@ -58,6 +59,8 @@ module.exports = function (deployer) {
     
     await deployer.deploy(PinkSlips, AddressManager.address);
     await deployer.deploy(GoldStars, AddressManager.address);
+    await deployer.deploy(ColoredID, AddressManager.address);
+
     //await deployer.deploy(ChadBadge, AddressManager.address);
     
     
@@ -76,6 +79,7 @@ module.exports = function (deployer) {
     
     const PinkSlipsInstance = await PinkSlips.deployed();
     const GoldStarsInstance = await GoldStars.deployed();
+    const ColoredIDInstance = await ColoredID.deployed();
     //const ChadBadgeInstance = await ChadBadge.deployed();
 
     //const JuryPoolInstance = await JuryPool.deployed();
@@ -83,6 +87,7 @@ module.exports = function (deployer) {
 
     await AddressManagerInstance.setPinkSlipAddress(PinkSlips.address);
     await AddressManagerInstance.setGoldStarAddress(GoldStars.address);
+    await AddressManagerInstance.setColoredIDAddress(ColoredID.address);
     //await AddressManagerInstance.setChadBadgeAddress(ChadBadge.address);
     //await AddressManagerInstance.setJuryPoolAddress(JuryPool.address);
     
@@ -91,6 +96,8 @@ module.exports = function (deployer) {
 
     await PinkSlipsInstance.updateTokenAddresses();
     await GoldStarsInstance.updateTokenAddresses();
+    await ColoredIDInstance.updateTokenAddresses();
+    
     //await ChadBadgeInstance.updateTokenAddresses();
     //await JuryPoolInstance.updateTokenAddresses();
     //await DisputeMachineInstance.updateTokenAddresses();

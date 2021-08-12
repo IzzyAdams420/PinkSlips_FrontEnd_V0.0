@@ -1,0 +1,189 @@
+@font-face {
+    font-family: "DrSugiyama-Regular";
+    src: local("DrSugiyama-Regular"),
+     url("../rsrc/fonts/DrSugiyama-Regular.ttf") format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "EmblemaOne";
+    src: local("EmblemaOne-Regular"),
+     url("../rsrc/fonts/EmblemaOne-Regular.ttf") format("truetype");
+    font-weight: bold;
+}
+
+.coloredIdHolder {
+    z-index: 3;
+    opacity: .5;
+    text-align: left;
+    position: absolute;
+    bottom: 12px;
+    left: 32px;
+
+    width: 390px;
+    height: 56px;
+    font-size: 42px;
+    letter-spacing: 3px;
+    color: #000000;
+    font-weight: 400;
+    font-family: "DrSugiyama-Regular";
+    outline: 3px;
+    -webkit-text-fill-color: rgba(66, 255, 246, 0.876); /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(218, 112, 195, 0.616);
+    text-shadow:
+    -2px -1px 0 rgba(223, 233, 85, 0.459), 
+    1px -1px 0 rgba(0, 0, 0, 0.424), 
+    1px 3px 0 rgba(255, 189, 189, 0.513),  
+     -1px -1px 0 rgb(255, 137, 229),  
+      2px -1px 0 rgb(100, 97, 255),
+      -1px 3px 0 rgb(113, 215, 255),
+       1px 1px 0 rgb(253, 65, 206),
+       3px -1px 0 rgb(80, 207, 245),
+       1px 4px 0 rgb(255, 159, 234),
+       1px 2px 0 rgb(255, 223, 80);
+/*
+    background-color: #f3ec78;
+    background-image: linear-gradient(45deg, #f3ec78, #af4261);
+    background-size: 100%;
+    background: rgb(255,218,146);
+    background: linear-gradient(0deg, rgba(255,218,146,1) 0%, rgba(189,212,190,1) 42%, rgba(150,244,255,1) 56%);
+
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+*/
+}
+
+.coloredIdAvatar {
+    z-index: 2;
+    opacity: 1;
+
+    height: 150px;
+    width: 180px;
+    position: absolute;
+    top: 17px;
+    left: 295px;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+
+.coloredIdTokenId {
+    z-index: 3;
+    opacity: .6;
+    
+    position: absolute;
+    bottom: 17px;
+    left: 335px;
+
+    width: 140px;
+    height: 30px;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: #000000;
+    font-weight: 400;
+    font-family: "EmblemaOne";
+}
+
+.pinkReason {
+
+    z-index: 2;
+    opacity: .9;
+    text-align: left;
+    position: absolute;
+    bottom: 67px;
+    left: 32px;
+
+    width: 270px;
+    height: 105px;
+    font-size: 27px;
+    letter-spacing: 2px;
+    color: #f53550;
+    font-weight: 400;
+    font-family: "DrSugiyama-Regular";
+}
+
+.pinkSender {
+    z-index: 2;
+    opacity: .5;
+    text-align: left;
+    position: absolute;
+    bottom: -10px;
+    left: 32px;
+
+    width: 250px;
+    height: 105px;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: #000000;
+    font-weight: 400;
+    font-family: "EmblemaOne";
+}
+
+.goldSender {
+    z-index: 3;
+    opacity: .8;
+    
+    position: absolute;
+    bottom: 120px;
+    left: 277px;
+
+    width: 243px;
+    height: 29px;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: #000000;
+    font-weight: 400;
+    font-family: "DrSugiyama-Regular";
+}
+
+.goldReason {
+    z-index: 3;
+    opacity: .8;
+    position: absolute;
+    bottom: 12px;
+    left: 205px;
+
+    width: 255px;
+    height: 84px;    
+
+    text-align: left;
+    justify-content: left;
+
+    padding-top: 10px;
+    padding-left: 8px;
+
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: #000000;
+    font-weight: 400;
+    font-family: "DrSugiyama-Regular";
+
+}
+
+.goldTip {
+    z-index: 3;
+    opacity: .8;
+    position: absolute;
+    bottom: 65px;
+    left: 28px;
+    
+    height: 43px;
+    width: 147px;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: #12113b;
+    font-weight: 400;
+    font-family: "EmblemaOne";
+
+    text-shadow: -1px -1px 0px rgba(255, 255, 253, 0.473), 1px 1px 0px rgba(0, 0, 0, 0.8);
+}
+
+.goldTipAmount {
+
+    color: #ca1414;
+}

@@ -17,6 +17,7 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     string public socialPlatform;
     string public badgeColor;
     string public badgeName;
+    string public baseURI_ = string(abi.encodePacked("ipfs", ":", "/", "/"));
 
     constructor(string memory _badgeName, string memory _badgeSymbol, string memory _socialPlatform, address _AddressManagerAddress)
         ERC721(_badgeName, _badgeSymbol)
@@ -102,9 +103,9 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
         _updateAvatar(_tokenId, _avatarTokenAddress, _avatarTokenId, _avatarNetworkId);
     }
 
-    function updateImageHash(uint256 _tokenId, string memory _imageHash) public {
-        require( isApprovedForAll(ownerOf(_tokenId), msg.sender));
-        _setTokenURI( _tokenId, _imageHash);
+    function updateImageHash(uint256 _tokenId, string memory _contentHash) public {
+        require(_isApprovedOrOwner(msg.sender, _tokenId));
+        _setTokenURI( _tokenId, _contentHash);
     }
 
     function _updateAvatar(uint _tokenId, address _avatarTokenAddress, uint _avatarTokenId) internal {
@@ -141,7 +142,8 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    function issueBadge(address receivingAddress, string memory _pseudonym, string memory _socialHandle, address _avatarTokenAddress, uint _avatarTokenId, uint _tokenId) public virtual
+    function issueBadge(address receivingAddress, string memory _pseudonym, string memory _socialHandle,
+                            address _avatarTokenAddress, uint _avatarTokenId, uint _tokenId, string memory _TokenURI) public virtual
         BAILIFF
         returns(uint newId) {
             uint _avatarNetworkId = 1;
@@ -237,6 +239,19 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
         } else {return false;}
     }
 
+    function setBaseURI(string memory _baseURIString) public BAILIFF returns (bool) {
+        _setBaseURI(_baseURIString);
+        return true;
+    }
+
+    function _setBaseURI(string memory _baseURIString) internal returns (bool) {
+        baseURI_ = _baseURIString;
+        return true;
+    }
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI_;
+    }
     function tokenURI(uint256 _tokenId) public view virtual override(ERC721, ERC721URIStorage) returns (string memory _URI) {
         _URI = ERC721URIStorage.tokenURI(_tokenId);
     }

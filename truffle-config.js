@@ -74,7 +74,7 @@ module.exports = {
   
     },
 
-    rinkby: {
+    rinkeby: {
        provider: () => {
          return new HDWalletProvider(mnemonic, infura2);
       },

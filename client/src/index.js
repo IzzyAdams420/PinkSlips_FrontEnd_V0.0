@@ -6,6 +6,9 @@ import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 //import AuthLayout from "layouts/Auth.js";
 import App from './views/App';
 
+import './rsrc/fonts/DrSugiyama-Regular.ttf';
+import './rsrc/fonts/EmblemaOne-Regular.ttf';
+
 ReactDOM.render(
   <HashRouter>
    {/*<BrowserRouter> */}
