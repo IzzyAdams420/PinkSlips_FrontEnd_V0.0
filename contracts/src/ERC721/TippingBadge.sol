@@ -56,7 +56,7 @@ abstract contract TippingBadge is UserSendable {
         _;
     }    
 
-    function setTipRatio(uint _numerator, uint _divisor) public JURY returns (bool){
+    function setTipRatio(uint _numerator, uint _divisor) public JURY returns (bool) {
         require(_numerator >= _divisor, "Sorry! Cost numerator must be greater than denominator");
         _setTipRatio(_numerator, _divisor);
         return true;

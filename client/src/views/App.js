@@ -92,8 +92,8 @@ class App extends Component {
                                       JuryPool.networks[networkId],
                                       VendingMachine.networks[networkId],
                                       AddressManager.networks[networkId],
-                                      //Minion.networks[networkId],
-                                      //CourtClerk.networks[networkId],
+                                      Minion.networks[networkId],
+                                      CourtClerk.networks[networkId],
                                       ColoredID.networks[networkId],
                                     ];
 
@@ -128,7 +128,7 @@ class App extends Component {
         AddressManager.abi,
         deployedNetwork[5] && deployedNetwork[5].address
       );
-/*
+
       const juryBailiff = new web3.eth.Contract(
         Minion.abi,
         deployedNetwork[6] && deployedNetwork[6].address
@@ -138,10 +138,10 @@ class App extends Component {
         CourtClerk.abi,
         deployedNetwork[7] && deployedNetwork[7].address
       );
-*/
+
       let coloredID= new web3.eth.Contract(
         ColoredID.abi,
-        deployedNetwork[6] && deployedNetwork[6].address,
+        deployedNetwork[8] && deployedNetwork[8].address,
       );
 
       //const juryDAOAddress = await addressManager.methods.JuryDAOAddress().call();
@@ -172,7 +172,7 @@ class App extends Component {
       coloredID.badgeTypeId = 3;
       coloredID.name = "ColoredID";
       coloredID.color = "Colored";
-      //coloredID.address = deployedNetwork[6].address;
+      coloredID.address = deployedNetwork[8].address;
 
      
       const badgeContracts = { redPens, pinkSlips, goldStars, coloredID};
@@ -194,7 +194,7 @@ class App extends Component {
       const userBalance = await redPens.methods.balanceOf(accounts[0]).call();
 
       this.setState({ web3, accounts, userBalance, mintingCosts, networkId, _goldStars, _pinkSlips, goldStars, coloredID, redPens, pinkSlips, juryPool,
-                      /*juryBailiff, */  vendingMachine,  /**courtClerk, */ goldStarsAddress, pinkSlipsAddress, juryPoolAddress,
+                      juryBailiff,   vendingMachine,  courtClerk, goldStarsAddress, pinkSlipsAddress, juryPoolAddress,
                        /* juryDAOAddress, */ vendingMachineAddress,  /**juryBailiffAddress, */ addressManager, badgeContracts });
 
     } catch (error) {

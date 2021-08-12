@@ -1,5 +1,6 @@
 import react from 'react';
 import { create } from 'ipfs-http-client';
+import {NFTStorage, File } from 'nft.storage';
 import { NftProvider, useNft } from "use-nft"
 import { Component } from 'react';
  
@@ -25,23 +26,32 @@ export const uploadIDBadge = async (imageData, badgeInfo) => {
 
 export const uploadGenericBadge = async (imageData, badgeInfo) => {
 
-    const _fileName = badgeInfo.name +" #" + badgeInfo.tokenId + ".png";
+    var randomNumber = new Uint16Array(1);
+    window.crypto.getRandomValues(randomNumber);
+    randomNumber = randomNumber.toString();
+
+    const _fileName = badgeInfo.name + "_" + randomNumber + ".png";
 
     const client = create('https://ipfs.infura.io:5001/api/v0');
 
     const image = new File([imageData], _fileName, { type: 'image/png'});
+    const _image = await client.add({path: _fileName, content: image}, {wrapWithDirectory: true});
+    const imageURL = "ipfs://" + _image.cid + "/" + _fileName;
 
-    const _image = await client.add(image);
+    const _metadata ={
+        name: badgeInfo.name,
+        description: badgeInfo.reason,
+        image: imageURL
+    } 
+    const _json = JSON.stringify(_metadata)
 
-    const _metadata =`{"name":"${badgeInfo.name}","description":"ID#${badgeInfo.tokenId}","reason"`
-                        + `:"${badgeInfo.reason}","sender":"${badgeInfo.sender}",image":"ipfs://${_image.path}"}`;
+    const metadata = await client.add({path: 'metadata.json', content: _json}, {wrapWithDirectory: true});
 
-    const metadata = await client.add(_metadata);
+    console.log("CID:" + metadata.cid);
 
-    console.log(metadata);
-    console.log(metadata.path);
-
-    return metadata;
+    const metadataPath = metadata.cid + '/metadata.json';
+    console.log(metadataPath);
+    return metadataPath;
 }
 
 export const NFTContent = async (_NFTAddress, _NFTTokenID) => {

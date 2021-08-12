@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 
 import {uploadIDBadge, uploadGenericBadge} from "../functions/IPFSInteractions.js";
-import { toPng } from 'html-to-image';
+import { toBlob, toPng } from 'html-to-image';
 import download from 'downloadjs';
 
 import Image from 'react-bootstrap/Image';
@@ -81,10 +81,10 @@ export default function MintingAgent(props) {
 
     const fileName = badge.name;
 
-    const generatePNG =  () => {
+    const generatePNG = () => {
 
-      return toPng(document.getElementById('badgeImage'), imagePrefs);
-      
+      // return toPng(document.getElementById('badgeImage'), imagePrefs);
+      return toBlob(document.getElementById('badgeImage'), imagePrefs);
     }
     
     const downloadPNG = async () => {
@@ -300,19 +300,19 @@ export default function MintingAgent(props) {
         sender: props.accounts[0]
     };
 
-    const metadata = await uploadGenericBadge(badgeImageData, badgeInfo);
-    const hashPipe = metadata.path;
-    const _badgeTip = props.web3.utils.toWei(badgeTip);
+    const contentURL = await uploadGenericBadge(badgeImageData, badgeInfo);
+    const hashPipe = contentURL;
+    const _badgeTip = props.web3.utils.toWei(badgeTip.toString());
     const response =  (
       (badge.badgeTypeId > 1)
       ?
       (
-        await contract.methods.issueBadge(receivingAddress.toString(), reason.toString(), _badgeTip, hashPipe.toString())
+        await contract.methods.issueBadge(receivingAddress, reason, _badgeTip, hashPipe)
               .send({ from: props.accounts[0] })
       )
       :
       (
-        await contract.methods.issueBadge(receivingAddress, reason, hashPipe.toString())
+        await contract.methods.issueBadge(receivingAddress, reason, hashPipe)
               .send({ from: props.accounts[0] })
       )
       );
