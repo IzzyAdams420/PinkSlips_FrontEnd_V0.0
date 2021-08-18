@@ -4,6 +4,7 @@ import {uploadIDBadge, uploadGenericBadge} from "../functions/IPFSInteractions.j
 import { toBlob, toPng } from 'html-to-image';
 import download from 'downloadjs';
 
+
 import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -32,7 +33,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../css/App.css";
 import "../css/styles.css";
 
-import BadgeImageGenerator from '../components/BadgeImageGenerator.js';
+import {GetNFTImage} from './GetNFTImage.js';
+import BadgeImageGenerator from './BadgeImageGenerator.js';
 
 import redPenIcons from '../icons/redPenIcon.png';
 import headerImage from '../rsrc/imgs/Chad_Banner.png';
@@ -40,7 +42,7 @@ import { pink } from "@material-ui/core/colors";
 
 
 
-export default function MintingAgent(props) {
+export default function PassportAgent(props) {
 
     const [badge, setBadge] = useState(props.badge);
     const [badgeType, setBadgeType] = useState(props.badge ? [props.badge] : 0);
@@ -50,17 +52,19 @@ export default function MintingAgent(props) {
     const [pensApproved, setPensApproved] =  useState(false);
     const [mintingCost, setMintingCost] = useState('?');
 
-    const reasonDeafult = "I'm not a cat...";
-    const [badgeTip, setBadgeTip] = useState(0);
-    const [reason, setReason] = useState(reasonDeafult);
+    const [avatarAddress, setAvatarAddress] = useState(null);
+    const [avatarTokenId, setAvatarTokenId] = useState(null);
+    const [pseudonym, setPseudonym] = useState(null);
+    const [socialHandle, setSocialHandle] = useState(null);
+    const [socialLink, setSocialLink] = useState(null);
     const [receivingAddress, setReceivingAddress] = useState(null);
     
+    const [imageData, SetImageData] = useState(null);
 
     const contract = badge.contract;
-    const badgeTypeId = badge ? badge.badgeTypeId : 0;
+    const badgeTypeId = 3;
 
     const disputeIMG = useRef();
-    
     const imagePrefs = {
       backgroundColor: "transparent",
       width: "490",
@@ -72,12 +76,14 @@ export default function MintingAgent(props) {
 
       "badge",
       "PinkSlip",
-      "GoldStar"
+      "GoldStar",
+      "Colored ID"
 
     ]
     useEffect( () => {
 
         checkPenApproval();
+        
     });
 
     const fileName = badge.name;
@@ -90,7 +96,7 @@ export default function MintingAgent(props) {
     
     const downloadPNG = async () => {
 
-      download(await generatePNG(), fileName);
+     // download(await generatePNG(), fileName);
 
     }
 
@@ -115,7 +121,11 @@ export default function MintingAgent(props) {
         </h1>
         <div id="goldSubHeader">Now you know if someones a chad!</div>
         <br />
+      </>,
+      <>
+      <h1 >Apply Below</h1>
       </>
+
     ];
 
     const badgeEmoji = [
@@ -129,6 +139,10 @@ export default function MintingAgent(props) {
       },
       {
         icon: "⭐⭐⭐",
+        filter: "drop-shadow(0 0 0.75rem gray)"
+      },
+      {
+        icon: "⭐",
         filter: "drop-shadow(0 0 0.75rem gray)"
       },
     ];
@@ -145,7 +159,12 @@ export default function MintingAgent(props) {
       "The Chad's Address"
     ]
 
-    const badgeColor = ["aliceblue", "pink", "rgba(245, 201, 7)"];
+    const coloredGradient = "linear-gradient(90deg, rgba(255,255,255,1) 13%, rgba(251,140,243,1) 18%, rgba(169,123,233,1) 21%,"
+                            + "rgba(4,89,213,1) 24%, rgba(47,137,225,1) 27%, rgba(132,234,249,1) 28%, rgba(130,255,249,1) 30%,"
+                            + " rgba(55,215,71,1) 33%, rgba(245,255,72,1) 36%, rgba(247,218,72,1) 38%, rgba(255,72,72,1) 41%,"
+                            + " rgba(255,255,255,1) 46%)";
+    const badgeColor = ["aliceblue", "pink", "rgba(245, 201, 7)", coloredGradient];
+
 
 
 
@@ -159,29 +178,47 @@ export default function MintingAgent(props) {
       //setBadgeAddress(props.[event.target.value + "Address"]);
     };
   
-    const handleTipChange = (event) => {
+    const handleAvatarTokenId = (event) => {
 
-      if (tipIsValid(event.target.value)) {
-        setBadgeTip(event.target.value);
+      if (Number.isInteger(parseInt(event.target.value))) {
+        setAvatarTokenId(event.target.value);
       } else {
         alert("Please enter a number");
       }
     
     };
+    
+    const handleAvatarAddress= (event) => {
+
+        setAvatarAddress(event.target.value);
+    
+    };
   
-    const handleReasonChange = (event) => {
-      setReason(event.target.value);
+    const handlePseudonym = (event) => {
+      setPseudonym(event.target.value);
       event.preventDefault();
     };
+
+    const handleSocialHandle = (event) => {
+      setSocialHandle(event.target.value);
+
+    };
+
+    const handleSocialLink = (event) => {
+      setSocialLink(event.target.value);
+  
+    };
+
     const handleReceivingAddressChange = (event) => {
       setReceivingAddress(event.target.value);
     }
 
-  const tipIsValid = (badgeTip) => {
-       if( (Number.isInteger(parseInt(badgeTip))
-           && parseInt(badgeTip) >= 0) || ! badgeTip )
+  const addressIsValid = (address) => {
+      const web3 = props.web3;
+      const _address = web3.utils.toChecksumAddress(address);
+       if (props.web3.utils.isAddress(_address))
        {
-           return true;
+           return _address;
        } else {
            return false;
        }
@@ -189,14 +226,22 @@ export default function MintingAgent(props) {
  
 
     const formIsValid = () => {
+
+      const _avatarAddress = addressIsValid(avatarAddress);
+      const _avatarTokenId = addressIsValid(avatarAddress);
+
        // if( Number.isInteger(parseInt(badgeId))
       //      && parseInt(badgeId) > 0 
       //      && badgeAddress != null )
       //  {
      //       return true;
       //  } else {
-            return false;
-
+      if (_avatarAddress && Number.isInteger(avatarTokenId)) {
+        setAvatarAddress(_avatarAddress);
+        return true;
+      } else {
+        return false;
+      }
     };
   
     const submitDispute = async () => {
@@ -205,22 +250,14 @@ export default function MintingAgent(props) {
 
   const TopBanner = () => {
     return (
-      <Card className="MintingTileHeader" style={{backgroundColor: badgeColor[badgeTypeId]}}
-        onClick={ formIsValid() ? submitDispute : (null) }>
+        <Card className="ColoredIDHeader" style={{backgroundColor: badgeColor[badgeTypeId]}}
+        onClick={ formIsValid ? submitDispute : (null) }>
         <CardContent style={{marginTop: 40}}>
         <Typography variant="h4" component="h2">
                 {badgeTitle[badgeTypeId]}
         </Typography>
-
-        {
-         badgeTypeId < 1
-         ?
-         null
-         : 
-          <Row style={{marginTop: 40, marginBottom: -10}}>
-              {mintingQuoteBox()}
-          </Row>
-        }
+        <img style={{width: "500px"}} src={imageData} />
+        <Button onClick={getAvatar} > Get Avatar! </Button>
         </CardContent>
 
         
@@ -229,31 +266,9 @@ export default function MintingAgent(props) {
               {badgeEmoji[badgeTypeId].icon}
             </span>
         </Typography>
-    </Card> 
+    </Card>
     )
   }
-
-  const mintingQuoteBox = () => {
-    return (
-             <>
-              <Col id='quoteContainer' md={12}>
-                <div className='tokenMeter'>
-                  <img className='tokenIcon' id='redPenIcon' src={redPenIcons} />
-                  <img className='tokenIcon' id='redPenIcon' src={redPenIcons} />
-                  <img className='tokenIcon' id='redPenIcon' src={redPenIcons} />
-                </div>
-                </Col>
-                <Col>
-                <div className="priceLabel">
-                  Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{ mintingCost }</span> Red Pens</div>
-                </div>                   
-              </Col>
-              
-             </>
-    );
-  }
-
-
 
   const AgentFooter = () => {
     return (
@@ -285,8 +300,9 @@ export default function MintingAgent(props) {
       </Card>);
   };
 
+  
   const mintBadge = async () => {
-
+/*
     const badgeImageData = await generatePNG();
     const tokenId = 2; // await contract.methods.nextTokenId().call();
 
@@ -318,32 +334,15 @@ export default function MintingAgent(props) {
     console.log("Hash path:" + hashPipe + " - Returned(eth):" + response);
     return response;
 
-
+*/
   };
 
+  const getAvatar = async () => {
+    const _image = await GetNFTImage("0x3Fb8af6285F63a3c121605C66De20060c6B6ECb2", "7", props.web3);
+    SetImageData(_image);
+  }
   const checkPenApproval = async () => {
-    
-    if (badge) {
-
-      let _mintingCost = await contract.methods.mintingCost().call();
-      _mintingCost = props.web3.utils.fromWei(_mintingCost);
-
-      let spender = badge.address;
-      let owner = props.accounts[0];
-      
-
-      let pensApproved = await props.redPens.methods.allowance(owner, spender).call();
-      let userBalance = await props.redPens.methods.balanceOf(owner).call();
-      userBalance = props.web3.utils.fromWei(userBalance);
-      pensApproved = props.web3.utils.fromWei(pensApproved);
-
-      setMintingCost(_mintingCost);
-      setPensApproved(pensApproved);
-      setUserBalance(userBalance);
-      return pensApproved;
-    } else {
-      return 0;
-    }
+    return 0;
   };
 
   const approvePens = async () => {
@@ -360,36 +359,30 @@ export default function MintingAgent(props) {
     return text;
   }
 
-  const BadgePreview = () => {
+  const BadgePreviewBox = () => {
     return (
       <Container fluid>
         <Row>
             <Col xs={12} md={12}>
-                <Card className="MintingTileImage" style={{alignContent: "center", justifyContent: "center"}}>
-                    <CardContent>
-                      <Container onClick={() => {}} style={{ backgroundColor: "transparent", alignContent: "center", justifyContent: "center"}}>
-                        <Row   id="badgeImage" style={{ padding: 0, alignContent: "center", justifyContent: "center"}}>
-                        <BadgeImageGenerator
-                              badge={badge}
-                              badgeSender={props.accounts[0]}
-                              badgeReason={reason}
-                              badgeTokenId={42069}
-                              badgeTip={badgeTip ? badgeTip : 1}
-                              web3={props.web3}
-                            />   
-                        </Row>
-                      </Container>                          
-                    </CardContent>
-
-                    <CardActions style={{justifyContent: "center"}}>
-                        <Button onClick={downloadPNG} color="secondary" size="small" ><strong>Save Image</strong></Button>
-                          <h5>(Don't worry, we'll upload it to IPFS too)</h5>
-                    </CardActions>
-
-                </Card>
+                <BadgePreview />
             </Col>
         </Row>      
       </Container>);
+}
+
+const BadgePreview = () => {
+  return (
+ 
+                        <BadgeImageGenerator
+                              badge={badge}
+                              badgeSender={props.accounts[0]}
+                              pseudonym={(pseudonym && (pseudonym.length >= 17)) ? pseudonym.slice(0, 18) : pseudonym}
+                              badgeTokenId={42069}
+                              // badgeTip={badgeTip ? badgeTip : 1}
+                              web3={props.web3}
+                            />    
+
+                );
 }
 
   return (
@@ -402,15 +395,6 @@ export default function MintingAgent(props) {
             </Row>      
         </Container>
 
-        <br />
-
-       {
-        (badgeTypeId && (receivingAddress || badgeTip || reason != reasonDeafult))
-        ?
-        <BadgePreview />
-        :
-        (null)}
-
         <br />        
 
         <Container>
@@ -422,73 +406,76 @@ export default function MintingAgent(props) {
                            
                             <Container fluid>
                               
-
-                                {
-                                  (badgeTypeId == 2)
-                                  ?
-                                  <Row style={{alignContent: "right", justifyContent: "right" }}>
-                                    <Col xs={0} lg={7} >
-                                    </Col>
+                                <Row style={{padding: "1vw", paddingTop: "3vh", paddingBottom: "3vh", justifyContent: "center"}}>
+                                  <Col xs={12} m={7} lg={7} style={{position: "relative"}}>
+                                    <BadgePreview />
+                                  
+                                  </Col>
                                     
-                                    <Col xs={12} lg={5} >
-                                        <TextField id="badge-token-id-input" label="Tip Amount" value={badgeTip}
-                                            onChange={handleTipChange} />
-                                    </Col>
+                                  <Col xs={12} m={4} lg={4} >
+                                    <Row>
+                                      <TextField id="badge-token-id-input" label="Avatar Address" value={avatarAddress}
+                                          onChange={handleAvatarAddress} />
+                                    </Row>
+                                    <Row>
+                                      <TextField id="badge-token-id-input" label="Avatar Token ID" value={avatarTokenId}
+                                          onChange={handleAvatarTokenId} />
+                                    </Row>
+                                    <Row style={{ paddingTop: "2vh" }} >
+                                      <Button onClick={downloadPNG} color="secondary" size="small" ><strong>Save Image</strong></Button>
+                                      <h5>(Don't worry, we'll upload it to IPFS too)</h5>
                                   </Row>
-                                  :
-                                  null
-                                }
-                                
-                                <Row>
-                                    <FormControl className="DisputeForm_A" >
-                                        <InputLabel id="select-badge-type">Badge Type</InputLabel>
-                                            <Select
-                                            labelId="demo-simple-select-helper-label"
-                                            id="demo-simple-select-helper-label"
-                                            value={badgeType}
-                                            onChange={handleBadgeChange}
-                                            style={{backgroundColor: badgeColor[badgeTypeId], borderStyle: "none", borderRadius: 5}}
-                                            disableUnderline
-                                            >
-                                                <MenuItem value={0}>
-                                                    <em>Select a badge color</em>
-                                                </MenuItem>
-                                                <MenuItem value={"_pinkSlips"}>PinkSlip</MenuItem>
-                                                <MenuItem value={"_goldStars"}>GoldStar</MenuItem>
-                                            </Select>
-                                    </FormControl>                                                                                            
+                                  </Col>
                                 </Row>
                                 
                                 <Row>
                                     <TextField
-                                    id="reason-for-appeal2"
-                                    label={walletLabel[badgeTypeId]}
-                                    helperText={getHelperText()}
+                                    id="pseudonym"
+                                    label="Your Psuedonym"
+                                    helperText="Whatever you want..."
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
                                     style={{opacity: .75}}
-                                    value={receivingAddress}
-                                    placeholder="0xWalletAddress"
-                                    onChange={handleReceivingAddressChange}
+                                    value={pseudonym}
+                                    placeholder="Psuedonym"
+                                    onChange={handlePseudonym}
                                     />
                                 </Row>
 
                                 <Row>
                                     <TextField
-                                    id="reason-for-appeal"
-                                    label={reasonLabel[badgeTypeId]}
-                                    helperText="(Be concise, you can provide more information later in your case thread)"
+                                    id="social-handle"
+                                    label="Twitter Handle"
+                                    helperText="Must be an ACTIVE twitter"
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    style={{opacity: .75}}
+                                    value={socialHandle}
+                                    placeholder="@YourTwitter"
+                                    onChange={handleSocialHandle}
+                                    />
+                                </Row>
+
+                                <Row>
+                                    <TextField
+                                    id="verification-link"
+                                    label="Twitter Verification"
+                                    helperText="(You can delete it after verification is complete)"
                                     fullWidth
                                     margin="normal"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
                                     variant="filled"
-                                    value={reason}
-                                    onChange={handleReasonChange}
+                                    value={socialLink}
+                                    placeholder="Link to Verification Tweet"
+                                    onChange={handleSocialLink}
                                     />
                                 </Row>
 

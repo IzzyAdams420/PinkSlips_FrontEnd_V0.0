@@ -37,7 +37,7 @@ export default function Disputes(props) {
           badgeSender={"0xFc961Da137b43B7F0Bf612079FC2f91d9216DdF2"}
           /> 
       </Row> */}
-      <Row>
+      <Row style={{zIndex: 2, position: "fixed", bottom: "5vh"}}>
         <BadgeImageGenerator badge={props.coloredID}
           badgeTokenId={42069}
           web3={props.web3} /> 

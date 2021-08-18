@@ -87,7 +87,7 @@ export default function BadgeImageGenerator (props)  {
     const badgeSender = (props.badgeSender ? (trimAddress(props.badgeSender, 13)) : "null" );
 
     const badgeHolderAddress = props.isIdentity ? "null" : "null";
-    const badgeHolderPsuedonym = "Izzy Adams 420"; // THIS IS JUST TMEPORARY
+    const badgeHolderPsuedonym = ( props.pseudonym ? props.pseudonym : "Izzy Adams 420"); // THIS IS JUST TMEPORARY
 
     const fileName = badge.name + "_" + badgeTokenId.toString();
 
@@ -195,9 +195,10 @@ export default function BadgeImageGenerator (props)  {
     const pinkSlipsImg = () => {
 
       return (
-        <Col   style={{
-          backgroundColor: "transparent", padding: 4, position: "relative", top: -4, left: 3, width: 500, height: 300}} >
-          <div >
+         <>
+          <Col style={{
+            backgroundColor: "transparent", padding: 4, position: "relative", top: -3, left: 3, width: "500px", height: "300px"}} >
+            <div style={{maxWidth: "500px"}}>
             <h1 className="pinkSender">
                 {"from " + badgeSender}
             </h1>
@@ -206,9 +207,10 @@ export default function BadgeImageGenerator (props)  {
                 {badgeReason}
             </h1>
           </div>
-          <img style={{zIndex: 1, position: "absolute", top: 0, left: 0}} src={paperPink} />
-          <img style={{zIndex: 3, position: "absolute", top: 0, left: 0}} src={baseLayerPink} />
-        </Col>
+          <img style={{zIndex: 1, width: 500, position: "absolute", top: 0, left: 0, maxWidth: "500px"}} src={paperPink} />
+          <img style={{zIndex: 3, width: 500, position: "absolute", top: 0, left: 0, maxWidth: "500px"}} src={baseLayerPink} />
+       </Col>
+       </>
       );
     }
 
@@ -232,7 +234,7 @@ export default function BadgeImageGenerator (props)  {
         
           
           <Col style={{
-            backgroundColor: "transparent", padding: 4, position: "relative", top: -3, left: 3, width: 500, height: 300}} >
+            backgroundColor: "transparent", padding: 4, position: "relative", top: -3, left: 3, width: 500, maxWidth: "500px !important", maxHeight: "500px", height: "300px"}} >
             <div >
               <h1 className="coloredIdHolder">
                   {nftLoaded ? avatarImage.src : badgeHolderPsuedonym}

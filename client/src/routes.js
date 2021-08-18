@@ -2,6 +2,7 @@ import React from 'react';
 
 import Home from './pages/Home.js';
 import MintingDesk from './pages/MintingDesk.js';
+import PassportOffice from './pages/PassportOffice.js';
 import AboutBadges from './pages/AboutBadges.js';
 import WalletSearch from './pages/Wallet_Search.js';
 import Disputes from './pages/Disputes.js';
@@ -12,6 +13,7 @@ import Faucet from './pages/Faucet.js';
 import FaceIcon from '@material-ui/icons/Face'; // alt home icon
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import RedeemIcon from '@material-ui/icons/Redeem';
 import LooksIcon from '@material-ui/icons/Looks';
 import GavelIcon from '@material-ui/icons/Gavel';
@@ -48,6 +50,13 @@ var routes = [
     component: Disputes,
     layout: "/",
     icon: GavelIcon,
+  },
+  {
+    path: "Passport",
+    name: "Passport Office",
+    component: PassportOffice,
+    layout: "/",
+    icon: FingerprintIcon,
   },
   {
     path: "Search",

@@ -94,14 +94,16 @@ contract GenericBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStora
 
 
     function issueBadge(address receivingAddress, string memory _reason) public virtual
-        returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
+    JURY
+        returns(uint newId) { 
         newId = _issueBadge(receivingAddress, _reason);
         return newId;
        
      }
 
     function issueBadge(address receivingAddress, string memory _reason,  string memory _tokenURI) public virtual
-        returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
+    JURY
+        returns(uint newId) { 
         newId = _issueBadge(receivingAddress, _reason, _tokenURI);
         return newId;
        

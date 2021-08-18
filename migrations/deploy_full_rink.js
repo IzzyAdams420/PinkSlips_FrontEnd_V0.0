@@ -65,7 +65,7 @@ module.exports = function (deployer) {
     
     
   }).then(async () => {
-    //await deployer.deploy(VendingMachine, RedPens.address);
+    //await deployer.deploy(VendingMachine, RedPens.address, treasuryAddress);
   })
   .then(async () => {
     //const RedPensInstance = await RedPens.deployed();

@@ -4,6 +4,7 @@ import getWeb3 from "../components/getWeb3";
 
 import {Container, Row, Col} from 'react-bootstrap';
 
+
 import Button from 'react-bootstrap/Button';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
@@ -164,6 +165,14 @@ class App extends Component {
         address : deployedNetwork[0].address,
       };
 
+      const _coloredID = {
+        contract: coloredID,
+        badgeTypeId : 3,
+        name : "Colored ID",
+        color : "Color",
+        address : deployedNetwork[8].address,
+      };
+
       goldStars.badgeTypeId = 2;
       goldStars.name = "GoldStars";
       goldStars.color = "Gold";
@@ -193,7 +202,7 @@ class App extends Component {
       
       const userBalance = await redPens.methods.balanceOf(accounts[0]).call();
 
-      this.setState({ web3, accounts, userBalance, mintingCosts, networkId, _goldStars, _pinkSlips, goldStars, coloredID, redPens, pinkSlips, juryPool,
+      this.setState({ web3, accounts, userBalance, mintingCosts, networkId, _goldStars, _pinkSlips, _coloredID,  goldStars, coloredID, redPens, pinkSlips, juryPool,
                       juryBailiff,   vendingMachine,  courtClerk, goldStarsAddress, pinkSlipsAddress, juryPoolAddress,
                        /* juryDAOAddress, */ vendingMachineAddress,  /**juryBailiffAddress, */ addressManager, badgeContracts });
 
@@ -321,7 +330,7 @@ class App extends Component {
                     paddingRight: ( this.state.drawerIsOpen ? "250px" : null)  }}>            
       
          <NavigationBar class="white" borderRadius={this.appBorderRadius} toggleDrawer={this.toggleDrawer}/>
-
+         
 
             {
               (!this.state.web3  && !this.state.isOverride)

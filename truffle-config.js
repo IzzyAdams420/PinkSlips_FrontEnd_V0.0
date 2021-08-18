@@ -25,6 +25,7 @@
 const mnemonic = process.env.TINYDANCER;
 const infura = process.env.INFURAPROJECT;
 const infura2 = process.env.INFURAPROJECT2;
+const infuraRink = process.env.ICERINK;
 const addy = process.env.OEADDY;
 const addy2 = process.env.OTHERADDY;
 

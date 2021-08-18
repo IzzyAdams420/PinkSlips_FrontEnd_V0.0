@@ -18,9 +18,10 @@ let AddressManagerInstance;
 let accounts = [];
 
 // THIS IS LEFT BLANK FOR TESTING THE UI, ALL PERMISSIONS ARE GRANTED TO DEPLOYER.
-let firstAdminAddress =  '0xaffbfc96a767c348fdc3f1fbaf11fdf5b0df65b4';
-let RedPensAddress = '';
-let juryDaoAgent = '';
+let firstAdminAddress =  '0xAFfBFc96A767C348FDC3F1fBaF11fDF5B0df65b4';
+let RedPensAddress;
+let GavelsAddress;
+let juryDaoAgent = '0x2fc321C703f06893b4C3E872FBd66DC2D7c91f72';
 let gavelDaoAgent = firstAdminAddress;
 let treasuryAddress = firstAdminAddress;
 let theCourtAddress = firstAdminAddress;
@@ -34,12 +35,13 @@ module.exports = function (deployer) {
     accounts = await web3.eth.getAccounts();
     
   }).then(async () => {
+    firstAdminAddress = accounts[0];
     //let firstAdminAddress = "0xAFfBFc96A767C348FDC3F1fBaF11fDF5B0df65b4"; //'0x76FB5FFCB1d2Ef86472980330BFf71a0c24f5d34';
-    juryDaoAgent = firstAdminAddress;
-    gavelDaoAgent = firstAdminAddress;
-    treasuryAddress = firstAdminAddress;
-    theCourtAddress = firstAdminAddress;
-    miniBailiff = firstAdminAddress;
+    //juryDaoAgent = firstAdminAddress;
+    //gavelDaoAgent = firstAdminAddress;
+    //treasuryAddress = firstAdminAddress;
+    //theCourtAddress = firstAdminAddress;
+    //miniBailiff = firstAdminAddress;
   }).then(async () => {
     await deployer.deploy(AddressManager, juryDaoAgent, gavelDaoAgent, treasuryAddress,
                           theCourtAddress, miniBailiff);
@@ -47,22 +49,28 @@ module.exports = function (deployer) {
 
     await deployer.deploy(RedPens, AddressManager.address);
     await deployer.deploy(Gavels, AddressManager.address);
+    const RedPensInstance = await RedPens.deployed();
+    const GavelsInstance = await Gavels.deployed();
+    
+    RedPensAddress = RedPensInstance.address;
+    GavelsAddress = GavelsInstance.address;
 
   }) .then(async () => {
 
     AddressManagerInstance = await AddressManager.deployed();
-    await AddressManagerInstance.setRedPenTokenAddress(RedPens.address);
-    await AddressManagerInstance.setGavelTokenAddress(Gavels.address);
+    await AddressManagerInstance.setRedPenTokenAddress(RedPensAddress);
+    await AddressManagerInstance.setGavelTokenAddress(GavelsAddress);
 
     
     await deployer.deploy(PinkSlips, AddressManager.address);
     await deployer.deploy(GoldStars, AddressManager.address);
-    await deployer.deploy(ChadBadge, AddressManager.address);
     await deployer.deploy(ColoredID, AddressManager.address);
+
+    await deployer.deploy(ChadBadge, AddressManager.address);
     
     
   }).then(async () => {
-    await deployer.deploy(VendingMachine, RedPens.address, treasuryAddress);
+    await deployer.deploy(VendingMachine, RedPensAddress, treasuryAddress);
   })
   .then(async () => {
     const RedPensInstance = await RedPens.deployed();
@@ -76,27 +84,29 @@ module.exports = function (deployer) {
     
     const PinkSlipsInstance = await PinkSlips.deployed();
     const GoldStarsInstance = await GoldStars.deployed();
+    const ColoredIDInstance = await ColoredID.deployed();
     const ChadBadgeInstance = await ChadBadge.deployed();
-    const ColoredIDInstance = await ColoredID.deployed()
 
     const JuryPoolInstance = await JuryPool.deployed();
     const DisputeMachineInstance = await DisputeMachine.deployed();
 
-    await AddressManagerInstance.setPinkSlipAddress(PinkSlipsInstance.address);
-    await AddressManagerInstance.setGoldStarAddress(GoldStarsInstance.address);
-    await AddressManagerInstance.setChadBadgeAddress(ChadBadgeInstance.address);
-    await AddressManagerInstance.setColoredIDAddress(ColoredIDInstance.address);
-    await AddressManagerInstance.setJuryPoolAddress(JuryPoolInstance.address);
+    await AddressManagerInstance.setPinkSlipAddress(PinkSlips.address);
+    await AddressManagerInstance.setGoldStarAddress(GoldStars.address);
+    await AddressManagerInstance.setColoredIDAddress(ColoredID.address);
+    await AddressManagerInstance.setChadBadgeAddress(ChadBadge.address);
+    await AddressManagerInstance.setJuryPoolAddress(JuryPool.address);
     
-    await RedPensInstance.updateAllAddresses();
-    await GavelsInstance.updateAllAddresses();
+    await RedPensInstance.updateTokenAddresses();
+    await GavelsInstance.updateTokenAddresses();
 
-    await PinkSlipsInstance.updateAllAddresses();
-    await GoldStarsInstance.updateAllAddresses();
-    await ChadBadgeInstance.updateAllAddresses();
-    await ChadBadgeInstance.updateAllAddresses();
-    await JuryPoolInstance.updateAllAddresses();
-    await DisputeMachineInstance.updateAllAddresses();
+    await PinkSlipsInstance.updateTokenAddresses();
+    await GoldStarsInstance.updateTokenAddresses();
+    await ColoredIDInstance.updateTokenAddresses();
+    
+    await ChadBadgeInstance.updateTokenAddresses();
+    await JuryPoolInstance.updateTokenAddresses();
+    await DisputeMachineInstance.updateTokenAddresses();
+    
     
   })
 

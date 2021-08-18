@@ -1,7 +1,5 @@
 import react from 'react';
 import { create } from 'ipfs-http-client';
-import {NFTStorage, File } from 'nft.storage';
-import { NftProvider, useNft } from "use-nft"
 import { Component } from 'react';
  
 export const uploadIDBadge = async (imageData, badgeInfo) => {

@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+
 import "./GenericBadge.sol";
 
 /**
@@ -13,51 +15,75 @@ import "./GenericBadge.sol";
  * period, or having an emergency switch for freezing all token transfers in the
  * event of a large bug.
  */
-contract UserSendable is GenericBadge {
+contract ElectedBadge is GenericBadge {
 
     // Set Default Minting Costs to 3 Red Pens.
-    uint256 public mintingCost = 3 * 10 ** 18;
+    uint256 public mintingCost = 300 * 10 ** 18;
 
     // Set Default Minting Cost Floor to 1 Red Pens
-    uint256 public mintingCostFloor = 1 * 10 ** 17;
+    uint256 public mintingCostFloor = 100 * 10 ** 17;
 
 
-    ERC20 public redPens = ERC20(RedPenTokenAddress);
+    ERC20Burnable public redPens = ERC20Burnable(RedPenTokenAddress);
+
+    mapping (address => uint) public chadVoteBalance;
  
     constructor(string memory _badgeName, string memory _badgeSymbol, address _AddressManagerAddress)
         GenericBadge(_badgeName, _badgeSymbol, _AddressManagerAddress)
     {
 
-        redPens = ERC20(RedPenTokenAddress);
+        redPens = ERC20Burnable(RedPenTokenAddress);
 
     }      
 
 
-    modifier PAY_WITH_PENS(address receivingAddress) virtual {      
+    modifier PAY_WITH_PENS(address receivingAddress, uint _voteValue) virtual {      
 
-        uint256 expectedContractBalance;
+        uint256 _valueSplit = _voteValue / 2;
+        uint256 expectedContractBalance = redPens.balanceOf(TreasuryAddress) + _valueSplit;
+        redPens.transferFrom(msg.sender, TreasuryAddress, _valueSplit);
+        redPens.burnFrom(msg.sender, _valueSplit);
+        //require(redPens.balanceOf(TreasuryAddress) == expectedContractBalance, "Error Transfering !RED Is it approved?");
+        chadVoteBalance[receivingAddress] += _voteValue;
 
-        expectedContractBalance = redPens.balanceOf(TreasuryAddress) + mintingCost;
-        redPens.transferFrom(msg.sender, TreasuryAddress, mintingCost);
-      
-        require(redPens.balanceOf(TreasuryAddress) == expectedContractBalance, "Error Transfering !RED");
-        
         _;
     }
 
-    function issueBadge(address receivingAddress, string memory _reason) public virtual override
-        PAY_WITH_PENS(receivingAddress) 
-        returns(uint newId) {
-        newId = _issueBadge(receivingAddress, _reason);
-        return newId;     
+    function electAChad(address receivingAddress, uint _voteValue) public virtual
+        PAY_WITH_PENS(receivingAddress, _voteValue) 
+        returns(uint votesRemaining) {
+
+            votesRemaining = getVotesNeeded(receivingAddress);            
+            return votesRemaining;     
     }
+
+    function electAChad(address receivingAddress, string memory _reason, uint _voteValue, string memory _tokenURI) public virtual
+        PAY_WITH_PENS(receivingAddress, _voteValue) 
+        returns(uint _newId_or_votesRemaining) {
+
+            if (chadVoteBalance[receivingAddress] >= mintingCost) {
+                chadVoteBalance[receivingAddress] = 0;
+                uint newId = _issueBadge(receivingAddress, _reason, _tokenURI);
+                _newId_or_votesRemaining = newId; 
+                
+            } else {
+                _newId_or_votesRemaining = getVotesNeeded(receivingAddress);
+            }
+            
+            return _newId_or_votesRemaining;     
+    }
+
+    function getVotesNeeded(address _nominatedAddress) public view returns (uint _votesNeeded) {
+        uint voteBalance = chadVoteBalance[_nominatedAddress];
+        if (mintingCost > voteBalance) { 
+                _votesNeeded = mintingCost - voteBalance;
+            } else if (mintingCost <= voteBalance) {
+                _votesNeeded = 0;
+            }
+            return _votesNeeded;
+    }
+
     
-    function issueBadge(address receivingAddress, string memory _reason, string memory _tokenURI) public virtual override
-        PAY_WITH_PENS(receivingAddress) 
-        returns(uint newId) {
-        newId = _issueBadge(receivingAddress, _reason, _tokenURI);
-        return newId;     
-    }
 
      /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,10 +120,10 @@ contract UserSendable is GenericBadge {
 
     function updatePaymentToken() public {
         _updateTokenAddresses();
-        redPens = ERC20(RedPenTokenAddress);
+        redPens = ERC20Burnable(RedPenTokenAddress);
     }
 
-     /////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /// @dev                                                                                     ////
     /// Transfer rules                                                                           ////
@@ -111,8 +137,7 @@ contract UserSendable is GenericBadge {
     {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = ownerOf(tokenId);
-        address gifter = BadgeInfo[tokenId].gifter;
-        return (spender == gifter || isApprovedForAll(owner, spender));
+        return (isApprovedForAll(owner, spender));
     }
 
 }

@@ -29,12 +29,12 @@ abstract contract TippingBadge is UserSendable {
         uint256 amonutToTreasury = (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
         uint256 amountToTip = _addedTip + (mintingCost - amonutToTreasury);
         
-        uint256 expectedContractBalance = redPens.balanceOf(address(this)) + amonutToTreasury;
+        uint256 expectedContractBalance = redPens.balanceOf(TreasuryAddress) + amonutToTreasury;
 
-        redPens.transferFrom(msg.sender, address(this), (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
+        redPens.transferFrom(msg.sender, TreasuryAddress, (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
         redPens.transferFrom(msg.sender, receivingAddress, amountToTip );
             
-        require(redPens.balanceOf(address(this)) == expectedContractBalance, "Error Transfering !RED");
+        require(redPens.balanceOf(address(this)) >= expectedContractBalance, "Error Transfering !RED");
         
         _;
     }
@@ -46,12 +46,12 @@ abstract contract TippingBadge is UserSendable {
         uint256 amountToTreasury = (payItForwardTreasuryRatio_Numerator * portionOfMintingCost);
         uint256 amountToTip = mintingCost - amountToTreasury;
         
-        uint256 expectedContractBalance = redPens.balanceOf(address(this)) + amountToTreasury;
+        uint256 expectedContractBalance = redPens.balanceOf(TreasuryAddress) + amountToTreasury;
 
         redPens.transferFrom(msg.sender, address(this), (payItForwardTreasuryRatio_Numerator * portionOfMintingCost));
         redPens.transferFrom(msg.sender, receivingAddress, amountToTip );
             
-        require(redPens.balanceOf(address(this)) == expectedContractBalance, "Error Transfering !RED");
+        require(redPens.balanceOf(TreasuryAddress) >= expectedContractBalance, "Error Transfering !RED");
         
         _;
     }    
