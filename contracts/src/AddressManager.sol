@@ -29,6 +29,8 @@
         string private errorMessage = "the hell are you doing? C'mon";
         string private zeroAddressWarning = "C'mon";
 
+        string public frontEnd = "content hash stored @ coloredbadges.eth";
+
         uint public badgeCount = 0;
 
         event AddressUpdated(address, string);

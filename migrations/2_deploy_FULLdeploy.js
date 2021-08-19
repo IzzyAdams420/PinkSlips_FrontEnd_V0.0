@@ -9,6 +9,8 @@ const GoldStars = artifacts.require("GoldStars");
 const ChadBadge = artifacts.require("ChadBadges");
 const ColoredID = artifacts.require("ColoredID");
 
+const CourtClerk = artifacts.require("CourtClerk");
+
 const VendingMachine = artifacts.require("VendingMachine");
 const JuryPool = artifacts.require("JuryPool");
 const DisputeMachine = artifacts.require("DisputeMachine");
@@ -21,6 +23,7 @@ let accounts = [];
 let firstAdminAddress =  '0xAFfBFc96A767C348FDC3F1fBaF11fDF5B0df65b4';
 let RedPensAddress;
 let GavelsAddress;
+let JuryDaoAddress = "0x333Edad0FA6822C3FaF4819B2D887570fdbC29BF";
 let juryDaoAgent = '0x2fc321C703f06893b4C3E872FBd66DC2D7c91f72';
 let gavelDaoAgent = firstAdminAddress;
 let treasuryAddress = firstAdminAddress;
@@ -64,19 +67,22 @@ module.exports = function (deployer) {
     
     await deployer.deploy(PinkSlips, AddressManager.address);
     await deployer.deploy(GoldStars, AddressManager.address);
-    await deployer.deploy(ColoredID, AddressManager.address);
+    await deployer.deploy(ColoredID, AddressManager.address, RedPensAddress);
 
     await deployer.deploy(ChadBadge, AddressManager.address);
     
     
   }).then(async () => {
     await deployer.deploy(VendingMachine, RedPensAddress, treasuryAddress);
+
+    await deployer.deploy(CourtClerk, JuryDaoAddress, juryDaoAgent, RedPensAddress);
   })
   .then(async () => {
     const RedPensInstance = await RedPens.deployed();
     await RedPensInstance.transfer(VendingMachine.address, "10000000000000000000000");
     await deployer.deploy(JuryPool, AddressManager.address);
     await deployer.deploy(DisputeMachine, AddressManager.address);
+
   }) .then(async () => {
   
     const RedPensInstance = await RedPens.deployed();

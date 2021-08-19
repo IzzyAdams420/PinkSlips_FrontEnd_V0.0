@@ -161,10 +161,14 @@ export default function MintingAgent(props) {
   
     const handleTipChange = (event) => {
 
-      if (tipIsValid(event.target.value)) {
-        setBadgeTip(event.target.value);
+      const _int = (parseInt(event.target.value) ? parseInt(event.target.value) : 0);
+      console.log("_int: " + _int);
+      if (tipIsValid(_int)) {
+        setBadgeTip(_int.toString());
+        console.log("Valid Tip");
       } else {
-        alert("Please enter a number");
+        console.log(`Alert ` + event.target.value );
+        alert("Tip must be a number!");
       }
     
     };
@@ -177,11 +181,27 @@ export default function MintingAgent(props) {
       setReceivingAddress(event.target.value);
     }
 
+  const addressIsValid = (address) => {
+      const web3 = props.web3;
+      try {
+        const _address = web3.utils.toChecksumAddress(address);
+        if (props.web3.utils.isAddress(_address))
+        {
+            
+            return _address;
+        } else {
+            return false;
+        } 
+      } catch (error) {
+        console.log("Please Enter A Valid ETH Address");
+      }
+   };
+
   const tipIsValid = (badgeTip) => {
        if( (Number.isInteger(parseInt(badgeTip))
            && parseInt(badgeTip) >= 0) || ! badgeTip )
        {
-           return true;
+           return parseInt(badgeTip).toString();
        } else {
            return false;
        }
@@ -290,33 +310,64 @@ export default function MintingAgent(props) {
     const badgeImageData = await generatePNG();
     const tokenId = 2; // await contract.methods.nextTokenId().call();
 
-    const badgeInfo = {
-        name: badge.name,
-        description: reason,
-        reason: reason,
-        sender: props.accounts[0]
-    };
-
-    const contentURL = await uploadGenericBadge(badgeImageData, badgeInfo);
-    const hashPipe = contentURL;
-    const _badgeTip = props.web3.utils.toWei(badgeTip.toString());
-    const response =  (
+    const _receivingAddress = addressIsValid(receivingAddress);
+    const validTip = (
       (badge.badgeTypeId > 1)
       ?
       (
-        await contract.methods.issueBadge(receivingAddress, reason, _badgeTip, hashPipe)
-              .send({ from: props.accounts[0] })
+        (tipIsValid(badgeTip) > 0)
       )
       :
       (
-        await contract.methods.issueBadge(receivingAddress, reason, hashPipe)
-              .send({ from: props.accounts[0] })
+        true
       )
-      );
+    );
+
+    const _approved = (pensApproved >= ( mintingCost + badgeTip));
+
+    if (!_receivingAddress || !validTip || !_approved) {
+      
+      if (!_receivingAddress) console.log("please enter valid address");
+      if (!_approved) {
+        const toApprove = mintingCost + badgeTip - pensApproved;
+        console.log("please approve " + toApprove + " more red pens");
+      };
+      if (!validTip) console.log("please enter valid tip");
+      
+      return false
+
+    } else {
+        const badgeInfo = {
+          name: badge.name,
+          description: reason,
+          reason: reason,
+          sender: props.accounts[0],
+          tip: (badgeTip + " !Red")
+        };
+
+        const contentURL = await uploadGenericBadge(badgeImageData, badgeInfo);
+        const hashPipe = contentURL;
+        const _badgeTip = props.web3.utils.toWei(parseInt(badgeTip).toString());
+        const response =  (
+          (badge.badgeTypeId > 1)
+          ?
+          (
+            await contract.methods.issueBadge(_receivingAddress, reason, _badgeTip, hashPipe)
+                  .send({ from: props.accounts[0] })
+          )
+          :
+          (
+            await contract.methods.issueBadge(_receivingAddress, reason, hashPipe)
+                  .send({ from: props.accounts[0] })
+          )
+          );
+        
+        
+        console.log("Hash path:" + hashPipe + " - Returned(eth):" + response);
+        return response;
+    }
+
     
-    
-    console.log("Hash path:" + hashPipe + " - Returned(eth):" + response);
-    return response;
 
 
   };
@@ -332,15 +383,15 @@ export default function MintingAgent(props) {
       let owner = props.accounts[0];
       
 
-      let pensApproved = await props.redPens.methods.allowance(owner, spender).call();
-      let userBalance = await props.redPens.methods.balanceOf(owner).call();
-      userBalance = props.web3.utils.fromWei(userBalance);
-      pensApproved = props.web3.utils.fromWei(pensApproved);
+      const pensApproved = await props.redPens.methods.allowance(owner, spender).call();
+      const userBalance = await props.redPens.methods.balanceOf(owner).call();
+      const _userBalance = props.web3.utils.fromWei(userBalance);
+      const _pensApproved = props.web3.utils.fromWei(pensApproved);
 
       setMintingCost(_mintingCost);
-      setPensApproved(pensApproved);
-      setUserBalance(userBalance);
-      return pensApproved;
+      setPensApproved(_pensApproved);
+      setUserBalance(_userBalance);
+      return _pensApproved;
     } else {
       return 0;
     }
@@ -374,7 +425,7 @@ export default function MintingAgent(props) {
                               badgeSender={props.accounts[0]}
                               badgeReason={reason}
                               badgeTokenId={42069}
-                              badgeTip={badgeTip ? badgeTip : 1}
+                              badgeTip={badgeTip ? parseInt(badgeTip).toString() : 1}
                               web3={props.web3}
                             />   
                         </Row>
@@ -431,7 +482,7 @@ export default function MintingAgent(props) {
                                     </Col>
                                     
                                     <Col xs={12} lg={5} >
-                                        <TextField id="badge-token-id-input" label="Tip Amount" value={badgeTip}
+                                        <TextField id="badge-token-id-input" label="Tip Amount" value={badgeTip ? badgeTip : ""}
                                             onChange={handleTipChange} />
                                     </Col>
                                   </Row>

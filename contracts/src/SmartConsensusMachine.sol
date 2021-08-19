@@ -188,20 +188,20 @@
         function updateAllRoles() public {
             _flipSaftey(true);
             _updateAllRoles();
-            require(_flipSaftey(false));
+            require(_flipSaftey(false), "saftey not flipped");
         }
 
         function updateSingleRole(bytes32 ROLE_TO_UPDATE) public {
             _flipSaftey(true);
             _clearRole(ROLE_TO_UPDATE);
             _updateRole(ROLE_TO_UPDATE);
-            require(_flipSaftey(false));
+            require(_flipSaftey(false), "saftey not flipped");
         }
 
         function syncSingleRole(bytes32 ROLE_TO_SYNC) public {
             _flipSaftey(true);
             _syncSingleRole(ROLE_TO_SYNC);
-            require(_flipSaftey(false));
+            require(_flipSaftey(false), "saftey not flipped");
         }
 
         function syncAllRoles() public {
@@ -213,7 +213,7 @@
             _syncSingleRole(JERK_ROLE);
             _syncSingleRole(DEFAULT_ADMIN_ROLE);
             _syncVotes();
-            require(_flipSaftey(false));
+            require(_flipSaftey(false), "saftey not flipped");
         }
 
 

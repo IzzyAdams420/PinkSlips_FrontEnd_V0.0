@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "../SmartConsensusMachine.sol";
 import "../AddressManagerReciever.sol";
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -11,17 +10,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStorage, ERC721Enumerable {
-    
-    using SafeERC20 for IERC20;
+
 
     uint256 private _tokenIdGenerator = 1;
-    uint256 public pensBalance;
 
     uint256 public mintingCost = 1 * 10 * 18;
 
-    uint256 public subsidyInitialValue = 1000 * 10 ** 18 ; //starting value
-    uint256 public subsidyDegradationRate = 69; //Higher = Faster
-    uint256 public subsidyFloor = 0;
 
     bool public isForeverLocked = false;
 
@@ -29,9 +23,6 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     string public badgeColor;
     string public badgeName;
     string public baseURI_ = string(abi.encodePacked("ipfs", ":", "/", "/"));
-
-    IERC20 public subsidyToken;
-
 
     constructor(string memory _badgeName, string memory _badgeSymbol, string memory _socialPlatform, address _AddressManagerAddress)
         ERC721(_badgeName, _badgeSymbol)
@@ -42,8 +33,6 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
         badgeColor = _badgeSymbol;
         badgeName = _badgeName;
         socialPlatform = socialPlatform;
-        subsidyToken = IERC20(RedPenTokenAddress);
-        pensBalance = subsidyToken.balanceOf(address(this));
 
     }      
     
@@ -72,22 +61,11 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
         return true;
     }
 
-    function _paySubsidy(address _payTo) internal returns (bool) {
-        uint _supply = totalSupply() + 1;
-
-        uint _amount = subsidyFloor + ( (subsidyInitialValue - subsidyFloor) / ( (_supply + subsidyDegradationRate) / subsidyDegradationRate ));
-        uint initialBalance = subsidyToken.balanceOf(address(this));
-        require ( initialBalance >= _amount);
-        subsidyToken.safeTransferFrom(address(this), _payTo, _amount);
-        uint newBalance = subsidyToken.balanceOf(address(this));
-        require (newBalance <= initialBalance);
-    }
-
     
     function _setBadgeInfo(string memory _pseudonym, string memory _socialHandle, address _avatarTokenAddress, uint _avatarTokenId, uint _tokenId) internal {
         
         
-        require(_checkAvailibility(_socialHandle, _pseudonym));
+        require(_checkAvailibility(_socialHandle, _pseudonym), "Do you already have an ID?");
         IDCardInfo[_tokenId].socialHandle = _socialHandle;
         IDCardInfo[_tokenId].avatarTokenAddress = _avatarTokenAddress;
         IDCardInfo[_tokenId].avatarTokenId = _avatarTokenId;
@@ -101,7 +79,7 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
 
     function _setBadgeInfo(string memory _pseudonym, string memory _socialHandle, address _avatarTokenAddress, uint _avatarTokenId, uint _avatarNetworkId, uint _tokenId) internal {
         
-        require(_checkAvailibility(_socialHandle, _pseudonym));
+        require(_checkAvailibility(_socialHandle, _pseudonym), "Do you already have an ID?");
 
         IDCardInfo[_tokenId].socialHandle = _socialHandle;
         IDCardInfo[_tokenId].avatarTokenAddress = _avatarTokenAddress;
@@ -169,11 +147,10 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
 
 
     function issueBadge(address receivingAddress, string memory _pseudonym, string memory _socialHandle,
-                            address _avatarTokenAddress, uint _avatarTokenId, string memory _TokenURI) public virtual
+                            address _avatarTokenAddress, uint _avatarTokenId, string memory _tokenURI) public virtual
         BAILIFF
         returns(uint newId) {
             uint _avatarNetworkId = 1;
-            string memory _tokenURI = "";
             newId = _issueBadge(receivingAddress, _pseudonym, _socialHandle, _avatarTokenAddress, _avatarTokenId, _avatarNetworkId, _tokenURI); 
      }
 
@@ -188,7 +165,7 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     }
     
     function issueBadge(address receivingAddress, string memory _pseudonym, string memory _socialHandle, address _avatarTokenAddress,
-                            uint _avatarTokenId, uint _avatarNetworkId, uint _tokenId, string memory _tokenURI) public virtual
+                            uint _avatarTokenId, uint _avatarNetworkId, string memory _tokenURI) public virtual
         BAILIFF
         returns(uint newId) {
         newId = _issueBadge(receivingAddress, _pseudonym, _socialHandle, _avatarTokenAddress, _avatarTokenId, _avatarNetworkId, _tokenURI);       
@@ -197,13 +174,12 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     function _issueBadge(address _receivingAddress, string memory _pseudonym, string memory _socialHandle, address _avatarTokenAddress,
                             uint _avatarTokenId, uint _avatarNetworkId, string memory _tokenURI) internal virtual
         returns(uint newId) { // Right now function also increments and returns tokenId, this will be removed.
-        require((_receivingAddress != msg.sender) && (_receivingAddress != address(0)));
+        require((_receivingAddress != msg.sender) && (_receivingAddress != address(0)), "No Self Issuance");
         require(balanceOf(_receivingAddress) <= 0, "Only one ID per wallet");
         newId = _tokenIdGenerator;
         _setBadgeInfo(_pseudonym, _socialHandle, _avatarTokenAddress, _avatarTokenId, _avatarNetworkId, newId);
         _safeMint(_receivingAddress, newId);
         _setTokenURI(newId, _tokenURI);
-        _paySubsidy(_receivingAddress);
         _tokenIdGenerator += 1;            
      }
 
@@ -322,7 +298,7 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
     
 
     function approveUserTransfer(uint _tokenId) public BAILIFF{
-        require(_approveTransfer(_tokenId));
+        require(_approveTransfer(_tokenId), "require(_approveTransfer(_tokenId))");
     }
 
     function _approveTransfer(uint _tokenId) internal returns (bool) {
@@ -361,8 +337,8 @@ contract IdentityBadge is SmartConsensusMachine, ERC721, Pausable, ERC721URIStor
         require(isApprovedForAll(from, msg.sender) || UserTransferApproved[_tokenId], "Please visit the DAO to change your address!");
          
         if (UserTransferApproved[_tokenId] && _isApprovedOrOwner(msg.sender, _tokenId)) {
-            require(UserTransferApproved[_tokenId]);
-            require(_undoApproveTransfer(_tokenId));
+            require(UserTransferApproved[_tokenId], "require(UserTransferApproved[_tokenId]);");
+            require(_undoApproveTransfer(_tokenId), "require(_undoApproveTransfer(_tokenId));");
             super._beforeTokenTransfer(from, to, _tokenId);
         } else {
             super._beforeTokenTransfer(from, to, _tokenId);

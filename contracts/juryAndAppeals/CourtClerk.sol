@@ -7,10 +7,15 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract CourtClerk {
     
-    address daoAddress = 0x333Edad0FA6822C3FaF4819B2D887570fdbC29BF;
+    address daoAddress;
     address daoMinionAddress = 0x2fc321C703f06893b4C3E872FBd66DC2D7c91f72;
     address pensAddress = 0xe78AC7E8d309C749EBC80F55A78B3b397625421C;
     
+    constructor (address _daoAddress, address _daoMinionAddress, address _pensAddress) {
+        daoAddress = _daoAddress;
+        daoMinionAddress = _daoMinionAddress;
+        pensAddress = _pensAddress;
+    }
 
     // should probably just generate minion call data here, for best security.Will Do that Later
     function submitDispute(uint _tokenId, address _badgeAddress, bytes memory _minionCallData) public returns (bytes memory proposalIdBytes) {
