@@ -48,7 +48,7 @@ export default function Home(props) {
      
       {/* <BadgeCarousel spread={true} /> */}
 
-      <AboutBadges noHeader={true} noCarousel={true} />
+      <AboutBadges noHeader={true} noCarousel={true} dark={true} />
       <ColoredPaper noHeader={true}/>         
     
       <Image style={{borderStyle: "solid", borderColor: "white", borderWidth: 2,marginTop: "3vh", borderRadius: "10px", maxWidth: "95vw"}}src={roadmap} />

@@ -97,6 +97,7 @@ module.exports = function (deployer) {
     //await GoldStarsInstance.updateTokenAddresses();
     await ColoredIDInstance.updateTokenAddresses();
     await ChadBadgeInstance.updateTokenAddresses();
+    
     //await JuryPoolInstance.updateTokenAddresses();
     //await DisputeMachineInstance.updateTokenAddresses();
     

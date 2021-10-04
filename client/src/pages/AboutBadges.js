@@ -14,153 +14,108 @@ import pinkSlipImg from '../rsrc/imgs/PinkSlip.png';
 import goldStarBadgeImg from '../rsrc/imgs/GoldStarBadge.png';
 import coloredID from '../rsrc/imgs/ColoredID.png';
 
-import BadgeCarousel from "../components/BadgeCarousel";
-
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
-
-import MarkdownPreview from "@uiw/react-markdown-preview";
+import ColoredIDSign from '../rsrc/imgs/ColoredID_large.gif';
+import PinkSlipSign from '../rsrc/imgs/PinkSlip.gif';
+import GoldStarSign from '../rsrc/imgs/GoldStar.gif';
+import ChadBadgeSign from '../rsrc/imgs/ChadBadge.gif';
 
 import headerImage from '../rsrc/imgs/ColoredBadgesHeader_w_badge_compressed.png';
-import badgeBanner from '../rsrc/imgs/ColoredBadgeArray.png';
 
-import ColoredPaper from '../components/ColoredPaper.js';
 import '../css/styles.css';
-
-const aboutColoredBadgesPreview = ``;
-
-const aboutColoredBadgesFull = ``;
-
 
 
 export default function AboutBadges(props) {
 
-  const [isExpanded, setIsExpanded] = useState(true);
   const blackish = "rgb(34, 26, 12)";
-  
-  const toggleAboutLength = () => { 
 
-    
-    setIsExpanded(!isExpanded);
-    
-  }
-
-  const divider = (bottomMargin, color) => {
-    return <> <Row style={{padding: 2, marginTop: "2vh", marginBottom: bottomMargin + "vh",
-                            backgroundColor: color}} >
-    </Row> </>
-  }
-
+  const textColor = "aliceblue";// ( props.dark ? blackish : "aliceblue" );
+  const bgColor = ( props.dark ? "rgba(87, 87, 87, 0.39)" : "transparent" );
   return (
 
     <>
 
     
-    <Container xs={6} m={12} className="aboutBadgesContainer" style={props.noHeader ? null: {minHeight: "97vh", paddingBottom: "30vh"}} style={{ backgroundColor: "aliceblue", justifyContent: "center"}}>   
-        
-      <Row>
-        {
-          props.noHeader
-          ?
-          (null)
-          :
-          ( <>
-            <Col style={{justifyContent: "center"}}>        
-                <Image style={{alignContent: "center", padding: 0, marginRight: "-5", marginLeft: "-5"}} alt="Header" src={headerImage} fluid />
-                <ColoredPaper />
-            </Col>
-          </>)
-        }
-      </Row>
-      {
-          props.noHeader
-          ?
-          divider(2, "transparent")
-          :
-          divider(2, blackish)
-      }
-      {
-          props.noCarousel
-          ?
-          (/*
-          <Row style={{justifyContent: "center", marginLeft: "-10%"}}>
-            <Col style={{minWidth: "250px", }}>
-            <Image className="BadgeImage" style={{padding: "3%", minWidth: "420px", maxWidth: "25vw", overflowY: "hidden" }} src={goldStarBadgeImg} />
-            </Col>
-            <Col style={{minWidth: "250px", textAlign: "right"}}>
-            <Image className="BadgeImage" style={{ padding: "3%", minWidth: "420px", maxWidth: "25vw", overflowY: "hidden" }} src={pinkSlipImg} />
-            </Col>
-            <Col style={{paddingTop: "3vh", minWidth: "250px", textAlign: "left"}}>
-            <Image className="BadgeImage" style={{padding: "3%", minWidth: "420px", maxWidth: "25vw", overflowY: "hidden" }} src={chadBadge} />
-            </Col>
-            <Col style={{minWidth: "250px", textAlign: "right"}}>
-            <Image className="BadgeImage" style={{ padding: "3%", minWidth: "420px", maxWidth: "25vw", overflowY: "hidden" }} src={coloredID} />
-            </Col>
-          </Row>
-          */
-          <Row  >
-            <Col>
-            <Image style={{ marginLeft: "50%", transform: "translateX(-50%)", alignItems: "center", alignSelf: "center", width: "85vw", justifyContent: "center"}} src={badgeBanner} />
-            </Col>
-          </Row>
-          
-          )
-          :
-          (<>
-          <BadgeCarousel light={true} />
-            <br /></>)
-      }
-      
-      
-      {divider(3, "gold")}
-      <Row>
-        <Col style={{textAlign:"left"}}>
-        Colored badged are meant to provide a unique and user-friendly way 
+    <Container className="badgeTypeContainer"
+              style={props.noHeader ? null: { minHeight: "97vh", paddingBottom: "30vh"}}
+              style={{ color: textColor, justifyContent: "center"}}>
+      <Row style={{background: "rgba(240, 248, 255, 0.616)", borderRadius: "5px", color: blackish, fontSize: "22px", textAlign:"left",
+                  marginTop: 0, marginBottom: "3vh",  marginRight: "4vw", marginLeft: "4vw", padding: "4vw"}} >
+        Colored badged provide a unique and user-friendly way 
         for DAOs and DAO members to mark and query the social-integrity, contribution history, or psuedo-identity of a given wallet address.
         <br /><br />
-        Depending on the badge, they are typically issued based on one's actions, contributions, or pseudo-verified idenity.  Most Colored badges can 
-        be issued by any user, although some types may be restricted to issuance only by community vote. Once issued, colored badges require the 
-        consent of the issuing party or overseeing DAO to be transfered or revoked.
-        </Col>
+        Before our composable protocol is ready, we want your help testing out various badge concepts in a global setting.
+        <br /><br />
+        Depending on the badge, they can be issued based on one's actions, contributions, or pseudo-verified idenity. Most Colored badges can 
+        be issued by any user, although some types may have additinoal restrictions - such as being limited to issuance only by community vote.
+        Once issued, colored badges require the consent of the issuing party or an overseeing DAO to be transfered or removed.
+        <br /><br />
+        Take a look below to check out some of our exploratory badge types, and hop on over to the minting desk to give them a try!
       </Row>
+    <Row style={{ paddingTop: "4vh", backgroundColor: bgColor}} >
+      <Row m={12} l={12}>
+        
+        <Col m={12} l={6}>
+         <Row >  <img src={ColoredIDSign} /> </Row>
+          <Row style={{ fontSize: "20px", fontWeight: "600" , paddingLeft: "10vw", paddingRight: "5vw", textAlign: "right" }}>
+          {"Colored IDs are issued based on your pseudo-identity, verified with an active social account."
+          + " Each badge features a verified NFT avatar, and comes with a welcome distribution of Red Pens"}
+          </Row>
+        </Col>
+
+        <Col m={12} l={6}>
+        <Row style={{marginLeft: "8vw"}} > {"Verified Social Accounts"} <br /> {"& NFT Avatars"} </Row>
+        <Row style={{minWidth: "350px", marginLeft: "7vw"}} > <img src={coloredID} /> </Row>
+        </Col>
       
-      { props.noCarousel
-        ?
-        (null)
-        :
-        (<>
-        {divider(4, "gold")}
-        <Row>
-        <Col style={{minWidth: "250px", }}>
-        GoldStars can be issued by anyone to anyone, usually for chad moves, or any type of socially-positive behavior.
-        Each Gold Star includes a tip in !Red. <br />
-        <Image className="BadgeImage" style={{padding: "3%", minWidth: "220px", maxWidth: "25vw", overflowY: "hidden" }} src={goldStarBadgeImg} />
-        {divider(2, "pink")}
+      </Row>
+
+      <Row>
+        <img src={headerImage} style={{marginTop: "-15vh", marginBottom: "-10vh"}} />
+      </Row>
+
+      <Row >
+        
+        <Col s={12} m={6}>
+          <Row style={{marginTop: "2vh", marginBottom: "3vh"}}>
+            <img src={PinkSlipSign} />
+            <Row style={{ fontSize: "20px", fontWeight: "600" , paddingLeft: "5vw", textAlign: "left" }}>
+            {"A fun way to reprimand one for breaking community rules, or just all around being a dick."
+            + " PinkSlips can be issued by any user, to any other user, and may only be removed upon a successful dispute application."}
+            </Row>
+            <img style={{minWidth: "350px"}} src={pinkSlipImg} />
+            
+          </Row>
+
+          <Row>
+            <img src={ChadBadgeSign} />
+            <Row style={{ fontSize: "20px", fontWeight: "600" , paddingLeft: "5vw", textAlign: "left" }}>          
+            {"ChadBadges are crowd-issued recognition badges, with users pooling community tokens to vote"
+            + " for a chad. If a Chad is elected, the voting tokens are split between the Chad and the burn address."}
+            </Row>
+            <img style={{minWidth: "350px", paddingLeft: "100px"}} src={chadBadge} />
+          </Row>
         </Col>
-        <Col style={{minWidth: "250px", textAlign: "right"}}>
-        Pinkslips are for dick moves, or breaking community rules. For certain communities, these may serve as disqualifiers for membership.
-        {divider(2, "pink")}
-        <Image className="BadgeImage" style={{ padding: "3%", minWidth: "220px", maxWidth: "25vw", overflowY: "hidden" }} src={pinkSlipImg} />
-        </Col>
-        <Col style={{paddingTop: "3vh", minWidth: "250px", textAlign: "left"}}>
-        {window.innerWidth <= 979 ? divider(2, "pink") : (null)}
-        DAO-Issued
-        Chad Badges can only be issued with a community vote, and are generally reserved for exceptional contributions 
-        or exceptionally chad moves.
-        <Image className="BadgeImage" style={{padding: "3%", minWidth: "220px", maxWidth: "25vw", overflowY: "hidden" }} src={chadBadge} />
-        {divider(2, "pink")}
-        </Col>
-        <Col style={{minWidth: "250px", textAlign: "right"}}>
-        Colored IDs can be issued by a governing DAO, based on a users social-verified psuedonym. IDs may be transfered to new wallets by the issuing DAO, upon petition by the ID holder.
-        {divider(2, "pink")}
-        <Image className="BadgeImage" style={{ padding: "3%", minWidth: "220px", maxWidth: "25vw", overflowY: "hidden" }} src={coloredID} />
-        </Col>
-        </Row>
-        </>)
-      }
 
 
-      {divider(4, "gold")}
+        <Col s={12} m={6} style={{marginTop: "20vh"}}>
+          <Row>
+            <img src={GoldStarSign} />
+            <br />
+            <Row style={{ fontSize: "30px" , fontWeight: "600" , color: "lime", paddingLeft: "5vw", textAlign: "right"}}>
+              {"Send pens to your friends!"}
+            </Row>
+            <Row style={{ fontSize: "20px", fontWeight: "600" , paddingLeft: "5vw", textAlign: "right" }}>
+              {"GoldStars can be issued (with a tip!) for any socially-beneficial behavior, or even just for fun."}
+            </Row>
+            <img style={{minWidth: "350px"}} src={goldStarBadgeImg} />
+            <br />
+            
+          </Row>
+        </Col>
+      
+      </Row>
+      </Row>  
+
       
     </Container>
 

@@ -15,13 +15,13 @@ export default function PassportOffice(props) {
 
   return (
 
-    <div className="App" style={{color: "white", alignContent: "center", marginTop: "20vh", justifyContent: "center"}}>       
-        <h3 style={{marginTop: "-10%"}} > Apply for a ColoredID <br /> (coming soon)</h3>
-        <br /><br />
-        <Row>
-                {/* <PassportAgent badge={props._coloredID} {...props} /> */}
-        </Row>
-        <br /><br />    
+    <div className="App" style={{ color: "white", alignContent: "center", marginTop: "20vh", justifyContent: "center" }}>
+      <h3 style={{ marginTop: "-10%" }} > Apply for a ColoredID <br /> (coming soon)</h3>
+      <br /><br />
+      <Row>
+        {/* <PassportAgent badge={props._coloredID} {...props} /> */}
+      </Row>
+      <br /><br />
     </div>
 
 

@@ -122,6 +122,14 @@ span {
     background-color: aliceblue;
     border-radius: 5px;
   }
+
+  .badgeTypeContainer {
+    padding: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 35px;
+    border-radius: 5px;
+  }
   .BadgeSearch {
     font-weight: 600;
     padding: 50px;

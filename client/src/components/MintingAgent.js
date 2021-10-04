@@ -36,6 +36,11 @@ import BadgeImageGenerator from '../components/BadgeImageGenerator.js';
 
 import redPenIcons from '../icons/redPenIcon.png';
 import headerImage from '../rsrc/imgs/Chad_Banner.png';
+
+
+import PinkSlipSign from '../rsrc/imgs/PinkSlip.gif';
+import GoldStarSign from '../rsrc/imgs/GoldStar.gif';
+
 import { pink } from "@material-ui/core/colors";
 
 
@@ -75,6 +80,13 @@ export default function MintingAgent(props) {
       "GoldStar"
 
     ]
+
+    const flashingSign = [
+      null,
+      PinkSlipSign,
+      GoldStarSign
+    ]
+
     useEffect( () => {
 
         checkPenApproval();
@@ -97,11 +109,11 @@ export default function MintingAgent(props) {
     const badgeTitle = [
       "Minting Desk",
       <>
-        <h1>
+        
           <span role="img" id="skull">☠</span> <span id="pinkHeader">Pink</span> 
           <span role="img" id="skull">☠</span> <span id="pinkHeader">Slips</span>
           <span role="img" id="skull">☠</span>
-        </h1>
+        
         <div id="pinkSubHeader">Now you know if someones a dick!</div>
         <br />      
       </>,
@@ -231,7 +243,7 @@ export default function MintingAgent(props) {
         <Typography variant="h4" component="h2">
                 {badgeTitle[badgeTypeId]}
         </Typography>
-
+        
         {
          badgeTypeId < 1
          ?
@@ -265,7 +277,7 @@ export default function MintingAgent(props) {
                 </Col>
                 <Col>
                 <div className="priceLabel">
-                  Minting a PinkSlip costs: <div id="priceQuote"><span id="priceNumber">{ mintingCost }</span> Red Pens</div>
+                  Minting a {badgeName[badgeTypeId]} costs: <div id="priceQuote"><span id="priceNumber">{ mintingCost }</span> Red Pens</div>
                 </div>                   
               </Col>
               
@@ -418,7 +430,13 @@ export default function MintingAgent(props) {
             <Col xs={12} md={12}>
                 <Card className="MintingTileImage" style={{alignContent: "center", justifyContent: "center"}}>
                     <CardContent>
-                      <Container onClick={() => {}} style={{ backgroundColor: "transparent", alignContent: "center", justifyContent: "center"}}>
+                      <Row>
+
+                      <Container s={3} >
+                        <img src={flashingSign[badgeTypeId]} />
+                      </Container>
+
+                      <Container s={3} onClick={() => {}} style={{ width: "500px", backgroundColor: "transparent", alignContent: "center", justifyContent: "center"}}>
                         <Row   id="badgeImage" style={{ padding: 0, alignContent: "center", justifyContent: "center"}}>
                         <BadgeImageGenerator
                               badge={badge}
@@ -429,7 +447,9 @@ export default function MintingAgent(props) {
                               web3={props.web3}
                             />   
                         </Row>
-                      </Container>                          
+                      </Container>
+
+                      </Row>                          
                     </CardContent>
 
                     <CardActions style={{justifyContent: "center"}}>
